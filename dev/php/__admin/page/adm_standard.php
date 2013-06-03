@@ -53,6 +53,17 @@ class adm_standard extends admin_ctrl
         $this->model->std_addRow($data);
         $this->back();
     }
+    protected function api_edit()
+    {
+        $dataDefine = ml_factory::load_dataDefine($this->dataDefine);
+
+        $id = $this->input('id');
+        foreach ($dataDefine['field'] as $key => $value) {
+            $data[$key] = $this->input($key);
+        }
+        $this->model->std_updateRow($id , $data);
+        $this->back();
+    }
     protected function api_delById()
     {
         $id = $this->input('id');

@@ -28,6 +28,7 @@
 
 ?>
 		<table width="98%" border="0" align="center" cellspacing="0" class="adminlist">
+			<form action="?dtdfn=<?php echo $data['_dataDefine'] ?>&api=edit&id=<?php echo $data['row']['id']; ?>" method="post">
 			<tr>
 				<th colspan="2">编辑</th>
 			</tr>
@@ -40,6 +41,7 @@
 			<tr>
 				<td colspan="2"><input type="submit" value="保存"/></td>
 			</tr>
+			</form>
 		</table>
 <?php
 	}

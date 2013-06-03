@@ -51,6 +51,16 @@ class ml_model_standard extends Lib_datamodel_db
 
         return $this->insert($data);
     }
+    function std_updateRow($id , $data = array())
+    {
+        if(!$this->init_db($uid , self::DB_MASTER))
+            return false;
+        $dataDefine = ml_factory::load_dataDefine($this->dataDefine);
+
+        $where = 'id='.$id;
+
+        return $this->update($data , $where);
+    }
     function std_delById($id)
     {
         if(!$this->init_db($uid , self::DB_MASTER))
