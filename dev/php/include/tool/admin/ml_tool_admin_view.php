@@ -63,4 +63,36 @@ class ml_tool_admin_view
     
         return $sHtml;
     }
+
+    static public function echoline($dataDefine , $field , $value)
+    {
+        $df = ml_factory::load_dataDefine($dataDefine);
+
+        if(in_array($df['field'][$field]['type'], array('i','s')))
+        {
+            echo htmlspecialchars($value);
+        }
+        else if($df['field'][$field]['type']=='enum')
+        {
+            
+            echo $df['field'][$field]['enum'][$value];
+        }   
+    }
+
+    static public function dtdfn_input($type ,$name, $dtdfn , $value = null)
+    {
+        if(in_array($type, array('i','s')))
+        {
+            return '<input type="text" name="'.$name.'" value="'.(is_null($value)?$dtdfn['default']:$value).'"/>';
+        }
+        else if($type=='enum')
+        {
+            $options = '';
+            foreach ($dtdfn['enum'] as $key => $cn) {
+                $options.='<option value="'.$key.'"'.($value==$key?' selected':'').'>'.$cn.'</option>';
+            }
+            return '<select name="'.$name.'">'.$options.'</select>';
+        }
+
+    }
 }

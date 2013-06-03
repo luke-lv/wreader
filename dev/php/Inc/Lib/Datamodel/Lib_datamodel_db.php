@@ -19,6 +19,9 @@ class Lib_datamodel_db extends Lib_datamodel_abstract
     private $_db_config;                            //当前模型的数据库配置
     private $_conn;                                 //当前DB连接
     private $_fetch_result_num = false;
+
+    private $_is_ctime = true;
+    private $_is_utime = true;
     
     protected $table;                               //当前的数据表名
     
@@ -158,6 +161,10 @@ class Lib_datamodel_db extends Lib_datamodel_abstract
             $this->table = $this->_db_config['tb_prefix'];
         return true;
     }
+    protected function hash_table($uid)
+    {
+
+    }
     protected function switch_fetch_num()
     {
         $this->_fetch_result_num = true;
@@ -224,6 +231,7 @@ class Lib_datamodel_db extends Lib_datamodel_abstract
      */
     protected function fetch($sql)
     {
+
         return $this->query($sql , true);
     }
     /**
@@ -234,6 +242,7 @@ class Lib_datamodel_db extends Lib_datamodel_abstract
      */
     protected function fetch_row($sql)
     {
+
         $rs = $this->query($sql , true);
         if(!$rs)
             return false;
@@ -249,6 +258,7 @@ class Lib_datamodel_db extends Lib_datamodel_abstract
      */
     protected function fetch_count($where = '')
     {
+
         $where ? $where = ' WHERE '.$where : '';
         $sql = 'SELECT count(*) n FROM '.$this->table.$where;
         $this->switch_fetch_num();
@@ -268,8 +278,11 @@ class Lib_datamodel_db extends Lib_datamodel_abstract
      */
     protected function insert($array)
     {
-        
+
         $array = $this->hook_before_write($array);
+
+        if($this->_is_ctime)
+            $array['_ctime'] = date('Y-m-d H:i:s');
         
         $sql_set = $this->format_set_sql($array);
         
@@ -288,7 +301,12 @@ class Lib_datamodel_db extends Lib_datamodel_abstract
      */
     protected function replace($array)
     {
+
         $array = $this->hook_before_write($array);
+
+        if($this->_is_utime)
+            $array['_utime'] = date('Y-m-d H:i:s');
+
         $sql_set = $this->format_set_sql($array);
         if(!$sql_set)
             return false;
@@ -306,7 +324,12 @@ class Lib_datamodel_db extends Lib_datamodel_abstract
      */
     protected function update($array , $where , $limit = 0)
     {
+
         $array = $this->hook_before_write($array);
+
+        if($this->_is_utime)
+            $array['_utime'] = date('Y-m-d H:i:s');
+
         $sql_set = $this->format_set_sql($array);
         if(!$sql_set)
             return false;

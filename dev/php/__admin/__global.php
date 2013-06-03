@@ -11,6 +11,11 @@
 include (dirname(dirname(__FILE__)).'/__global.php');
 include(SERVER_ROOT_PATH.'/include/config/admin/ml_admin_queuename.php');
 
+function mla_echo($a)
+{
+    echo ml_tool_admin_view::echoline($a);
+}
+
 class admin_ctrl
 {
     private $session;

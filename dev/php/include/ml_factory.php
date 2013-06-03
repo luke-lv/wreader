@@ -26,6 +26,21 @@ class ml_factory
         return self::$_configs['stdConf'][$name];
     }
     /**
+     * 取数据定义
+     *
+     * @param string $name
+     * @return array
+     */
+    public static function load_dataDefine($name)
+    {
+        $aPath = Tool_pathParser::parse($name);
+        
+        if(!is_array(self::$_configs['dtdfn'][$name]))
+            self::$_configs['dtdfn'][$name] = include(SERVER_ROOT_PATH.'/include/config/dataDefine/'.$aPath['path'].'ml_dtdfn_'.$name.'.php');
+        
+        return self::$_configs['dtdfn'][$name];
+    }
+    /**
      * 加载页面模块
      *
      * @param int $mod_id
