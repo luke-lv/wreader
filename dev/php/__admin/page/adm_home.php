@@ -7,7 +7,7 @@ class adm_home extends admin_ctrl
 {
     function run()
     {
-        die('welcome');
+        $this->output();
     }
     
     function page_suggestlist()
@@ -92,6 +92,31 @@ class adm_home extends admin_ctrl
         }
         
         $this->_redirect('?page=notice');
+    }
+
+    function api_codeautomake()
+    {
+        $dtdfn = $this->input('dtdfn');
+        $dataDefine = ml_factory::load_dataDefine($dtdfn);
+        if(is_array($dataDefine) && !is_file('./adm_'.$dtdfn.'.php'))
+        {
+            
+            $page_code = file_get_contents( SERVER_ROOT_PATH.'/__admin/page/adm_standard.php');
+            $page_code = str_replace('adm_standard', 'adm_'.$dtdfn, $page_code);
+            $page_code = str_replace('ml_model_standard', 'ml_model_'.$dtdfn, $page_code);
+            $page_code = str_replace('$this->input(\'dtdfn\')', '\''.$dtdfn.'\'', $page_code);
+            file_put_contents(SERVER_ROOT_PATH.'/__admin/page/adm_'.$dtdfn.'.php', $page_code);
+
+            copy(SERVER_ROOT_PATH.'/__admin/view/page_adm_standard.php', SERVER_ROOT_PATH.'/__admin/view/page_adm_'.$dtdfn.'.php');
+
+            $page_code = file_get_contents( SERVER_ROOT_PATH.'/include/model/ml_model_standard.php');
+            $page_code = str_replace('ml_model_standard', 'ml_model_'.$dtdfn, $page_code);
+            file_put_contents(SERVER_ROOT_PATH.'/include/model/ml_model_'.$dtdfn.'.php', $page_code);
+             
+            die('over');
+        }
+        else
+            die('错误');
     }
 
     function page_queueStat()

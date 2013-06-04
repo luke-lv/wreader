@@ -76,6 +76,8 @@ class Lib_datamodel_db extends Lib_datamodel_abstract
             }
             if(!$conn)
             {
+                var_dump(mysql_error());
+                die;
                 Tool_logger::monitorLog(__CLASS__ , 'connect_err '.$host.' '.$user.' '.mysql_error() , Tool_logger::LOG_LEVEL_ALERM );
                 return false;
             }
@@ -149,7 +151,7 @@ class Lib_datamodel_db extends Lib_datamodel_abstract
         $db_name = $this->_db_config['connect'][$type]['name'];
      
         //连接DB
-        $rs = $this->_connect($host,'',$user,$pw,$db_name);
+        $rs = $this->_connect($host,$port,$user,$pw,$db_name);
 
         if(!$rs)
             return false;

@@ -71,7 +71,7 @@ function hideMenu()
   <tr><td align="center" class="td_title"><strong>内容库管理</strong></td></tr>
   <tr><td align="center">
     <table width="100%" border="0">
-      <tr><td width="100%" align="center"><a href="/__admin/page/adm_standard.php?dtdfn=wrcSource" target="admin_iframe">源管理</a></td></tr>
+      <tr><td width="100%" align="center"><a href="/__admin/page/adm_wrcSource.php" target="admin_iframe">源管理</a></td></tr>
       </table>
   </td></tr>
 

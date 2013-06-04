@@ -85,7 +85,7 @@ class Lib_memSession{
             if (empty($_COOKIE[session_name()])) {
                 session_id(md5(uniqid(microtime())));
             }
-            session_set_cookie_params(0, "/", ".gulibaby.com");
+            session_set_cookie_params(0, "/", ".wreader.cn");
             session_start(); 
             $this->_sesStarted = TRUE; 
         }

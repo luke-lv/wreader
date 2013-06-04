@@ -1,4 +1,20 @@
 <?php
+function page_index($data)
+{
+?>
+
+<table class="adminlist" width="100%">
+<form action="?api=codeautomake" method="POST">
+<tr>
+    <th width="100%" style="text-align:center;" colspan="2">生成代码</th>
+</tr>
+<tr>
+    <td>数据定义：<input type="text" name="dtdfn"/><input type="submit" value="生成"/></td>
+</tr>
+</form>
+</table>
+<?php
+}
 function page_notice($adm)
 {
 ?>

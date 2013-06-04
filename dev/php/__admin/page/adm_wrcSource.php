@@ -3,7 +3,7 @@
 include('../__global.php');
 
 
-class adm_standard extends admin_ctrl
+class adm_wrcSource extends admin_ctrl
 {
     private $dataDefine;
     private $model;
@@ -11,8 +11,8 @@ class adm_standard extends admin_ctrl
     public function _construct()
     {
         
-        $this->dataDefine = $this->input('dtdfn');
-        $this->model = new ml_model_standard($this->dataDefine);
+        $this->dataDefine = 'wrcSource';
+        $this->model = new ml_model_wrcSource($this->dataDefine);
 
         //
     }
@@ -29,6 +29,9 @@ class adm_standard extends admin_ctrl
         $page = $this->input['page'];
         $this->model->std_listByPage($page);
         $data['rows'] = $this->model->get_data();
+        $this->model->std_getCount();
+        $data['total'] = $this->model->get_data();
+        $data['pagesize'] = 10;
         $this->output($data);
     }
     protected function page_addForm()
@@ -72,5 +75,5 @@ class adm_standard extends admin_ctrl
     }
 }
 
-new adm_standard();
+new adm_wrcSource();
 ?>

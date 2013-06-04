@@ -2,7 +2,7 @@
 /**
  * 
  */
-class ml_model_standard extends Lib_datamodel_db 
+class ml_model_wrcSource extends Lib_datamodel_db 
 {
     const STATUS_NORMAL = 0;
     const STATUS_DEL = 2;
