@@ -98,8 +98,8 @@ class adm_home extends admin_ctrl
     {
         $dtdfn = $this->input('dtdfn');
         $dataDefine = ml_factory::load_dataDefine($dtdfn);
-        if(is_array($dataDefine) && !is_file('./adm_'.$dtdfn.'.php'))
-        {
+        //if(is_array($dataDefine) && !is_file('./adm_'.$dtdfn.'.php'))
+        //{
             
             $page_code = file_get_contents( SERVER_ROOT_PATH.'/__admin/page/adm_standard.php');
             $page_code = str_replace('adm_standard', 'adm_'.$dtdfn, $page_code);
@@ -114,9 +114,9 @@ class adm_home extends admin_ctrl
             file_put_contents(SERVER_ROOT_PATH.'/include/model/ml_model_'.$dtdfn.'.php', $page_code);
              
             die('over');
-        }
-        else
-            die('错误');
+        //}
+        //else
+        //    die('错误');
     }
 
     function page_queueStat()

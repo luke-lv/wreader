@@ -8,7 +8,7 @@ class ml_model_wrcSource extends Lib_datamodel_db
     const STATUS_DEL = 2;
 
     private $dataDefine;
-    function __construct($dataDefine)
+    function __construct()
     {
         $this->dataDefine = $dataDefine;
         $db_config = ml_factory::load_standard_conf('dbContentbase');        //目前只有一个配置文件，所以
@@ -71,6 +71,18 @@ class ml_model_wrcSource extends Lib_datamodel_db
 
         return $this->update($data , $where);
 
+    }
+
+
+    function listBySpidertime($spider_time , $page , $pagesize = 10)
+    {
+        if(!$this->init_db($uid , self::DB_SLAVE))
+            return false;
+
+        $page = $page <1 ? 1 : $page;
+        $start = ($page-1)*$pagesize;
+        $sql = 'select * from '.$this->table.' where spider_type='.$spider_time.' and status='.self::STATUS_NORMAL.' order by id desc limit '.$start.','.$pagesize;
+        return $this->fetch($sql);
     }
 }
 ?>

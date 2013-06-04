@@ -165,6 +165,31 @@ $defaultUids = array(
     );
 
 
+define('ML_TAGTYPE_OTHER', 0);
+define('ML_TAGTYPE_TECH', 1);
+define('ML_TAGTYPE_PD', 2);
+define('ML_TAGTYPE_OP', 3);
+define('ML_TAGTYPE_TEST', 4);
+define('ML_TAGTYPE_BIZ', 5);
+define('ML_TAGTYPE_BRAND', 6);
+define('ML_TAGTYPE_PEOPLE', 7);
+define('ML_TAGTYPE_BOOK', 8);
+$ML_TAG_TYPE = array(
+    '其他' => 0,
+    '技术' => 1,
+    '产品' => 2,
+    '运营' => 3,
+    '测试' => 4,
+    '商业' => 5,
+    '品牌' => 6,
+    '人物' => 7,
+    '书' => 8,
+);
+$ML_TAG_SUBTYPE = array(
+    
+);
+
+
 define('ML_IMG_DIR_ROOT' , SYSDEF_DATA_ROOT_PATH.'ml_image');
 define('ML_IMG_DIR_BIGPIC' , ML_IMG_DIR_ROOT.'/bigpic');
 define('ML_IMG_DIR_SMALLPIC' , ML_IMG_DIR_ROOT.'/smallpic');

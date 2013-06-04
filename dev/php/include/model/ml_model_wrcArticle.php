@@ -2,18 +2,18 @@
 /**
  * 
  */
-class ml_model_standard extends Lib_datamodel_db 
+class ml_model_wrcArticle extends Lib_datamodel_db 
 {
     const STATUS_NORMAL = 0;
     const STATUS_DEL = 2;
 
     private $dataDefine;
-    function __construct($dataDefine = '')
+    function __construct()
     {
         $this->dataDefine = $dataDefine;
         $db_config = ml_factory::load_standard_conf('dbContentbase');        //目前只有一个配置文件，所以
 
-        parent::__construct('wrc_source' , $db_config['wrc_source']);
+        parent::__construct('wrc_article' , $db_config['wrc_article']);
     }
     
     function std_listByPage($page = 1 , $pagesize = 10)
@@ -43,11 +43,14 @@ class ml_model_standard extends Lib_datamodel_db
         return $this->fetch_row($sql);
     }
 
-    function std_addRow($data = array())
+    function std_addRow($srcId , $data = array())
     {
-        if(!$this->init_db($uid , self::DB_MASTER))
+        if(!$this->init_db($srcId , self::DB_MASTER))
             return false;
-        $dataDefine = ml_factory::load_dataDefine($this->dataDefine);
+        
+        $data['source_id'] = $srcId;
+        $data['title_hash'] = $this->_title_hash($data['title']);
+
 
         return $this->insert($data);
     }
@@ -71,6 +74,31 @@ class ml_model_standard extends Lib_datamodel_db
 
         return $this->update($data , $where);
 
+    }
+
+
+    function countByLink($srcId , $link)
+    {
+        if(!$this->init_db($uid , self::DB_SLAVE))
+            return false;
+        $where = 'source_id = '.$srcId.' and link = "'.$link.'"';
+        return $this->fetch_count($where);
+    }
+    function countByTitle($srcId , $title)
+    {
+        if(!$this->init_db($uid , self::DB_SLAVE))
+            return false;
+        $where = 'source_id = '.$srcId.' and title_hash = "'.$this->_title_hash($title).'"';
+        return $this->fetch_count($where);   
+    }
+
+
+
+
+
+    private function _title_hash($title)
+    {
+        return ml_tool_resid::str_hash($title);
     }
 }
 ?>

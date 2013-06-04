@@ -2,39 +2,23 @@
 /**
  * 
  */
-class ml_model_standard extends Lib_datamodel_db 
+class ml_model_wrcArticleContent extends Lib_datamodel_db 
 {
     const STATUS_NORMAL = 0;
     const STATUS_DEL = 2;
 
     private $dataDefine;
-    function __construct($dataDefine = '')
+    function __construct()
     {
         $this->dataDefine = $dataDefine;
         $db_config = ml_factory::load_standard_conf('dbContentbase');        //目前只有一个配置文件，所以
 
-        parent::__construct('wrc_source' , $db_config['wrc_source']);
+
+        parent::__construct('wrc_articleContent' , $db_config['wrc_articleContent']);
+        $this->_is_ctime = false;
+        $this->_is_utime = false;
     }
     
-    function std_listByPage($page = 1 , $pagesize = 10)
-    {
-        if(!$this->init_db($uid , self::DB_SLAVE))
-            return false;
-
-        $page = $page <1 ? 1 : $page;
-        $start = ($page-1)*$pagesize;
-        $sql = 'select * from '.$this->table.' where status='.self::STATUS_NORMAL.' order by id desc limit '.$start.','.$pagesize;
-        return $this->fetch($sql);
-    }
-
-    function std_getCount()
-    {
-        if(!$this->init_db($uid , self::DB_SLAVE))
-            return false;
-        $where = 'status = '.self::STATUS_NORMAL;
-        return $this->fetch_count();
-    }
-
     function std_getRowById($id)
     {
         if(!$this->init_db($uid , self::DB_SLAVE))
@@ -43,12 +27,12 @@ class ml_model_standard extends Lib_datamodel_db
         return $this->fetch_row($sql);
     }
 
-    function std_addRow($data = array())
+    function std_addRow($srcId , $articleId , $data = array())
     {
-        if(!$this->init_db($uid , self::DB_MASTER))
+        if(!$this->init_db($srcId , self::DB_MASTER))
             return false;
-        $dataDefine = ml_factory::load_dataDefine($this->dataDefine);
 
+        $data['id'] = $articleId;
         return $this->insert($data);
     }
     function std_updateRow($id , $data = array())
@@ -72,5 +56,7 @@ class ml_model_standard extends Lib_datamodel_db
         return $this->update($data , $where);
 
     }
+
+
 }
 ?>

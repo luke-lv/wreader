@@ -26,17 +26,18 @@ class adm_wrcSource extends admin_ctrl
     
     protected function run()
     {
-        $page = $this->input['page'];
-        $this->model->std_listByPage($page);
+        $page = $this->input('page');
+        $pagesize = $this->input('pagesize' , 'g' , 10);
+        $this->model->std_listByPage($page , $pagesize);
         $data['rows'] = $this->model->get_data();
         $this->model->std_getCount();
         $data['total'] = $this->model->get_data();
-        $data['pagesize'] = 10;
+        $data['pagesize'] = $pagesize;
         $this->output($data);
     }
     protected function page_addForm()
     {
-        $this->output();
+        $this->output($data);
     }
     protected function page_editForm()
     {
@@ -53,6 +54,13 @@ class adm_wrcSource extends admin_ctrl
         foreach ($dataDefine['field'] as $key => $value) {
             $data[$key] = $this->input($key);
         }
+        
+        if(!$data['domain'] && $data['rss'])
+        {
+            $rs = parse_url($data['rss']);
+            $data['domain'] = $rs['host'];
+        }
+        
         $this->model->std_addRow($data);
         $this->back();
     }
@@ -64,6 +72,13 @@ class adm_wrcSource extends admin_ctrl
         foreach ($dataDefine['field'] as $key => $value) {
             $data[$key] = $this->input($key);
         }
+
+        if(!$data['domain'] && $data['rss'])
+        {
+            $rs = parse_url($data['rss']);
+            $data['domain'] = $rs['host'];
+        }
+
         $this->model->std_updateRow($id , $data);
         $this->back();
     }

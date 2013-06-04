@@ -15,16 +15,16 @@ class ml_model_admin_dbCommon extends Lib_datamodel_db
 {
     const TB_SUGGEST = 'mla_suggestlist';
     const TB_COMMENT = 'mla_commentlist';
-    const TB_TAGS = 'mla_tags';
+    const TB_TAGS = 'wrc_tags';
     const TB_HTMLBLOCK = 'mla_htmlblock';
     const TB_GOODSAUTOFETCH = 'mla_goodsautofetch';
 
     public function __construct()
     {
-        $db_config = ml_factory::load_standard_conf('dbAdmin');
+        $db_config = ml_factory::load_standard_conf('dbContentbase');
 
 
-        parent::__construct('admin' , $db_config['admin']);
+        parent::__construct('wrc_source' , $db_config['wrc_source']);
     }
 
     public function suggest_list($pageid , $pagesize = 20)
@@ -185,6 +185,7 @@ class ml_model_admin_dbCommon extends Lib_datamodel_db
             $a = array(
                 'type' => $type,
                 'tag' => $value,
+                'tag_hash' => crc32($value),
             );
             $this->table = self::TB_TAGS;
             $this->insert($a);
@@ -253,14 +254,6 @@ class ml_model_admin_dbCommon extends Lib_datamodel_db
 
         $sql = 'select * from '.self::TB_TAGS;
         return $this->fetch($sql);
-    }
-    public function tags_updateTagHash($id , $hash)
-    {
-        if(!$this->init_db())
-            return false;
-
-        $sql = 'update '.self::TB_TAGS.' set tag_hash = "'.$hash.'" where `id` = '.$id;
-        return $this->query($sql);
     }
 
 

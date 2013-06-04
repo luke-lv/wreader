@@ -20,8 +20,8 @@ class Lib_datamodel_db extends Lib_datamodel_abstract
     private $_conn;                                 //当前DB连接
     private $_fetch_result_num = false;
 
-    private $_is_ctime = true;
-    private $_is_utime = true;
+    protected $_is_ctime = true;
+    protected $_is_utime = true;
     
     protected $table;                               //当前的数据表名
     

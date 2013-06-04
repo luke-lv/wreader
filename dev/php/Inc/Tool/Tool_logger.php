@@ -171,7 +171,8 @@ class Tool_logger
         }
         
         if (! is_dir($f = dirname($fname))) {
-            @mkdir($f);
+mkdir($f,0777,true);
+echo 'vvv';
             //@chown($f, "www");
             //@chgrp($f, "www");
         }
@@ -183,7 +184,6 @@ class Tool_logger
             $msg .= SYSDEF_LOG_SEPARATE . $_SERVER['SCRIPT_NAME'];
         }
         $msg .= "\n";
-        
         if (! is_file($fname))
         {
             fopen($fname, 'a');

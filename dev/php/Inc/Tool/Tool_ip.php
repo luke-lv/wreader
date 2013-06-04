@@ -35,18 +35,21 @@ class Tool_ip
                 }
             }
         }
-        foreach ($ips as $ip)
+        if(is_array($ips))
         {
-            $sub_ip = substr($ip, 0, 5);
-            
-            $aInner = array('127.0' , '10.55' , '10.49' , '10.69' , '10.73');
-            if ( /*取外网IP*/ !$is_inner_net && (!in_array($sub_ip , $aInner))
-                /*取内网IP*/ || $is_inner_net && (in_array($sub_ip , $aInner)))
+            foreach ($ips as $ip)
             {
-                if(!file_exists($ip_cache)){
-                    @file_put_contents($ip_cache, 'IPADDR="'.$ip.'"');
+                $sub_ip = substr($ip, 0, 5);
+                
+                $aInner = array('127.0' , '10.55' , '10.49' , '10.69' , '10.73');
+                if ( /*取外网IP*/ !$is_inner_net && (!in_array($sub_ip , $aInner))
+                    /*取内网IP*/ || $is_inner_net && (in_array($sub_ip , $aInner)))
+                {
+                    if(!file_exists($ip_cache)){
+                        @file_put_contents($ip_cache, 'IPADDR="'.$ip.'"');
+                    }
+                    return $ip;
                 }
-                return $ip;
             }
         }
     }

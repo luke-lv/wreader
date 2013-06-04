@@ -3,7 +3,7 @@
 include('../__global.php');
 
 
-class adm_standard extends admin_ctrl
+class adm_wrcArticle extends admin_ctrl
 {
     private $dataDefine;
     private $model;
@@ -11,8 +11,8 @@ class adm_standard extends admin_ctrl
     public function _construct()
     {
         
-        $this->dataDefine = $this->input('dtdfn');
-        $this->model = new ml_model_standard($this->dataDefine);
+        $this->dataDefine = 'wrcArticle';
+        $this->model = new ml_model_wrcArticle($this->dataDefine);
 
         //
     }
@@ -75,5 +75,5 @@ class adm_standard extends admin_ctrl
     }
 }
 
-new adm_standard();
+new adm_wrcArticle();
 ?>
