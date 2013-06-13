@@ -32,7 +32,7 @@ class ml_model_standard extends Lib_datamodel_db
         if(!$this->init_db($uid , self::DB_SLAVE))
             return false;
         $where = 'status = '.self::STATUS_NORMAL;
-        return $this->fetch_count();
+        return $this->fetch_count($where);
     }
 
     function std_getRowById($id)

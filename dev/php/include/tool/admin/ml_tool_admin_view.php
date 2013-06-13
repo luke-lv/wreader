@@ -76,7 +76,11 @@ class ml_tool_admin_view
         {
             
             echo $df['field'][$field]['enum'][$value];
-        }   
+        }
+        else
+        {
+            echo htmlspecialchars($value);
+        }
     }
 
     static public function dtdfn_input($type ,$name, $dtdfn , $value = null)

@@ -16,23 +16,23 @@ class ml_model_wrcArticle extends Lib_datamodel_db
         parent::__construct('wrc_article' , $db_config['wrc_article']);
     }
     
-    function std_listByPage($page = 1 , $pagesize = 10)
+    function std_listBySrcIdByPage($srcId , $page = 1 , $pagesize = 10)
     {
         if(!$this->init_db($uid , self::DB_SLAVE))
             return false;
 
         $page = $page <1 ? 1 : $page;
         $start = ($page-1)*$pagesize;
-        $sql = 'select * from '.$this->table.' where status='.self::STATUS_NORMAL.' order by id desc limit '.$start.','.$pagesize;
+        $sql = 'select * from '.$this->table.' where source_id = '.$srcId.' and status='.self::STATUS_NORMAL.' order by id desc limit '.$start.','.$pagesize;
         return $this->fetch($sql);
     }
 
-    function std_getCount()
+    function std_getCountBySrcId($srcId)
     {
         if(!$this->init_db($uid , self::DB_SLAVE))
             return false;
-        $where = 'status = '.self::STATUS_NORMAL;
-        return $this->fetch_count();
+        $where = 'source_id = '.$srcId.' and status = '.self::STATUS_NORMAL;
+        return $this->fetch_count($where);
     }
 
     function std_getRowById($id)

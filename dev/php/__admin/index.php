@@ -51,15 +51,6 @@ function hideMenu()
   <table width="150" border="0" align="center" cellpadding="0" cellspacing="0" class="adminlist">
     
   <tr><td width="912" align="center" class="td_title"><strong>首页</strong></td></tr>
-  <tr><td align="center" class="td_title"><strong>产品管理</strong></td></tr>
-  <tr><td align="center">
-    <table width="100%" border="0">
-      <tr><td width="100%" align="center"><a href="/__admin/page/adm_taobao.php?page=findbykeys" target="admin_iframe">淘宝</a></td></tr>
-      <tr><td width="100%" align="center"><a href="/__admin/page/adm_tags.php" target="admin_iframe">标签管理</a></td></tr>
-      <tr><td width="100%" align="center"><a href="/__admin/page/adm_goodsaudit.php" target="admin_iframe">商品审核</a></td></tr>
-      
-      </table>
-  </td></tr>
   
   <tr><td align="center" class="td_title"><strong>用户管理</strong></td></tr>
   <tr><td align="center">
@@ -72,6 +63,8 @@ function hideMenu()
   <tr><td align="center">
     <table width="100%" border="0">
       <tr><td width="100%" align="center"><a href="/__admin/page/adm_wrcSource.php" target="admin_iframe">源管理</a></td></tr>
+      <tr><td width="100%" align="center"><a href="/__admin/page/adm_wrcArticle.php" target="admin_iframe">文章管理</a></td></tr>
+      <tr><td width="100%" align="center"><a href="/__admin/page/adm_tags.php" target="admin_iframe">标签管理</a></td></tr>
       </table>
   </td></tr>
 

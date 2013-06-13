@@ -394,14 +394,17 @@ class ml_function_lib
         $scws = scws_new();
         $scws->set_charset('utf8');
         $scws->set_dict(SERVER_ROOT_PATH.'/include/config/scws/dict.utf8.xdb');
+        $scws->set_dict(SERVER_ROOT_PATH.'/include/config/scws/wreader.xdb');
         $scws->set_rule(SERVER_ROOT_PATH.'/include/config/scws/rules.utf8.ini');
-        $scws->add_dict(SERVER_ROOT_PATH.'/include/config/scws/dict_huxiu.txt', SCWS_XDICT_TXT);
+        //$scws->add_dict(SERVER_ROOT_PATH.'/include/config/scws/dict_huxiu.txt', SCWS_XDICT_TXT);
         $scws->set_multi($data['option'] & SCWS_TEST_MULTI_MASK);
         $scws->set_ignore(($data['option'] & SCWS_TEST_IGNORE_SYMBOL) ? true : false); 
         $scws->set_duality(($data['option'] & SCWS_TEST_DUALITY) ? true : false); 
         $scws->send_text($str);
+
         while ($result = $scws->get_result())
         {
+            
             foreach ($result as $tmp)
                 $words[] = $tmp['word'];
         }

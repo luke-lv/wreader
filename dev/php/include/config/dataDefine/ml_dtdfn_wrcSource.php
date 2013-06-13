@@ -2,6 +2,7 @@
 	include_once(SERVER_ROOT_PATH.'/include/config/ml_spider_config.php');
 	return array(
 		'table'=>'wrc_source',
+		'hash_table' => false,
 		'field'=>array(
 			'title' => array(
 				'cn'=>'网站名称',
@@ -16,6 +17,10 @@
 				'cn'=>'域名',
 				'type' => 's',
 				'length'=>50),
+			'tags' => array(
+				'cn'=>'标签',
+				'type' => 's',
+				'length'=>200),
 			'language' => array(
 				'cn'=>'语言',
 				'type' => 'enum',
@@ -27,7 +32,7 @@
 			'spider_type' => array(
 				'cn'=>'抓取方式',
 				'type' => 'enum',
-				'enum'=>array(0=>'RSS')),
+				'enum'=>array(0=>'RSS' , 1=>'RSS+页面抓取' , 2=>'RSS+自定义抓取')),
 		)
 	);
 ?>

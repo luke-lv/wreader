@@ -54,17 +54,19 @@
 		<table width="98%" border="0" align="center" cellspacing="0" class="adminlist">
 			<tr>
 				<th>#</th>
-				<?php foreach ($dataDefine['field'] as $key => $value) {?>
-				<th><?php echo $value['cn']; ?></th>
-				<?php } ?>
+				<th>标题</th>
+				<th>标签</th>
+				<th>发布时间</th>
+				<th>链接</th>
 				<th>操作</th>
 			</tr>
 			<?php foreach ($data['rows'] as $key => $row) { ?>
 			<tr>
 				<td><?php echo $row['id']; ?></td>
-				<?php foreach ($dataDefine['field'] as $key => $value) {?>
-				<td><?php ml_tool_admin_view::echoline($data['_dataDefine'] , $key , $row[$key]); ?></td>
-				<?php } ?>
+				<td><?php ml_tool_admin_view::echoline($data['_dataDefine'] , 'title' , $row['title']); ?></td>
+				<td><?php ml_tool_admin_view::echoline($data['_dataDefine'] , 'tags' , $row['tags']); ?></td>
+				<td><?php ml_tool_admin_view::echoline($data['_dataDefine'] , 'pub_time' , $row['pub_time']); ?></td>
+				<td><a href="<?php ml_tool_admin_view::echoline($data['_dataDefine'] , 'link' , $row['link']); ?>" target="_blank">链接</a></td>
 				<td>
 					<a href="?dtdfn=<?php echo $data['_dataDefine'] ?>&page=editForm&id=<?php echo $row['id'] ?>">编辑</a>
 					<a href="javascript:;" onclick="if(window.confirm('xxx')){window.location='?dtdfn=<?php echo $data['_dataDefine'] ?>&api=delById&id=<?php echo $row['id'] ?>'}"><font color="red">删除</font></a>

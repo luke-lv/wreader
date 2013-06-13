@@ -26,7 +26,7 @@ class adm_wrcSource extends admin_ctrl
     
     protected function run()
     {
-        $page = $this->input('page');
+        $page = $this->input('p');
         $pagesize = $this->input('pagesize' , 'g' , 10);
         $this->model->std_listByPage($page , $pagesize);
         $data['rows'] = $this->model->get_data();

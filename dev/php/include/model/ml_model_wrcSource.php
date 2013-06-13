@@ -32,7 +32,7 @@ class ml_model_wrcSource extends Lib_datamodel_db
         if(!$this->init_db($uid , self::DB_SLAVE))
             return false;
         $where = 'status = '.self::STATUS_NORMAL;
-        return $this->fetch_count();
+        return $this->fetch_count($where);
     }
 
     function std_getRowById($id)
@@ -81,7 +81,7 @@ class ml_model_wrcSource extends Lib_datamodel_db
 
         $page = $page <1 ? 1 : $page;
         $start = ($page-1)*$pagesize;
-        $sql = 'select * from '.$this->table.' where spider_type='.$spider_time.' and status='.self::STATUS_NORMAL.' order by id desc limit '.$start.','.$pagesize;
+        $sql = 'select * from '.$this->table.' where spider_time='.$spider_time.' and status='.self::STATUS_NORMAL.' order by id desc limit '.$start.','.$pagesize;
         return $this->fetch($sql);
     }
 }

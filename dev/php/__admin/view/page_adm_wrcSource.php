@@ -66,6 +66,7 @@
 				<td><?php ml_tool_admin_view::echoline($data['_dataDefine'] , $key , $row[$key]); ?></td>
 				<?php } ?>
 				<td>
+					<a href="adm_wrcArticle.php?srcId=<?php echo $row['id'] ?>">文章列表</a>
 					<a href="?dtdfn=<?php echo $data['_dataDefine'] ?>&page=editForm&id=<?php echo $row['id'] ?>">编辑</a>
 					<a href="javascript:;" onclick="if(window.confirm('xxx')){window.location='?dtdfn=<?php echo $data['_dataDefine'] ?>&api=delById&id=<?php echo $row['id'] ?>'}"><font color="red">删除</font></a>
 				</td>

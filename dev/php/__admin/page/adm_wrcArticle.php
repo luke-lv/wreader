@@ -26,10 +26,16 @@ class adm_wrcArticle extends admin_ctrl
     
     protected function run()
     {
-        $page = $this->input('page','g',10);
-        $pagesize = $this->input('pagesize');
-        $this->model->std_listByPage($page , $pagesize);
+        $page = $this->input('p','g',1);
+        $pagesize = $this->input('pagesize' , 'g' , 10);
+        $srcId = $this->input('srcId');
+        if (!$srcId) {
+            $this->_redirect('adm_wrcSource.php');
+        }
+        $this->model->std_listBySrcIdByPage($srcId , $page , $pagesize);
         $data['rows'] = $this->model->get_data();
+        $this->model->std_getCountBySrcId($srcId);
+        $data['total'] = $this->model->get_data();
         $data['pagesize'] = $pagesize;
 
         $this->output($data);
