@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>初识前端快速开发工具包-bootstrap</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <style>
+      body {
+        padding-top: 60px;
+        padding-bottom: 60px;
+      }
+    </style>
+    <link href="css/bootstrap-responsive.css" rel="stylesheet">
+    <link href="css/code.css" rel="stylesheet">
+  </head>
+
+
+<!-- ################# scroll spy -->
+  <body data-spy="scroll" data-target=".navbar-fixed-bottom">
+
+<!-- ################# 顶部导航 -->
+
+    <div class="navbar navbar-fixed-top navbar-inverse">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="#" id="xxx">初识前端快速开发工具包-bootstrap</a>
+          <div class="nav-collapse pull-right">
+            <ul class="nav">
+              <li><a href="http://twitter.github.com/bootstrap/">官方文档</a></li>
+<!-- ################# 下拉菜单 -->
+              <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:;">联系我 <b class="caret"></b></a>
+                <ul class="dropdown-menu" id="swatch-menu">
+                  <li><a href="#myModal" role="button" data-toggle="modal">我是谁？</a></li>
+                  <li><a href="default"><i class="icon-envelope"></i>shaopu@</a></li>
+                  <li><a href="default"><i class="icon-comment"></i>@小顶</a></li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+<!-- ################# 底部导航 -->
+	  <div class="navbar navbar-fixed-bottom hidden-tablet hidden-phone">
+      <div class="navbar-inner">
+        <div class="container">
+          <div class="nav-collapse">
+            <ul class="nav">
+              <!-- ################# scroll spy -->
+              <li class="active"><a href="#sec_what">What's Bootstrap</a></li>
+              <li><a href="#sec_example">范例</a></li>
+              <li><a href="#sec_html">基本页面代码</a></li>
+              <li><a href="#sec_row">静态栅格系统</a></li>
+              <li><a href="#sec_fluid">流式栅格系统</a></li>
+              <li><a href="#sec_span">列的内嵌</a></li>
+              <li><a href="#sec_respon">响应式布局</a></li>
+              <li><a href="#sec_other">更多？</a></li>
+            </ul>
+          </div>
+          <a href="#overModal" role="button" data-toggle="modal" class="btn pull-right">&gt;&gt;</a>
+        </div>
+      </div>
+    </div>
+
+
+
+<!-- ##################### 页面容器 -->
+<div class="container-fluid">
+
+<div class="well hidden-desktop visible-tablet" style="text-align: center">
+<h1>初识前端快速开发工具包 bootstrap</h1>
+  <h3>产品部 微博相册</h3>
+  <h4>应用开发师:辛少普</h4>
+  <address>
+<strong>泰鹏大厦</strong><br>
+7层 北区 17列-5<br>
+</address>
+</div>
+
+<!-- ##################### 折叠插件 -->
+<div class="accordion" id="accordion2">
+
+
+
+
+
+<div class="accordion-group">
+  <div class="accordion-heading">
+  <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne">
+  <h2>什么是 Bootstrap?</h2>
+  </a>
+  </div>
+<div id="collapseOne" class="accordion-body collapse in">
+<div class="accordion-inner">
+
+
+
+<!-- ##################### 为了让显示集中，我们加入一个子容器 -->
+<div class="container" id="sec_what">
+  <div class="row">
+    <div class="span8">
+      <h3>Bootstrap是Twitter推出的开源前端开发工具包 <!-- ### --><small>ver:2.2.2</small></h3>
+    </div>
+  </div>
+  <div class="row">
+    <div class="span7 offset1">
+      <blockquote>
+        <p>“Bootstrap 是我和 Jacob Thornton 编写的一个前端工具箱，目的是为了帮助设计师和 Web 前端开发人员快速有效地创建一个结构简单、性能优良、页面精致的 Web 应用。它使用了最新的浏览器技术，可以提供精致的网页排版方式以及表单、按钮、表格、网格栅格化、导航等诸多元素。”</p>
+        <small class="pull-right">Mark Otto</small>
+      </blockquote>
+    </div>
+    <div class="span3 offset1">
+      <div class="row-fluid">
+        <div class="span6">
+          <img src="./img/author_2.png"/><br/>
+          Mark Otto<br/>
+          @mto
+        </div>
+        <div class="span6">
+          <img src="./img/author_1.png" style="with:95px" width="95px"/><br/>
+          Jacob Thornton<br/>
+          @fat
+        </div>
+      </div>
+    </div>
+    <!-- ################# clearfix -->
+    <div class="clearfix"></div>
+    <div class="span6">
+      <h3>优势与劣势</h3>
+    </div>
+  </div>
+  <div class="row">
+    <div class="span6 offset1">
+      <div class="row-fluid" style="margin-bottom: 5px;">
+<!-- ################# 好多大按钮 和 ICON -->
+        <div class="span6"><a href="" class="btn btn-danger btn-large btn-block"><i class="icon-ok icon-white"></i><strong>精美的UI</strong></a></div>
+        <div class="span6"><a href="" class="btn btn-danger btn-large btn-block"><i class="icon-ok icon-white"></i><strong>标准化、模块化的设计思路</strong></a></div>
+      </div>
+      <div class="row-fluid" style="margin-bottom: 5px;">
+        <div class="span6"><a href="" class="btn btn-danger btn-large btn-block"><i class="icon-ok icon-white"></i><strong>跨设备、跨浏览器</strong></a></div>
+        <div class="span6"><a href="" class="btn btn-danger btn-large btn-block"><i class="icon-ok icon-white"></i><strong>响应式布局</strong></a></div>
+      </div>
+      <div class="row-fluid" style="margin-bottom: 5px;">
+        <div class="span6"><a href="" class="btn btn-danger btn-large btn-block"><i class="icon-ok icon-white"></i><strong>基于JQUERY的多种插件</strong></a></div>
+        <div class="span6"><a href="" class="btn btn-danger btn-large btn-block"><i class="icon-ok icon-white"></i><strong>基于HTML5及LESS构建</strong></a></div>
+      </div>
+    </div>
+    <div class="span5">
+      <div class="row-fluid" style="margin-bottom: 5px;">
+        <div class="span6"><a href="#" id="weak_btn"  data-triggle="click" class="btn btn-inverse btn-large btn-block" rel="popover" data-placement="bottom" title="有针对IE6的补丁了" data-content="http://ddouble.github.com/bsie/"><i class="icon-remove icon-white"></i><strong>不支持IE6</strong></a></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="span8">
+      <h3>LESS是什么？</h3>
+    </div>
+  </div>
+  <div class="row">
+    <div class="span7 offset1">
+      <blockquote>
+        <p>LESS 将 CSS 赋予了动态语言的特性，如 变量， 继承， 运算， 函数. LESS 既可以在 客户端 上运行 (支持IE 6+, Webkit, Firefox)，也可以借助Node.js或者Rhino在服务端运行。</p>
+        <small class="pull-right"><a href="http://www.lesscss.net/" target="_blank">http://www.lesscss.net/</a></small>
+      </blockquote>
+    </div>
+    <div class="span3 offset1">
+      <img src="./img/less.png"/>
+    </div>
+  </div>
+
+</div>
+
+</div>
+</div>
+</div>
+
+
+
+
+
+
+<div class="accordion-group" id="sec_example">
+  <div class="accordion-heading">
+  <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#sec_slide">
+  <h2>来看些例子</h2>
+  </a>
+  </div>
+<div id="sec_slide" class="accordion-body collapse in">
+<div class="accordion-inner">
+
+<div class="container">
+
+<div class="row">
+  <div class="span10 offset1">
+    <div id="myCarousel" class="carousel slide">
+      <!-- Carousel items -->
+      <div class="carousel-inner" style="height:600px">
+        <div class="item active"><img src="./img/example_0.png" alt=""></div>
+        <div class="item"><img src="./img/example_4.png" alt=""></div>
+        <div class="item"><img src="./img/example_1.png" alt=""></div>
+        <div class="item"><img src="./img/example_2.png" alt=""></div>
+        <div class="item"><img src="./img/example_3.png" alt=""></div>
+        <div class="item"><img src="./img/example_5.png" alt=""></div>
+      </div>
+      <a class="carousel-control left" href="#myCarousel" data-slide="prev">&lsaquo;</a>
+      <a class="carousel-control right" href="#myCarousel" data-slide="next">&rsaquo;</a>
+    </div>
+  </div>
+</div>
+
+</div>
+
+
+</div>
+</div>
+</div>
+
+
+
+
+
+
+
+<div class="accordion-group" id="sec_html">
+  <div class="accordion-heading">
+  <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse2">
+  <h2>我应该从哪开始？<small>基本页面代码</small></h2>
+  </a>
+  </div>
+<div id="collapse2" class="accordion-body collapse in">
+<div class="accordion-inner">
+
+<div class="container">
+  <div class="row">
+    <div class="span12">
+      <h3><em>我如果要用Bootstrap,我都需要些什么？</em></h3>
+    </div>
+  </div>
+  <div class="row">
+    <div class="span7">
+<!-- ################# GOOGLE的代码美化器 -->
+        <pre class="prettyprint linenums">
+<span _target="0" class="sp_htm" style="border: 1px solid #ff0000">  &lt;!DOCTYPE html&gt;</span>
+  &lt;html lang="en"&gt;
+    &lt;head&gt;
+      &lt;meta charset="utf-8"&gt;
+<span _target="1" class="sp_htm" style="border: 1px solid #ff0000;">      &lt;link href="../assets/css/bootstrap.css" rel="stylesheet"&gt;
+      &lt;link href="../assets/css/bootstrap-responsive.css" rel="stylesheet"&gt;</span>
+    &lt;/head&gt;
+
+    &lt;body&gt;
+      &lt;div class="container"&gt;
+        &lt;h1&gt;Hello,world!&lt;/h1&gt;
+      &lt;/div&gt; &lt;!-- /container --&gt;
+<span _target="2" class="sp_htm" style="border: 1px solid #ff0000;">      &lt;script src="../assets/js/jquery.js"&gt;&lt;/script&gt;
+      &lt;script src="../other_js"&gt;&lt;/script&gt;</span>
+    &lt;/body&gt;
+  &lt;/html&gt;
+        </pre>
+    </div>
+    <div class="span5" id="sp_htmCmt">
+        <h5><p class="text-error">使用HTML5标准的文档类型</p></h5>
+        <h5 style="margin-top: 60px;"><p class="text-error">加载Bootstrap样式表</p></h5>
+        <h5 style="margin-top: 150px;"><p class="text-error">根据你的需求加载JS模块</p></h5>
+    </div>
+  </div>
+</div>
+  
+</div>
+</div>
+</div>
+
+
+
+
+<div class="accordion-group" id="sec_row">
+  <div class="accordion-heading">
+  <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse4">
+  <h2>如何搭建页面框架？<small>静态栅格系统</small></h2>
+  </a>
+  </div>
+<div id="collapse4" class="accordion-body collapse in">
+<div class="accordion-inner">
+
+<div class="container">
+
+<div class="row">
+  <div class="span6">
+    <h3>
+      <em>
+      假如我们要搭建一个左窄右宽的页面，应该如何实现？
+      </em>
+    </h3>
+  </div>
+  <div class="span6">
+    <div class="row-fluid">
+      <div class="span4" style="background-color: #efefef;"><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/></div>
+      <div class="span8" style="background-color: #efefef;"><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/></div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="span12">
+    <h3>Bootstrap 提供了940px宽，12列的栅格，使得完成一个页面如同搭积木一样简单快捷。</h3>
+  </div>
+</div>
+<div class="row hidden-phone" style="background-color: #efefef;margin-bottom: 10px">
+  <div class="span1" style="background-color: #bdbdbd"><h3 style="text-align: center;">1</h3></div>
+  <div class="span1" style="background-color: #bdbdbd"><h3 style="text-align: center;">1</h3></div>
+  <div class="span1" style="background-color: #bdbdbd"><h3 style="text-align: center;">1</h3></div>
+  <div class="span1" style="background-color: #bdbdbd"><h3 style="text-align: center;">1</h3></div>
+  <div class="span1" style="background-color: #bdbdbd"><h3 style="text-align: center;">1</h3></div>
+  <div class="span1" style="background-color: #bdbdbd"><h3 style="text-align: center;">1</h3></div>
+  <div class="span1" style="background-color: #bdbdbd"><h3 style="text-align: center;">1</h3></div>
+  <div class="span1" style="background-color: #bdbdbd"><h3 style="text-align: center;">1</h3></div>
+  <div class="span1" style="background-color: #bdbdbd"><h3 style="text-align: center;">1</h3></div>
+  <div class="span1" style="background-color: #bdbdbd"><h3 style="text-align: center;">1</h3></div>
+  <div class="span1" style="background-color: #bdbdbd"><h3 style="text-align: center;">1</h3></div>
+  <div class="span1" style="background-color: #bdbdbd"><h3 style="text-align: center;">1</h3></div>
+</div>
+
+<div class="row hidden-phone" style="background-color: #efefef;margin-bottom: 10px">
+  <div class="span12" style="background-color: #bdbdbd"><h3 style="text-align: center;">12</h3></div>
+</div>
+
+<div class="row hidden-phone" style="background-color: #efefef;margin-bottom: 10px">
+  <div class="span4" style="background-color: #bdbdbd"><h3 style="text-align: center;">4</h3></div>
+  <div class="span8" style="background-color: #bdbdbd"><h3 style="text-align: center;">8</h3></div>
+</div>
+
+<div class="row hidden-phone" style="background-color: #efefef;margin-bottom: 10px">
+  <div class="span2" style="background-color: #bdbdbd"><h3 style="text-align: center;">2</h3></div>
+  <div class="span7" style="background-color: #bdbdbd"><h3 style="text-align: center;">7</h3></div>
+  <div class="span3" style="background-color: #bdbdbd"><h3 style="text-align: center;">3</h3></div>
+</div>
+
+<div class="row hidden-phone" style="background-color: #efefef;margin-bottom: 10px">
+  <div class="span6" style="background-color: #bdbdbd"><h3 style="text-align: center;">6</h3></div>
+  <div class="span6" style="background-color: #bdbdbd"><h3 style="text-align: center;">6</h3></div>
+</div>
+
+<div class="row hidden-phone" style="background-color: #efefef;margin-bottom: 10px">
+  <div class="span2" style="background-color: #bdbdbd"><h3 style="text-align: center;">2</h3></div>
+  <div class="span2 offset8" style="background-color: #bdbdbd"><h3 style="text-align: center;">2</h3></div>
+</div>
+
+<ul class="nav nav-tabs">
+    <li><a href="#grid" data-toggle="tab">什么是栅格?</a></li>
+    <li><a href="#why960" data-toggle="tab">为什么是940px</a></li>
+    <li><a href="http://960.gs/demo.html" target="_blank">来看看实例&gt;&gt;</a></li>
+  </ul>
+   
+  <div class="tab-content">
+    <div class="tab-pane" id="why960">
+      <div class="row-fluid">
+        <div class="span8">
+          <ul>
+            <li><h4>目前主流的显示分辨率依然是1024</h4></li>
+            <li><h4>在IE浏览器下，1024 -（左边框宽度）2px -（右边滚动条的宽度）18px = 1004px</h4><i>好无厘头的数字</i></li>
+            <li><h4>960能够被12、15、16、24整除，得数分别为80、64、60、40，这些数字听着就和谐而且靠谱。因此960更适合使用栅格设计系统进行网页设计。</h4>
+            <li><h4>960px=n列+(n-1)列间隙+20px侧边间隙</h4>
+            </li>
+          </ul>
+        </div>
+        <div class="span4"><img src="./img/1024.png"/></div>
+      </div>
+    </div>
+    <div class="tab-pane active" id="grid">
+      <div class="row-fluid">
+        <div class="span8">
+          <blockquote>
+            <p>栅格设计系统是一种平面设计的方法与风格。运用固定的格子设计版面布局，其风格工整简洁，在二战后大受欢迎，已成为今日出版物设计的主流风格之一。</p>
+            <small class="pull-right"><a href="http://zh.wikipedia.org/w/index.php?title=%E6%A0%85%E6%A0%BC%E8%AE%BE%E8%AE%A1&variant=zh-cn" target="_blank">维基百科</a></small>
+          </blockquote>
+        </div>
+        <div class="span4">
+          <img src="./img/windows8.jpg"/>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+<h4>栅格系统使用起来非常简单</h4>
+<div class="row">
+  <div class="span6">
+    <pre class="prettyprint linenums">
+&lt;div class="row"&gt;
+  &lt;div class="span2"&gt;&lt;/div&gt;
+  &lt;div class="span7"&gt;&lt;/div&gt;
+  &lt;div class="span3"&gt;&lt;/div&gt;
+&lt;/div&gt;</pre>
+  </div>
+  <div class="span6">
+    <pre class="prettyprint linenums">
+&lt;div class="row"&gt;
+  &lt;div class="span2"&gt;&lt;/div&gt;
+  &lt;div class="span2 offset8"&gt;&lt;/div&gt;
+&lt;/div&gt;</pre>
+  </div>
+</div>
+<h4>使用<code>.container</code>作为页面容器</h4>
+<div class="row">
+  </div>
+  <div class="row">
+    <div class="span8">
+        <pre class="prettyprint linenums">
+  &lt;body&gt;
+    &lt;div class="container"&gt;
+      &lt;h1&gt;Hello,world!&lt;/h1&gt;
+    &lt;/div&gt; &lt;!-- /container --&gt;
+  &lt;/body&gt;
+        </pre>
+    </div>
+    <div class="span4">
+      <div style="background-color: #bdbdbd;padding: 5px;padding-left: 30px;padding-right: 30px;">
+        <div style="background-color: #ffffff;text-align: center;"><br/><h4>940px</h4><br/><br/><br/></div>
+      </div>
+    </div>
+  </div>
+
+
+  
+
+
+
+</div>
+
+
+
+</div>
+</div>
+</div>
+
+
+
+
+<div class="accordion-group" id="sec_fluid">
+  <div class="accordion-heading">
+  <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse5">
+  <h2>大显示器显示有问题？<small>流式栅格系统</small></h2>
+  </a>
+  </div>
+<div id="collapse5" class="accordion-body collapse in">
+<div class="accordion-inner">
+
+
+
+<div class="container">
+  <div class="row">
+    <div class="span6">
+    <h3>为了兼容更不同的显示设备，Bootstrap提供了基于百分比的12列布局方式</h3>
+    </div>
+    <div class="span6">
+      <pre class="prettyprint linenums">
+  &lt;div class="row-fluid"&gt;
+    &lt;div class="span3"&gt;&lt;/div&gt;
+    &lt;div class="span5 offset4"&gt;&lt;/div&gt;
+  &lt;/div&gt;
+      </pre>
+  </div>
+  </div>
+</div>
+
+<div class="container-fluid">
+<div class="row-fluid hidden-phone" style="background-color: #efefef;margin-bottom: 10px">
+  <div class="span1" style="background-color: #bdbdbd"><h3 style="text-align: center;">1</h3></div>
+  <div class="span1" style="background-color: #bdbdbd"><h3 style="text-align: center;">1</h3></div>
+  <div class="span1" style="background-color: #bdbdbd"><h3 style="text-align: center;">1</h3></div>
+  <div class="span1" style="background-color: #bdbdbd"><h3 style="text-align: center;">1</h3></div>
+  <div class="span1" style="background-color: #bdbdbd"><h3 style="text-align: center;">1</h3></div>
+  <div class="span1" style="background-color: #bdbdbd"><h3 style="text-align: center;">1</h3></div>
+  <div class="span1" style="background-color: #bdbdbd"><h3 style="text-align: center;">1</h3></div>
+  <div class="span1" style="background-color: #bdbdbd"><h3 style="text-align: center;">1</h3></div>
+  <div class="span1" style="background-color: #bdbdbd"><h3 style="text-align: center;">1</h3></div>
+  <div class="span1" style="background-color: #bdbdbd"><h3 style="text-align: center;">1</h3></div>
+  <div class="span1" style="background-color: #bdbdbd"><h3 style="text-align: center;">1</h3></div>
+  <div class="span1" style="background-color: #bdbdbd"><h3 style="text-align: center;">1</h3></div>
+</div>
+
+<div class="row-fluid hidden-phone" style="background-color: #efefef;margin-bottom: 10px">
+  <div class="span12" style="background-color: #bdbdbd"><h3 style="text-align: center;">12</h3></div>
+</div>
+
+<div class="row-fluid hidden-phone" style="background-color: #efefef;margin-bottom: 10px">
+  <div class="span4" style="background-color: #bdbdbd"><h3 style="text-align: center;">4</h3></div>
+  <div class="span8" style="background-color: #bdbdbd"><h3 style="text-align: center;">8</h3></div>
+</div>
+
+<div class="row-fluid hidden-phone" style="background-color: #efefef;margin-bottom: 10px">
+  <div class="span2" style="background-color: #bdbdbd"><h3 style="text-align: center;">2</h3></div>
+  <div class="span7" style="background-color: #bdbdbd"><h3 style="text-align: center;">7</h3></div>
+  <div class="span3" style="background-color: #bdbdbd"><h3 style="text-align: center;">3</h3></div>
+</div>
+
+<div class="row-fluid hidden-phone" style="background-color: #efefef;margin-bottom: 10px">
+  <div class="span6" style="background-color: #bdbdbd"><h3 style="text-align: center;">6</h3></div>
+  <div class="span6" style="background-color: #bdbdbd"><h3 style="text-align: center;">6</h3></div>
+</div>
+
+<div class="row-fluid hidden-phone" style="background-color: #efefef;margin-bottom: 10px">
+  <div class="span3" style="background-color: #bdbdbd"><h3 style="text-align: center;">3</h3></div>
+  <div class="span5 offset4" style="background-color: #bdbdbd"><h3 style="text-align: center;">5</h3></div>
+</div>
+
+</div>
+
+<div class="container">
+<h4>使用<code>.container-fluid</code>作为页面容器</h4>
+<div class="row">
+    <div class="span8">
+        <pre class="prettyprint linenums">
+  &lt;body&gt;
+    &lt;div class="container-fluid"&gt;
+      &lt;h1&gt;Hello,world!&lt;/h1&gt;
+    &lt;/div&gt; &lt;!-- /container --&gt;
+  &lt;/body&gt;
+        </pre>
+    </div>
+    <div class="span4">
+      <div style="background-color: #bdbdbd;padding: 5px;">
+        <div style="background-color: #ffffff;text-align: center;"><br/><h4>100%</h4><br/><br/><br/></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+</div>
+</div>
+
+
+
+
+<div class="accordion-group" id="sec_span">
+  <div class="accordion-heading">
+  <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse6">
+  <h2>页面细节该怎么做？<small>列的内嵌</small></h2>
+  </a>
+  </div>
+<div id="collapse6" class="accordion-body collapse in">
+<div class="accordion-inner">
+
+<div class="container">
+  <div class="row">
+    <div class="span8">
+      <h3>
+        <em>
+          具体的页面小模块应该怎么实现呢？
+        </em>
+      </h3>
+    </div>
+    <div class="span4">
+      <div class="row-fluid" style="border: 1px solid gray;">
+        <div class="span4" style="padding: 10px;"><img src="./img/0.jpg" style="width:120px;max-width: 1000%"/></div>
+        <div class="span8" style="padding: 10px;">
+          <h5>小顶<a href="#" class="btn btn-mini btn-warning pull-right">加关注</a></h5>
+          <div class="row-fluid">
+            <div class="span3"><a href="">关注<br/>134</a></div>
+            <div class="span3"><a href="">粉丝<br/>342</a></div>
+            <div class="span3"><a href="">微博<br/>525</a></div>
+            <div class="span3"><a href="">表态<br/>156</a></div>
+          </div>
+          <small><em>马上就又是春节了啊,这一年过得好快啊~~~</em></small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h3>在静态栅格系统下，内嵌的<code>span*</code>之和应与容器的<code>span*</code>相等</h3>
+<div class="row" style="background-color: #efefef;margin-bottom: 10px">
+  <div class="span12" style="background-color: #bdbdbd">
+    <h3 style="text-align: center;">12</h3>
+    <div class="row">
+<div class="span6" style="background-color: #787878"><h3 style="text-align: center;">6</h3>
+</div>
+<div class="span6" style="background-color: #787878"><h3 style="text-align: center;">6</h3>
+</div>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="row">
+  <div class="span8">
+      <pre class="prettyprint linenums">
+&lt;div class="row"&gt;
+  &lt;div class="span4"&gt;
+    &lt;div class="row"&gt;
+    &lt;div class="span2"&gt;&lt;/div&gt;
+    &lt;div class="span2"&gt;&lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+      </pre>
+  </div>
+  <div class="span4" style="background-color: #bdbdbd">
+    <div>
+      <h3 style="text-align: center;">4</h3>
+      <div class="row">
+        <div class="span1" style="background-color: #787878"><h3 style="text-align: center;">1</h3></div>
+        <div class="span3" style="background-color: #787878"><h3 style="text-align: center;">3</h3></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h3>在流式栅格系统下，内嵌的栅格数<code>span*</code>则也容器大小无关。</h3>
+<div class="row">
+  <div class="span8">
+      <pre class="prettyprint linenums">
+&lt;div class="row"&gt;
+  &lt;div class="span4"&gt;
+    &lt;div class="row-fluid"&gt;
+    &lt;div class="span6"&gt;&lt;/div&gt;
+    &lt;div class="span6"&gt;&lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+      </pre>
+      <div class="alert alert-success">
+        相比较，流式栅格更适实现局部布局~~
+      </div>
+  </div>
+  <div class="span4" style="background-color: #bdbdbd">
+    <h3 style="text-align: center;">4</h3>
+    <div class="row-fluid">
+      <div class="span4" style="background-color: #787878"><h3 style="text-align: center;">4</h3></div>
+      <div class="span8" style="background-color: #787878"><h3 style="text-align: center;">8</h3></div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="span8">
+      <pre class="prettyprint linenums">
+&lt;div class="span4"&gt;
+  &lt;div class="row-fluid" style="border: 1px solid gray;"&gt;
+    &lt;div class="span4" style="padding: 10px;"&gt;&lt;img src="./img/0.jpg"/&gt;&lt;/div&gt;
+    &lt;div class="span8" style="padding: 10px;"&gt;
+	  &lt;h6&gt;小顶&lt;a href="#" class="btn btn-mini btn-warning pull-right"&gt;加关注&lt;/a&gt;&lt;/h6&gt;
+	  &lt;div class="row-fluid"&gt;
+	    &lt;div class="span3"&gt;&lt;a href=""&gt;关注&lt;br/&gt;134&lt;/a&gt;&lt;/div&gt;
+	    &lt;div class="span3"&gt;&lt;a href=""&gt;粉丝&lt;br/&gt;342&lt;/a&gt;&lt;/div&gt;
+	    &lt;div class="span3"&gt;&lt;a href=""&gt;微博&lt;br/&gt;525&lt;/a&gt;&lt;/div&gt;
+	    &lt;div class="span3"&gt;&lt;a href=""&gt;表态&lt;br/&gt;156&lt;/a&gt;&lt;/div&gt;
+	  &lt;/div&gt;
+	  &lt;small&gt;&lt;em&gt;马上春节了啊~~~&lt;/em&gt;&lt;/small&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+      </pre>
+  </div>
+  <div class="span4">
+	  <div class="row-fluid" style="border: 1px solid gray;">
+        <div class="span4" style="padding: 10px;"><img src="./img/0.jpg" style="width:120px;max-width: 1000%"/></div>
+        <div class="span8" style="padding: 10px;">
+          <h5>小顶<a href="#" class="btn btn-mini btn-warning pull-right">加关注</a></h5>
+          <div class="row-fluid">
+            <div class="span3"><a href="">关注<br/>134</a></div>
+            <div class="span3"><a href="">粉丝<br/>342</a></div>
+            <div class="span3"><a href="">微博<br/>525</a></div>
+            <div class="span3"><a href="">表态<br/>156</a></div>
+          </div>
+          <small><em>马上就又是春节了啊,这一年过得好快啊~~~</em></small>
+        </div>
+      </div>
+    <h3><em>还算看得过去吧~~:P</em></h3>
+  </div>
+</div>
+
+</div>
+
+</div>
+</div>
+</div>
+
+
+
+
+
+
+
+<div class="accordion-group" id="sec_respon">
+  <div class="accordion-heading">
+  <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse8">
+  <h2>应对移动互联网时代  <small>响应式布局</small></h2>
+  </a>
+  </div>
+<div id="collapse8" class="accordion-body collapse in">
+<div class="accordion-inner">
+
+
+<div class="container">
+
+<div class="row">
+  <div class="span6">
+    <h3><em>老板说，要让他能用平板和手机也访问 T_T</em></h3>
+  </div>
+  <div class="span6">
+    <img src="./img/diff.png" style="margin-bottom: 10px;">
+  </div>
+</div>
+<div class="row">
+  <div class="span6">
+    <h3>页面布局可以根据实际显示尺寸自动进行动态调节，可以保存在不同情况下均能正常显示。</h3>
+  </div>
+  <div class="span6">
+    <br/>
+    <ul>
+    <li><a href="http://www.orealys.com/" target="_blank">www.orealys.com/ <span class="label label-warning">这个好赞！！</span></a></li>
+    <li><a href="http://www.greatfridays.com/" target="_blank">www.greatfridays.com/</a></li>
+    </ul>
+  </div>
+</div>
+
+<div class="row">
+   <div class="span3">
+    <h3>怎么用？</h3>
+  </div>
+  <div class="span9">
+      <pre class="prettyprint linenums">
+&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+  &lt;head&gt;
+    &lt;meta charset="utf-8"&gt;
+<span _target="1" class="sp_htm" style="border: 1px solid #ff0000;">    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</span>
+    &lt;link href="../assets/css/bootstrap.css" rel="stylesheet"&gt;
+<span _target="1" class="sp_htm" style="border: 1px solid #ff0000;">    &lt;link href="../assets/css/bootstrap-responsive.css" rel="stylesheet"&gt;</span>
+  &lt;/head&gt;
+      </pre>
+  </div>
+</div>
+<div class="row">
+   <div class="span3">
+    <h3>对不同的设备如何支持？</h3>
+  </div>
+  <div class="span9">
+
+<!-- ################# 表格 -->
+      <table class="table table-bordered table-striped">
+        <thead>
+          <tr>
+            <th>类</th>
+            <th>手机 <small>&lt;=480px</small></th>
+            <th>平板 <small>&lt;=767px</small></th>
+            <th>桌面 <small>&gt;=768px</small></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th><code>.visible-phone</code></th>
+            <td class="is-visible">显示</td>
+            <td class="is-hidden">隐藏</td>
+            <td class="is-hidden">隐藏</td>
+          </tr>
+          <tr>
+            <th><code>.visible-tablet</code></th>
+            <td class="is-hidden">隐藏</td>
+            <td class="is-visible">显示</td>
+            <td class="is-hidden">隐藏</td>
+          </tr>
+          <tr>
+            <th><code>.visible-desktop</code></th>
+            <td class="is-hidden">隐藏</td>
+            <td class="is-hidden">隐藏</td>
+            <td class="is-visible">显示</td>
+          </tr>
+          <tr>
+            <th><code>.hidden-phone</code></th>
+            <td class="is-hidden">隐藏</td>
+            <td class="is-visible">显示</td>
+            <td class="is-visible">显示</td>
+          </tr>
+          <tr>
+            <th><code>.hidden-tablet</code></th>
+            <td class="is-visible">显示</td>
+            <td class="is-hidden">隐藏</td>
+            <td class="is-visible">显示</td>
+          </tr>
+          <tr>
+            <th><code>.hidden-desktop</code></th>
+            <td class="is-visible">显示</td>
+            <td class="is-visible">显示</td>
+            <td class="is-hidden">隐藏</td>
+          </tr>
+        </tbody>
+      </table>
+  </div>
+</div>
+
+</div>
+
+</div>
+</div>
+</div>
+
+
+<div class="accordion-group" id="sec_other">
+  <div class="accordion-heading">
+  <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse9">
+  <h2>这样就OK了？不，你还能做的更好！</h2>
+  </a>
+  </div>
+<div id="collapse9" class="accordion-body collapse in">
+<div class="accordion-inner">
+
+<div class="container">
+
+<div class="row">
+  <div class="span12">
+    <h3>Bootstrap 还提供了丰富的预定义样式，它能帮助快速的搭建一套漂亮、规范的页面</h3>
+
+  </div>
+</div>
+<div class="row">
+  <div class="span12">
+    <table class="table table-bordered">
+      <thead>
+        <th colspan="3" style="text-align: center;">这是一套表格</th>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="text-align: center;height:100px;vertical-align: middle;">
+            <a href="" class="btn btn-large btn-warning tip-btn" rel="tooltip" data-placement="top" title="Tooltip on top">&nbsp;&nbsp;按&nbsp;&nbsp;钮&nbsp;&nbsp;</a>&nbsp;&nbsp;
+            <a href="" class="btn btn-primary tip-btn" rel="tooltip" data-placement="bottom" title="Tooltip on top">&nbsp;&nbsp;按&nbsp;&nbsp;钮&nbsp;&nbsp;</a>&nbsp;&nbsp;
+            <a href="" class="btn btn-small btn-success tip-btn" rel="tooltip" data-placement="left" title="Tooltip on top">&nbsp;&nbsp;按&nbsp;&nbsp;钮&nbsp;&nbsp;</a>&nbsp;&nbsp;
+            <a href="" class="btn btn-mini btn-info tip-btn" rel="tooltip" data-placement="right" title="Tooltip on top">&nbsp;&nbsp;按&nbsp;&nbsp;钮&nbsp;&nbsp;</a>
+          </td>
+          <td style="text-align: center;height:100px;vertical-align: middle;">
+            <div class="btn-group">
+              <a href="" class="btn">按钮1</a>
+              <a href="" class="btn">按钮2</a>
+              <a href="" class="btn">按钮组</a>
+              <a href="" class="btn"><b class="caret"></b></a>
+            </div>
+          </td>
+          <td style="text-align: center;height:100px;vertical-align: middle;">
+            <div class="label label-info">标签</div>
+            <div class="label label-error">标签</div>
+            <span class="badge">标号</span>
+            <span class="badge badge-success">标号</span>
+          </td>
+        </tr>
+        <tr>
+          <td style="text-align: center;height:100px;vertical-align: middle;">
+            <div class="alert" style="margin-bottom: 10px;">
+              <button type="button" class="close" data-dismiss="alert">&times;</button>
+              <strong>警告!</strong> 哪出事了？
+            </div>
+            <div class="alert alert-success">
+              <button type="button" class="close" data-dismiss="alert">&times;</button>
+              <strong>O了!</strong> 原来没事~~
+            </div>
+          </td>
+          <td style="text-align: center;height:100px;vertical-align: middle;">
+            <img src="http://tp3.sinaimg.cn/1315648622/180/5641007290/0" class="img-circle" style="width:120px;">
+          </td>
+          <td style="text-align: center;height:100px;vertical-align: middle;">
+            <i class="icon-signal"></i>
+            <i class="icon-remove"></i>
+            <i class="icon-search"></i>
+            <i class="icon-user"></i>
+          </td>
+        </tr>
+        <tr class="info">
+          <td style="text-align: center;height:100px;vertical-align: middle;">
+            <form class="form-inline">
+            <input type="text" class="input-small" placeholder="Email">
+            <input type="password" class="input-small" placeholder="Password">
+            <label class="checkbox">
+            <input type="checkbox"> Remember me
+            </label>
+            <button type="submit" class="btn">Sign in</button>
+            </form>
+          </td>
+          <td style="text-align: center;height:100px;vertical-align: middle;">
+            <form class="form-search">
+              <div class="input-append">
+                <input type="text" class="span2 search-query">
+                <button type="submit" class="btn">搜索</button>
+              </div>
+            </form>
+          </td>
+          <td style="text-align: center;height:100px;vertical-align: middle;">
+            <form class="form-search">
+              <div class="input-prepend">
+                <span class="add-on">@</span>
+                <input class="span2" id="prependedInput" type="text" placeholder="谁？" data-provide="typeahead" data-items="4" data-source='["Alabama","Alaska","Arizona","Arkansas","California","Colorado","Connecticut","Delaware","Florida","Georgia","Hawaii","Idaho","Illinois","Indiana","Iowa","Kansas","Kentucky","Louisiana","Maine","Maryland","Massachusetts","Michigan","Minnesota","Mississippi","Missouri","Montana","Nebraska","Nevada","New Hampshire","New Jersey","New Mexico","New York","North Dakota","North Carolina","Ohio","Oklahoma","Oregon","Pennsylvania","Rhode Island","South Carolina","South Dakota","Tennessee","Texas","Utah","Vermont","Virginia","Washington","West Virginia","Wisconsin","Wyoming"]'>
+              </div>
+            </form>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="row">
+  <div class="span12">
+    <h3>为配合页面交互，Bootstrap还提供了若干种方便好用的JQUERY插件</h3>
+  </div>
+  <div class="clearfix"></div>
+  <div class="span4 offset1">
+    <h5>找一找，你见到它们了嘛？</h5>
+  </div>
+  <div class="span7">
+
+    <ul>
+      <li>下拉菜单</li>
+      <li>模态对话框</li>
+      <li>标签页</li>
+      <li>折叠</li>
+      <li>图片轮播</li>
+      <li>弹出提示</li>
+      <li>Tips</li>
+      <li>输入联想</li>
+      <li>滚动侦听</li>
+    </ul>
+  </div>
+</div>
+<div class="row">
+  <div class="span12">
+    <h3>还不满足？看看还有什么资源可以利用</h3>
+  </div>
+  <div class="clearfix"></div>
+  <div class="span11 offset1">
+    <ul>
+      <li><h5>我不会设计，有没有现成的样式可用？<a href="http://bootswatch.com/" target="_blank" class="btn">&gt;&gt;来这看看</a></h5></li>
+      <li><h5>我想自己改改颜色，有办法嘛？？<a href="http://twitter.github.com/bootstrap/customize.html" target="_blank" class="btn">&gt;&gt;试试自定义吧</a></h5></li>
+      <li><h5>我想更快捷的制作~~<a href="http://jetstrap.com/" target="_blank" class="btn">&gt;&gt;jetstrap，可视化的自定义工具</a></h5></li>
+      <li><h5>还有没有更多插件？<a href="http://www.oschina.net/news/35251/twitter-bootstrap-resources" target="_blank" class="btn">&gt;&gt;这里有很多</a></h5></li>
+      <li><h5>我是高手，我想贡献力量~~<a href="http://twitter.github.com/bootstrap/customize.html" target="_blank" class="btn">&gt;&gt;github社区在等着你</a></h5></li>
+    </ul>
+  </div>
+</div>
+</div>
+
+
+</div>
+
+</div>
+</div>
+</div>
+
+
+</div><!-- container -->
+
+<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal-header">
+<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+<h3 id="myModalLabel">内部分享</h3>
+</div>
+<div class="modal-body" style="text-align: center;">
+  <h1>初识前端快速开发工具包 bootstrap</h1>
+  <h3>产品部 微博相册</h3>
+  <h4>应用开发师:辛少普</h4>
+  <address>
+<strong>泰鹏大厦</strong><br>
+7层 北区 17列-5<br>
+</address>
+</div>
+<div class="modal-footer">
+<small class="pull-left">在线查看本讲义：http://gulibaby.com/bootstrap</small>
+<button class="btn" data-dismiss="modal" aria-hidden="true">开始吧！</button>
+</div>
+</div>
+
+<div id="overModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal-header">
+<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+</div>
+<div class="modal-body" style="text-align: center;padding: 100px;">
+  <h1>谢谢！！</h1>
+</div>
+</div>
+
+
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="./js/jquery.js"></script>
+    <script src="./js/bootstrap-transition.js"></script>
+    <script src="./js/bootstrap-alert.js"></script>
+    <script src="./js/bootstrap-modal.js"></script>
+    <script src="./js/bootstrap-dropdown.js"></script>
+    <script src="./js/bootstrap-scrollspy.js"></script>
+    <script src="./js/bootstrap-tab.js"></script>
+    <script src="./js/bootstrap-tooltip.js"></script>
+    <script src="./js/bootstrap-popover.js"></script>
+    <script src="./js/bootstrap-button.js"></script>
+    <script src="./js/bootstrap-collapse.js"></script>
+    <script src="./js/bootstrap-carousel.js"></script>
+    <script src="./js/bootstrap-typeahead.js"></script>
+    <script src="./js/prettify.js"></script>
+	<script>
+$('#navbar').scrollspy();
+$('.carousel').carousel();
+window.prettyPrint && prettyPrint();
+$(".collapse").collapse();
+$('#weak_btn').popover();
+$('.typeahead').typeahead();
+$('.tip-btn').tooltip()
+	</script>
+  </body>
+</html>

@@ -60,6 +60,8 @@ class ml_controller extends ml_controller_base
         '$notice' => ''
         );
     protected $_option = array(); //接收参数的集合
+    private $_tpl_dir;
+    private $_uri_dir;
 
     /**
      * @var object session对象单例
@@ -125,7 +127,7 @@ class ml_controller extends ml_controller_base
  */
         //投放微博用户访问路径
         $this->_wb_visit_log();
-
+        $this->init();
         $this->initParam();
         $this->checkParam();
         $this->main();
@@ -242,7 +244,9 @@ class ml_controller extends ml_controller_base
         $this->__isself = true;
          
         $aPath = Tool_pathParser::parse($tpl_name , '::');
-        $tpl_path = $aPath['path'].'/tpl_'.$aPath['filename'].'.php';
+
+        $tpl_path = $this->_tpl_dir . $aPath['path'].'tpl_'.$aPath['filename'].'.phtml';
+
         if(is_array($data)) extract($data);
         $this->set_scope_var('$site_root_url', 'http://'.$_SERVER['HTTP_HOST']);
         if($this->__visitor['uid'])
@@ -279,20 +283,16 @@ var scope = '.$scope.'
         if(count($this->_meta_description)>0)
             $meta['description'] = implode(',' , array_unique($this->_meta_description));
 
-        $this->add_page_nav('classes', ml_tool_getdata::lbJsonData('class'));
-        $this->add_page_nav('catelog', ml_factory::load_standard_conf('catelog'));
+        
+
         if(count($this->_nav)>0)
             $nav = $this->_nav;
         //输出禁用缓存HEADER
         ml_tool_httpheader::no_cache();
         $this->_over();
-        include_once(SERVER_ROOT_PATH.'/view/'.$tpl_path);
-        if ($this->_needWBrsync) {
-            $sd = session_id();
-            //$sd = Tool_encrypt::stingCode($sd.'cc', 'E');
-            include_once(SERVER_ROOT_PATH.'/view/wbrsync/_tpl_wbrsync.php');
-        }
+        include_once($tpl_path);
     }
+
     /**
      * 页面重定向
      *
@@ -526,8 +526,14 @@ var scope = '.$scope.'
         $this->_scope['$online'] = $this->__visitor['online'];
     }
 
-
-
+    protected function set_tpl_dir($dir)
+    {
+        $this->_tpl_dir = $dir;
+    }
+    protected function set_uri_dir($dir)
+    {
+        $this->_uri_dir = $dir;
+    }
     /**
      * 获取对象唯一实例
      *

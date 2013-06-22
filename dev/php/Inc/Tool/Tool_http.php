@@ -34,6 +34,7 @@ class Tool_http
         curl_setopt($curl, CURLOPT_TIMEOUT, $timeout);
         curl_setopt($curl, CURLOPT_HEADER,false);
         curl_setopt($curl, CURLOPT_HTTPGET, 1);
+        curl_setopt($curl, CURLOPT_FOLLOWLOCATION,1);
     
         $start = self::_microtime();
         $rs =curl_exec($curl);

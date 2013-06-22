@@ -238,6 +238,14 @@ class ml_model_admin_dbCommon extends Lib_datamodel_db
         $sql = 'select * from '.self::TB_TAGS.' where `tag` in ('.$sTag.')';
         return $this->fetch($sql);
     }
+    public function tags_get_by_tag_like($tag)
+    {
+        if(!$this->init_db())
+            return false;
+
+        $sql = 'select * from '.self::TB_TAGS.' where `tag` like "%'.$tag.'%"';
+        return $this->fetch($sql);
+    }
 
     public function tags_del($id)
     {

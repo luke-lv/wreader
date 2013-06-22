@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>初识前端快速开发工具包-bootstrap</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <style>
+      body {
+        padding-top: 40px;
+        padding-bottom: 40px;
+      }
+    </style>
+    <!--<link href="css/bootstrap-responsive.css" rel="stylesheet">-->
+    <link href="css/code.css" rel="stylesheet">
+  </head>
+
+
+<!-- ################# scroll spy -->
+  <body>
+
+<!-- ################# 顶部导航 -->
+    <div class="navbar navbar-fixed-top navbar-inverse">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <div class="row-fluid">
+            <div class="span2">
+              <a href="#" class="btn">x</a>
+            </div>
+            <div class="span8 text-warning">
+              <a href="#" class="text-success" data-toggle="dropdown"><h4 style="text-align: center;">成长阅读<b class="caret"></b></h4></a>
+                <ul class="dropdown-menu" id="swatch-menu">
+                  <li><a href="default"><i class="icon-envelope"></i>shaopu@</a></li>
+                  <li><a href="default"><i class="icon-comment"></i>@小顶</a></li>
+                </ul>
+            </div>
+            <div class="span2">
+              <a href="#" class="btn pull-right" data-toggle="dropdown"><i class="icon-home"></i></a>
+                <ul class="dropdown-menu pull-right" id="swatch-menu">
+                  <li><a href="#myModal" role="button" data-toggle="modal">我是谁？</a></li>
+                  <li><a href="default"><i class="icon-envelope"></i>shaopu@</a></li>
+                  <li><a href="default"><i class="icon-comment"></i>@小顶</a></li>
+                </ul>
+            </div>
+          </div>
+
+
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <table class="table table-striped">
+        <tbody>
+          <tr>
+            <td>
+              <h3>这是标题啊啊</h3>
+              <div class="row-fluid">
+                <div class="span4"> 35分钟前 来自 <a href="#">虎嗅</a></div>
+                <div class="span4"></div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <h3>这是标题啊啊</h3>
+              <div class="row-fluid">
+                <div class="span4"> 35分钟前 来自 <a href="#">虎嗅</a></div>
+                <div class="span4"></div>
+              </div>
+            </td>
+          </tr><tr>
+            <td>
+              <h3>这是标题啊啊</h3>
+              <div class="row-fluid">
+                <div class="span4"> 35分钟前 来自 <a href="#">虎嗅</a></div>
+                <div class="span4"></div>
+              </div>
+            </td>
+          </tr><tr>
+            <td>
+              <h3>这是标题啊啊</h3>
+              <div class="row-fluid">
+                <div class="span4"> 35分钟前 来自 <a href="#">虎嗅</a></div>
+                <div class="span4"></div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+    </div>
+
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="./js/jquery.js"></script>
+    <script src="./js/bootstrap-transition.js"></script>
+    <script src="./js/bootstrap-alert.js"></script>
+    <script src="./js/bootstrap-modal.js"></script>
+    <script src="./js/bootstrap-dropdown.js"></script>
+    <script src="./js/bootstrap-scrollspy.js"></script>
+    <script src="./js/bootstrap-tab.js"></script>
+    <script src="./js/bootstrap-tooltip.js"></script>
+    <script src="./js/bootstrap-popover.js"></script>
+    <script src="./js/bootstrap-button.js"></script>
+    <script src="./js/bootstrap-collapse.js"></script>
+    <script src="./js/bootstrap-carousel.js"></script>
+    <script src="./js/bootstrap-typeahead.js"></script>
+    <script src="./js/prettify.js"></script>
+	<script>
+$('#navbar').scrollspy();
+$('.carousel').carousel();
+window.prettyPrint && prettyPrint();
+$(".collapse").collapse();
+$('#weak_btn').popover();
+$('.typeahead').typeahead();
+$('.tip-btn').tooltip()
+	</script>
+  </body>
+</html>

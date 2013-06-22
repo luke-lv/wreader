@@ -24,8 +24,24 @@ class _cron_tag_build_xdb
 		}
 		fclose($fp);
 
-		$cmd = 'php '.SERVER_ROOT_PATH.'/__admin/other/scws/make_xdb_file.php '.SERVER_ROOT_PATH.'/xx.xdb ./_queue/contentbase/tags_build.tmp';
-		echo $cmd;
+		$dest_tmp = SERVER_ROOT_PATH.'/include/config/scws/wreader_tmp.xdb';
+		$dest = SERVER_ROOT_PATH.'/include/config/scws/wreader.xdb';
+		unlink($dest_tmp);
+
+		$cmd = 'php '.SERVER_ROOT_PATH.'/__admin/other/scws/make_xdb_file.php '. $dest_tmp . ' '.SERVER_ROOT_PATH.'/_queue/contentbase/tags_build.tmp';
+		echo $cmd."\n";
+		$rs = Tool_os::run_cmd($cmd);
+		if(trim(substr($rs, -6)) == 'DONE!')
+		{
+
+			unlink($dest);
+			$rs = rename($dest_tmp, $dest);
+			if($rs)
+				echo 'build ok!';
+		}
+		die('x');
+
+
 	}
 
 }

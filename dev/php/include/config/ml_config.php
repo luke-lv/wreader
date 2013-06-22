@@ -190,6 +190,8 @@ $ML_TAG_SUBTYPE = array(
 );
 
 
+
+
 define('ML_IMG_DIR_ROOT' , SYSDEF_DATA_ROOT_PATH.'ml_image');
 define('ML_IMG_DIR_BIGPIC' , ML_IMG_DIR_ROOT.'/bigpic');
 define('ML_IMG_DIR_SMALLPIC' , ML_IMG_DIR_ROOT.'/smallpic');

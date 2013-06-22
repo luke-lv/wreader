@@ -67,18 +67,29 @@ class _cron_spider_base
 					if($srcRow['spider_type'] == ML_SPIDERTYPE_RSSHTML)
 						$articleRow['description'] = $this->_fetchByHtml($articleRow['link']);
 					
+					
 					$seg = ml_function_lib::segmentChinese($articleRow['title']);
 					$rs = $this->oAdminCommon->tags_get_by_tag($seg);
 					$tags = $this->oAdminCommon->get_data();
 
 					$tags = Tool_array::format_2d_array($tags, 'tag' , Tool_array::FORMAT_VALUE_ONLY );
 					
+					/*
+					$seg = ml_function_lib::segmentChinese($articleRow['description']);
+					$a = (array_count_values($seg));
+					asort($a);
+					var_dump($a);
+					die;
+					 */
 
 					if(count($tags) > 0)
 					{
 						$articleRow['tags'] = $tags;
 
 					}
+
+					//
+					$articleRow = $this->_formatBySource($srcRow['codeSign'] , $articleRow);
 
 					$this->_write_in_article($srcRow['id'],$articleRow);
 					
@@ -112,7 +123,7 @@ class _cron_spider_base
 			 */
 
 			
-			 ml_tool_rssContent::parseHtml2Content($html);
+			 return ml_tool_rssContent::parseHtml2Content($html);
 
 		}
 		return false;
@@ -128,7 +139,18 @@ class _cron_spider_base
 		return;
 
 	}
+	
+	private function _formatBySource($srcCodesign , $articleRow)
+	{
+		$classname = 'ml_tool_contentFormater_src'.ucfirst($srcCodesign);
+		if (class_exists($classname)) {
 
+			if(method_exists($classname, 'formatLink'))
+				$articleRow['link'] = $classname::formatLink($articleRow['link']);
+
+		}
+		return $articleRow;
+	}
 	//判断文章是否已经抓取
 	private function _is_article_fetched($srcId , $title , $link)
 	{
@@ -144,6 +166,7 @@ class _cron_spider_base
 
 	private function _write_in_article($srcId , $articleRow)
 	{
+		var_dump($articleRow['link']);
 		$data = array(
 			'title' => $articleRow['title'],
 			'link' => $articleRow['link'],

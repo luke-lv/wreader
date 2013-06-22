@@ -7,13 +7,14 @@ class adm_wrcArticle extends admin_ctrl
 {
     private $dataDefine;
     private $model;
+    private $modelContent;
 
     public function _construct()
     {
         
         $this->dataDefine = 'wrcArticle';
         $this->model = new ml_model_wrcArticle($this->dataDefine);
-
+        $this->modelContent = new ml_model_wrcARticleContent();
         //
     }
     
@@ -49,6 +50,17 @@ class adm_wrcArticle extends admin_ctrl
         $id = $this->input('id');
         $this->model->std_getRowById($id);
         $data['row'] = $this->model->get_data();
+        $this->output($data);
+    }
+    protected function page_articleShow()
+    {
+        $id = $this->input('id');
+        $this->model->std_getRowById($id);
+        $data['articleRow'] = $this->model->get_data();
+        $this->modelContent->std_getRowById($id);
+
+        $data['articleRow'] = array_merge($data['articleRow'] , $this->modelContent->get_data());
+        
         $this->output($data);
     }
     

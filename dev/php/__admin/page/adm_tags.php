@@ -16,7 +16,14 @@ class adm_tags extends admin_ctrl
         if($tag)
         {
             $aTag = explode(',', $tag);
-            $oAdmComm->tags_get_by_tag($aTag);
+            if(count($aTag) == 1)
+            {
+                $oAdmComm->tags_get_by_tag_like($aTag[0]);
+            }
+            else
+            {
+                $oAdmComm->tags_get_by_tag($aTag);
+            }
             $data['tags'] = $oAdmComm->get_data();
             $type = $data['tags'][0]['type'];
         }

@@ -8,6 +8,10 @@
 				'cn'=>'网站名称',
 				'type' => 's',
 				'length'=>30),
+			'codeSign' => array(
+				'cn'=>'编程标识',
+				'type' => 's',
+				'length'=>30),
 			'rss' => array(
 				'cn'=>'rss',
 				'type' => 's',

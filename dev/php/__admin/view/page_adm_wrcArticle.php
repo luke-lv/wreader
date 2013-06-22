@@ -50,7 +50,6 @@
 	{
 		$dataDefine=ml_factory::load_dataDefine($data['_dataDefine']);
 ?>
-		<a href="?dtdfn=<?php echo $data['_dataDefine']; ?>&page=addForm">新增</a>
 		<table width="98%" border="0" align="center" cellspacing="0" class="adminlist">
 			<tr>
 				<th>#</th>
@@ -68,6 +67,7 @@
 				<td><?php ml_tool_admin_view::echoline($data['_dataDefine'] , 'pub_time' , $row['pub_time']); ?></td>
 				<td><a href="<?php ml_tool_admin_view::echoline($data['_dataDefine'] , 'link' , $row['link']); ?>" target="_blank">链接</a></td>
 				<td>
+					<a href="?dtdfn=<?php echo $data['_dataDefine'] ?>&page=articleShow&id=<?php echo $row['id'] ?>">查看</a>
 					<a href="?dtdfn=<?php echo $data['_dataDefine'] ?>&page=editForm&id=<?php echo $row['id'] ?>">编辑</a>
 					<a href="javascript:;" onclick="if(window.confirm('xxx')){window.location='?dtdfn=<?php echo $data['_dataDefine'] ?>&api=delById&id=<?php echo $row['id'] ?>'}"><font color="red">删除</font></a>
 				</td>
@@ -77,6 +77,19 @@
 				<td colspan="<?php echo count($dataDefine['field'])+2; ?>"><?php echo ml_tool_admin_view::get_page($data['total'] , $data['pagesize'] , $data['page']); ?></td>
 			</tr>
 		</table>
+<?php
+	}
+	function page_articleShow($data)
+	{
+?>
+	<table width="98%" border="0" align="center" cellspacing="0" class="adminlist">
+		<tr>
+			<th><?php echo $data['articleRow']['title']; ?></th>
+		</tr>
+		<tr>
+			<td><?php echo $data['articleRow']['content']; ?></td>
+		</tr>
+	</table>
 <?php
 	}
 ?>
