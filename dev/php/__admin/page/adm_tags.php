@@ -12,7 +12,7 @@ class adm_tags extends admin_ctrl
         $type = $this->input('type','all',0);
         $tag = $this->input('tag','all',0);
 
-            $oAdmComm = new ml_model_admin_dbCommon();
+            $oAdmComm = new ml_model_admin_dbTag();
         if($tag)
         {
             $aTag = explode(',', $tag);
@@ -38,6 +38,13 @@ class adm_tags extends admin_ctrl
             $data['page'] = $page;
         }
 
+        $oAdmComm->core_tags_get_all($type);
+        $aCoreTag = Tool_array::format_2d_array($oAdmComm->get_data() , 'tag' , Tool_array::FORMAT_ID2VALUE);
+        $aCoreTag[0] = '无';
+        ksort($aCoreTag);
+        $data['coreTag'] = $aCoreTag;
+
+
         if($type== ML_TAGTYPE_COLOR)
         {
             global $ML_COLOR;
@@ -49,24 +56,54 @@ class adm_tags extends admin_ctrl
     
     function page_nearHotTag()
     {
-        $oAdmComm = new ml_model_admin_dbGoodsAudit();
-        $oAdmComm->list_goods(ml_model_admin_dbGoodsAudit::AUDITSTATUS_PASS , 1 , 1000);
-        $rows = $oAdmComm->get_data();
+        $oArticle = new ml_model_wrcArticle();
+        $oArticle->getLatestArticle();
+        $rows = $oArticle->get_data();
         $aAllTag = array();
         foreach ($rows as $key => $value) {
-            $aAllTag = array_merge($aAllTag, explode(',', $value['gd_tag']));
+            $aAllTag = array_merge($aAllTag, $value['tags']);
 
         }
         
         $aAllTag = array_count_values($aAllTag);
         arsort($aAllTag);
 
+
         $oAdmComm = new ml_model_admin_dbCommon();
         $oAdmComm->tags_get_by_tag(array_keys($aAllTag));
         $data['tags'] = $oAdmComm->get_data();
 
+        $oAdmComm->core_tags_get_all();
+        $aCoreTag = Tool_array::format_2d_array($oAdmComm->get_data() , 'tag' , Tool_array::FORMAT_ID2VALUE);
+        $aCoreTag[0] = '无';
+        $data['coreTag'] = $aCoreTag;
+        
+
         $this->output($data , 'index');
     }
+    function page_redisTagStat()
+    {
+        $oRdsCB = new ml_model_rdsContentBase();
+        $aTag2cnt = $oRdsCB->listAllTags();
+        
+        if(empty($aTag2cnt))
+            die('none1');
+
+        $oTag = new ml_model_admin_dbTag();
+
+        $oTag->tags_get_by_taghash(array_keys($aTag2cnt));
+        $aTags = $oTag->get_data();
+        if(empty($aTags))
+            die('none2');
+
+        foreach ($aTags as $key => &$value) {
+            $value['article_cnt'] = (int)$aTag2cnt[$value['tag_hash']];
+        }
+        $data['tags'] = $aTags;
+        
+        return $this->output($data);
+    }
+
 
     function api_batch_add()
     {
@@ -75,9 +112,10 @@ class adm_tags extends admin_ctrl
             $value = trim($value);
         }
         $type = $this->input('type');
+        $core_tagid = $this->input('core_tagid');
         $oAdmComm = new ml_model_admin_dbCommon();
         
-        $oAdmComm->tags_batch_add($type , $tags);
+        $oAdmComm->tags_batch_add($type , $core_tagid, $tags);
         $this->back();
     }
 
@@ -87,6 +125,24 @@ class adm_tags extends admin_ctrl
         $type = $this->input('type');
         $oAdmComm = new ml_model_admin_dbCommon();
         $oAdmComm->tags_change_type_by_id($type , $id);
+
+        $this->back('#id'.$id);
+    }
+    function api_changeCoreTagidById()
+    {
+        $id = $this->input('id');
+        $coreTagid = $this->input('coreTagid');
+        $oAdmComm = new ml_model_admin_dbCommon();
+        $oAdmComm->tags_change_core_tagid_by_id($coreTagid , $id);
+
+        $this->back('#id'.$id);
+    }
+    function api_changeIsCoreById()
+    {
+        $id = $this->input('id');
+        $v = $this->input('value');
+        $oAdmComm = new ml_model_admin_dbCommon();
+        $oAdmComm->tags_change_is_core_by_id($v , $id);
 
         $this->back('#id'.$id);
     }

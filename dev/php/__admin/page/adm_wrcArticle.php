@@ -33,7 +33,7 @@ class adm_wrcArticle extends admin_ctrl
         if (!$srcId) {
             $this->_redirect('adm_wrcSource.php');
         }
-        $this->model->std_listBySrcIdByPage($srcId , $page , $pagesize);
+        $this->model->std_listBySrcIdByPage($srcId ,0, $page , $pagesize);
         $data['rows'] = $this->model->get_data();
         $this->model->std_getCountBySrcId($srcId);
         $data['total'] = $this->model->get_data();
@@ -57,6 +57,7 @@ class adm_wrcArticle extends admin_ctrl
         $id = $this->input('id');
         $this->model->std_getRowById($id);
         $data['articleRow'] = $this->model->get_data();
+        
         $this->modelContent->std_getRowById($id);
 
         $data['articleRow'] = array_merge($data['articleRow'] , $this->modelContent->get_data());

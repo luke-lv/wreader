@@ -63,7 +63,7 @@
 			<tr>
 				<td><?php echo $row['id']; ?></td>
 				<td><?php ml_tool_admin_view::echoline($data['_dataDefine'] , 'title' , $row['title']); ?></td>
-				<td><?php ml_tool_admin_view::echoline($data['_dataDefine'] , 'tags' , $row['tags']); ?></td>
+				<td><?php ml_tool_admin_view::echoline($data['_dataDefine'] , 'tags' , implode(' ' , $row['tags'])); ?></td>
 				<td><?php ml_tool_admin_view::echoline($data['_dataDefine'] , 'pub_time' , $row['pub_time']); ?></td>
 				<td><a href="<?php ml_tool_admin_view::echoline($data['_dataDefine'] , 'link' , $row['link']); ?>" target="_blank">链接</a></td>
 				<td>

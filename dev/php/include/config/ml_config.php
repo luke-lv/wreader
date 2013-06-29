@@ -174,6 +174,7 @@ define('ML_TAGTYPE_BIZ', 5);
 define('ML_TAGTYPE_BRAND', 6);
 define('ML_TAGTYPE_PEOPLE', 7);
 define('ML_TAGTYPE_BOOK', 8);
+define('ML_TAGTYPE_MANAGE', 9);
 $ML_TAG_TYPE = array(
     '其他' => 0,
     '技术' => 1,
@@ -184,6 +185,7 @@ $ML_TAG_TYPE = array(
     '品牌' => 6,
     '人物' => 7,
     '书' => 8,
+    '管理' => 9,
 );
 $ML_TAG_SUBTYPE = array(
     
@@ -206,4 +208,7 @@ define('ML_IMG_TYPE_CROP', 2);
 
 
 define('ML_HTMLBLOCK_DIR' , SYSDEF_PRIVDATA_ROOT_PATH.'/htmlblock');
+
+define('ML_CHARSET_UTF8' , 0);
+define('ML_CHARSET_GBK' , 1);
 ?>

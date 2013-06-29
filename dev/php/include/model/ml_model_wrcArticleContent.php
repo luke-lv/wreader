@@ -19,17 +19,24 @@ class ml_model_wrcArticleContent extends Lib_datamodel_db
         $this->_is_utime = false;
     }
     
+    protected function hash_table($Ym)
+    {
+        return '_'.$Ym;
+    }
+
     function std_getRowById($id)
     {
-        if(!$this->init_db($uid , self::DB_SLAVE))
+        $Ym = $this->_calc_date_by_articleId($id);
+        if(!$this->init_db($Ym , self::DB_SLAVE))
             return false;
-        $sql = 'select * from '.$this->table.' where id='.$id;
+        $sql = 'select * from '.$this->table.' where id="'.$id.'"';
         return $this->fetch_row($sql);
     }
 
     function std_addRow($srcId , $articleId , $data = array())
     {
-        if(!$this->init_db($srcId , self::DB_MASTER))
+        $Ym = $this->_calc_date_by_articleId($articleId);
+        if(!$this->init_db($Ym , self::DB_MASTER))
             return false;
 
         $data['id'] = $articleId;
@@ -37,7 +44,8 @@ class ml_model_wrcArticleContent extends Lib_datamodel_db
     }
     function std_updateRow($id , $data = array())
     {
-        if(!$this->init_db($uid , self::DB_MASTER))
+        $Ym = $this->_calc_date_by_articleId($id);
+        if(!$this->init_db($Ym , self::DB_MASTER))
             return false;
         $dataDefine = ml_factory::load_dataDefine($this->dataDefine);
 
@@ -47,7 +55,8 @@ class ml_model_wrcArticleContent extends Lib_datamodel_db
     }
     function std_delById($id)
     {
-        if(!$this->init_db($uid , self::DB_MASTER))
+        $Ym = $this->_calc_date_by_articleId($id);
+        if(!$this->init_db($Ym , self::DB_MASTER))
             return false;
 
         $where = '`id` = '.$id;
@@ -57,6 +66,10 @@ class ml_model_wrcArticleContent extends Lib_datamodel_db
 
     }
 
-
+    private function _calc_date_by_articleId($article_id)
+    {
+        $date = strtotime(base_convert(substr($article_id , 0 , 5),36,10));
+        return date('Ym' , $date);
+    }
 }
 ?>

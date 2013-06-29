@@ -37,6 +37,10 @@
 				'cn'=>'抓取方式',
 				'type' => 'enum',
 				'enum'=>array(0=>'RSS' , 1=>'RSS+页面抓取' , 2=>'RSS+自定义抓取')),
+			'charset' => array(
+				'cn'=>'编码',
+				'type' => 'enum',
+				'enum'=>array(ML_CHARSET_UTF8=>'utf8' , ML_CHARSET_GBK=>'gbk')),
 		)
 	);
 ?>

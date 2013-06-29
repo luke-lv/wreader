@@ -16,10 +16,42 @@ class ml_model_wrcArticle extends Lib_datamodel_db
         parent::__construct('wrc_article' , $db_config['wrc_article']);
     }
     
-    function std_listBySrcIdByPage($srcId , $page = 1 , $pagesize = 10)
+    protected function hook_after_fetch()
     {
-        if(!$this->init_db($uid , self::DB_SLAVE))
+        if(isset($this->_data[0]['tags']))
+        {
+            foreach ($this->_data as &$row) {
+                $row['tags'] = explode(',', $row['tags']);
+            }
+        }
+        else if(isset($this->_data['tags']))
+        {
+            $this->_data['tags'] = explode(',', $this->_data['tags']);
+        }
+
+    }
+    
+    protected function hook_before_write($array)
+    {
+        $array['tags'] = is_array($array['tags']) ? implode(',', $array['tags']) : '';
+        return $array;
+    }
+
+    
+
+    protected function hash_table($Ym)
+    {
+        return '_'.$Ym;
+    }
+
+
+    function std_listBySrcIdByPage($srcId  , $Ym =0, $page = 1 , $pagesize = 10)
+    {
+        $Ym = $Ym>0 ? $Ym : date('Ym');
+        if(!$this->init_db($Ym , self::DB_SLAVE))
             return false;
+
+
 
         $page = $page <1 ? 1 : $page;
         $start = ($page-1)*$pagesize;
@@ -27,27 +59,33 @@ class ml_model_wrcArticle extends Lib_datamodel_db
         return $this->fetch($sql);
     }
 
-    function std_getCountBySrcId($srcId)
+    function std_getCountBySrcId($srcId , $Ym = 0)
     {
-        if(!$this->init_db($uid , self::DB_SLAVE))
+        $Ym = $Ym>0 ? $Ym : date('Ym');
+        if(!$this->init_db($Ym , self::DB_SLAVE))
             return false;
+        
         $where = 'source_id = '.$srcId.' and status = '.self::STATUS_NORMAL;
+
         return $this->fetch_count($where);
     }
 
     function std_getRowById($id)
     {
-        if(!$this->init_db($uid , self::DB_SLAVE))
+        $Ym = $this->_calc_date_by_articleId($id);
+        if(!$this->init_db($Ym , self::DB_SLAVE))
             return false;
-        $sql = 'select * from '.$this->table.' where id='.$id;
+        $sql = 'select * from '.$this->table.' where id="'.$id.'"';
         return $this->fetch_row($sql);
     }
 
-    function std_addRow($srcId , $data = array())
+    function std_addRow($article_id , $srcId , $data = array())
     {
-        if(!$this->init_db($srcId , self::DB_MASTER))
+        $Ym = $this->_calc_date_by_articleId($article_id);
+        if(!$this->init_db($Ym , self::DB_MASTER))
             return false;
         
+        $data['id'] = $article_id;
         $data['source_id'] = $srcId;
         $data['title_hash'] = $this->_title_hash($data['title']);
 
@@ -56,7 +94,8 @@ class ml_model_wrcArticle extends Lib_datamodel_db
     }
     function std_updateRow($id , $data = array())
     {
-        if(!$this->init_db($uid , self::DB_MASTER))
+        $Ym = $this->_calc_date_by_articleId($id);
+        if(!$this->init_db($Ym , self::DB_MASTER))
             return false;
         $dataDefine = ml_factory::load_dataDefine($this->dataDefine);
 
@@ -66,7 +105,8 @@ class ml_model_wrcArticle extends Lib_datamodel_db
     }
     function std_delById($id)
     {
-        if(!$this->init_db($uid , self::DB_MASTER))
+        $Ym = $this->_calc_date_by_articleId($id);
+        if(!$this->init_db($Ym , self::DB_MASTER))
             return false;
 
         $where = '`id` = '.$id;
@@ -79,26 +119,47 @@ class ml_model_wrcArticle extends Lib_datamodel_db
 
     function countByLink($srcId , $link)
     {
-        if(!$this->init_db($uid , self::DB_SLAVE))
+        $Ym = date('Ym');
+        if(!$this->init_db($Ym , self::DB_SLAVE))
             return false;
         $where = 'source_id = '.$srcId.' and link = "'.$link.'"';
         return $this->fetch_count($where);
     }
     function countByTitle($srcId , $title)
     {
-        if(!$this->init_db($uid , self::DB_SLAVE))
+        $Ym = date('Ym');
+        if(!$this->init_db($Ym , self::DB_SLAVE))
             return false;
         $where = 'source_id = '.$srcId.' and title_hash = "'.$this->_title_hash($title).'"';
         return $this->fetch_count($where);   
     }
 
+    function getLatestArticle($Ym = 0 , $page = 1 , $pagesize=100)
+    {
+        $Ym = $Ym>0 ? $Ym : date('Ym');
+        if(!$this->init_db($Ym , self::DB_SLAVE))
+            return false;
+
+        $sql = 'select * from '.$this->table.' order by _ctime desc';
+        return $this->fetch($sql);
+    }
 
 
-
+    private function _calc_date_by_articleId($article_id)
+    {
+        $date = strtotime(base_convert(substr($article_id , 0 , 5),36,10));
+        return date('Ym' , $date);
+    }
 
     private function _title_hash($title)
     {
         return ml_tool_resid::str_hash($title);
+    }
+    public function hash_article_id($date , $srcId , $title)
+    {
+        return base_convert($date, 10, 36)
+        .str_pad(bin2hex($srcId) , 5,0, STR_PAD_LEFT)
+        .$this->_title_hash($title);
     }
 }
 ?>

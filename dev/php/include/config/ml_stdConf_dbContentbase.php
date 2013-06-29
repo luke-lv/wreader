@@ -49,7 +49,7 @@ return array(
                 'name' => 'wreader_dev',
             )
         ),
-        'tb_n' => 1,
+        'tb_n' => 2,
         'tb_prefix' => 'wrc_article'
     ),
     'wrc_articleContent' => array(
@@ -71,7 +71,7 @@ return array(
                 'name' => 'wreader_dev',
             )
         ),
-        'tb_n' => 1,
+        'tb_n' => 2,
         'tb_prefix' => 'wrc_article_content'
     ),
 );

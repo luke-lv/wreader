@@ -158,14 +158,14 @@ class Lib_datamodel_db extends Lib_datamodel_abstract
             
         //分表
         if($this->_db_config['tb_n'] > 1)
-            $this->table = $this->_db_config['tb_prefix'].Tool_sina::calc_hash_tbl($hash_key , $this->_db_config['tb_n']);
+            $this->table = $this->_db_config['tb_prefix'].$this->hash_table($hash_key);
         else 
             $this->table = $this->_db_config['tb_prefix'];
         return true;
     }
-    protected function hash_table($uid)
+    protected function hash_table($hash_key)
     {
-
+        return Tool_sina::calc_hash_tbl($hash_key , $this->_db_config['tb_n']);;
     }
     protected function switch_fetch_num()
     {

@@ -7,17 +7,12 @@
  */
 
 return array(
-    'meila_cnt' => array(
-        array('host'=>'127.0.0.1' , 'port'=>'6381'),
-    ),
-    'meila_cache' => array(
-        array('host'=>'127.0.0.1' , 'port'=>'6383'),
-    ),
+    
     'meila_queue' => array(
-        array('host'=>'127.0.0.1' , 'port'=>'6380'),
+        array('host'=>'127.0.0.1' , 'port'=>'6379'),
     ),
-    'meila_guang' => array(
-        array('host'=>'127.0.0.1' , 'port'=>'6382'),
+    'meila_contentBase' => array(
+        array('host'=>'127.0.0.1' , 'port'=>'6379'),
     ),
 );
 ?>

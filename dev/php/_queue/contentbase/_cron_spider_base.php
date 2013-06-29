@@ -10,7 +10,7 @@ class _cron_spider_base
 	private $oArticleContent;
 	private $oAdminCommon;
 
-	public function __construct($spidertime)
+	public function set_spider_time($spidertime)
 	{
 		$this->oArticle = new ml_model_wrcArticle();
 		$this->oArticleContent = new ml_model_wrcArticleContent();
@@ -53,11 +53,18 @@ class _cron_spider_base
 				//出错 报错
 			}
 		}
+
 		//对比更新时间与最后抓取时间
 		if(!$this->_is_fetched_by_time($srcRow['id'] , $rssData['items'][0]['pubDate']))
 		{
 			foreach ($rssData['items'] as $articleRow) 
 			{
+				$articleRow['link'] = Tool_string::trimCdata($articleRow['link']);
+				$articleRow['title'] = Tool_string::trimCdata($articleRow['title']);
+				
+				//临时去掉过去的
+				if(strtotime($articleRow['pubDate'])< strtotime('20130601'))
+					continue;
 
 				if(!$this->_is_article_fetched($srcRow['id'] , $articleRow['title'] , $articleRow['link']))
 				{
@@ -67,6 +74,15 @@ class _cron_spider_base
 					if($srcRow['spider_type'] == ML_SPIDERTYPE_RSSHTML)
 						$articleRow['description'] = $this->_fetchByHtml($articleRow['link']);
 					
+					
+
+					//charset
+					if($srcRow['charset'] == ML_CHARSET_GBK)
+					{
+						$articleRow['description'] = Tool_string::gb2utf($articleRow['description']);
+						$articleRow['title'] = Tool_string::gb2utf($articleRow['title']);
+					}
+
 					
 					$seg = ml_function_lib::segmentChinese($articleRow['title']);
 					$rs = $this->oAdminCommon->tags_get_by_tag($seg);
@@ -89,10 +105,12 @@ class _cron_spider_base
 					}
 
 					//
+					
 					$articleRow = $this->_formatBySource($srcRow['codeSign'] , $articleRow);
 
 					$this->_write_in_article($srcRow['id'],$articleRow);
 					
+
 
 				}
 				else
@@ -166,20 +184,30 @@ class _cron_spider_base
 
 	private function _write_in_article($srcId , $articleRow)
 	{
-		var_dump($articleRow['link']);
+		
 		$data = array(
 			'title' => $articleRow['title'],
 			'link' => $articleRow['link'],
-			'tags' => implode(',', $articleRow['tags']),
+			'tags' => $articleRow['tags'],
 			'pub_time' => date('Y-m-d H:i:s' , strtotime($articleRow['pubDate'])),
 		);
-		$this->oArticle->std_addRow($srcId , $data);
-		$article_id = $this->oArticle->insert_id();
+
+		$article_id = $this->oArticle->hash_article_id(date('Ymd' , strtotime($data['pub_time'])) , $srcId , $data['title']);
+		
+		$this->oArticle->std_addRow($article_id , $srcId , $data);
+		
 
 		$data = array(
 			'content' => ml_tool_rssContent::rss2article($articleRow['description']),
 		);
 		$this->oArticleContent->std_addRow($srcId , $article_id , $data);
+
+		//
+		echo $article_id;
+		var_dump($articleRow['tags']);
+		ml_tool_queue_contentBase::add_content2redis($article_id , $articleRow['tags']);
+
+
 		return true;
 	}
 }

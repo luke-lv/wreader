@@ -1,6 +1,7 @@
 <?php
 include('./_cron_spider_base.php');
 
-$o = new _cron_spider_base(ML_SPIDERTIME_1HOUR);
+$o = new _cron_spider_base();
+$o->set_spider_time(ML_SPIDERTIME_1HOUR);
 $o->execute();
 

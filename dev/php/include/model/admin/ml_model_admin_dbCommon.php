@@ -157,7 +157,7 @@ class ml_model_admin_dbCommon extends Lib_datamodel_db
 
         $start = ($page-1)*$pagesize;
         $where = ' where type='.$type;
-        $sql = 'select * from '.self::TB_TAGS.$where.' limit '.$start.','.$pagesize;
+        $sql = 'select * from '.self::TB_TAGS.$where.' order by id desc limit '.$start.','.$pagesize;
         
 
         return $this->fetch($sql);
@@ -176,7 +176,7 @@ class ml_model_admin_dbCommon extends Lib_datamodel_db
     }
 
 
-    public function tags_batch_add($type , $aTags)
+    public function tags_batch_add($type , $core_tagid , $aTags)
     {
         if(!$this->init_db())
             return false;
@@ -184,6 +184,7 @@ class ml_model_admin_dbCommon extends Lib_datamodel_db
         foreach ($aTags as $value) {
             $a = array(
                 'type' => $type,
+                'core_tagid' => $core_tagid,
                 'tag' => $value,
                 'tag_hash' => crc32($value),
             );
@@ -210,6 +211,26 @@ class ml_model_admin_dbCommon extends Lib_datamodel_db
 
             $this->table = self::TB_TAGS;
             $this->update(array('suggest_pt'=>$pt) , '`id`='.$id , 1);
+        
+        return;
+    }
+    public function tags_change_core_tagid_by_id($core_tagid , $id)
+    {
+        if(!$this->init_db())
+            return false;
+
+            $this->table = self::TB_TAGS;
+            $this->update(array('core_tagid'=>$core_tagid) , '`id`='.$id , 1);
+        
+        return;
+    }
+    public function tags_change_is_core_by_id($is_core , $id)
+    {
+        if(!$this->init_db())
+            return false;
+
+            $this->table = self::TB_TAGS;
+            $this->update(array('is_core'=>$is_core) , '`id`='.$id , 1);
         
         return;
     }
@@ -246,7 +267,14 @@ class ml_model_admin_dbCommon extends Lib_datamodel_db
         $sql = 'select * from '.self::TB_TAGS.' where `tag` like "%'.$tag.'%"';
         return $this->fetch($sql);
     }
-
+    public function core_tags_get_all($type = 0)
+    {
+        if(!$this->init_db())
+            return false;
+        $condition = $type > 0 ? ' and type = '.$type : '';
+        $sql = 'select * from '.self::TB_TAGS.' where is_core = 1'.$condition;
+        return $this->fetch($sql);
+    }
     public function tags_del($id)
     {
         if(!$this->init_db())

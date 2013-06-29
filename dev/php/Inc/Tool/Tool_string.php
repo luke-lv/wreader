@@ -386,6 +386,12 @@ class Tool_string
     }
     
 
-    
+    public function trimCdata($str)
+    {
+        if (substr($str, 0 , 9) == '<![CDATA[') {
+                    $str = substr($str, 9 , strlen($str)-9-3);
+                }
+        return $str;
+    }
     
 }

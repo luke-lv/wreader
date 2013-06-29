@@ -20,6 +20,7 @@ function page_index($adm)
 </td>
 <td width="30%">
     <a href="?page=nearHotTag">最近常见标签</a>
+    <a href="?page=redisTagStat">标签redis统计</a>
 </td>
 <td width="20%">
 <form method="get" action="?">
@@ -33,6 +34,7 @@ function page_index($adm)
     <th>#</th>
     <th>标签</th>
     <th>分类</th>
+    <th>核心标签</th>
     <th>子分类</th>
     <th>操作</th>
 </tr>
@@ -40,19 +42,27 @@ function page_index($adm)
 <tr>
     <td><a id="id<?php echo $value['id']; ?>" name="id<?php echo $value['id']; ?>"></a><?php echo $value['id']; ?></td>
     <td><?php echo $value['tag']; ?></td>
-    <td><?php echo $aId2tag[$value['type']]; ?></td>
+    <td>
+        <select name="type" onchange="window.location='?api=changeTypeById&id=<?php echo $value['id']; ?>&type='+this.value">
+        <?php foreach ($ML_TAG_TYPE as $typename => $id) { ?>
+        <option value="<?php echo $id; ?>"<?php if($id==$value['type']){echo ' selected';} ?>><?php echo $typename; ?></option>
+        <?php } ?>
+    </select>
+    </td>
+    <td>
+        <a href = "?api=changeIsCoreById&id=<?php echo $value['id']; ?>&value=<?php echo $value['is_core']==0?'1':'0'; ?>"><font color="<?php echo $value['is_core']?'#ff0000':'bcbcbc'; ?>"><?php echo $value['is_core']?'核心标签':'普通标签'; ?></font></a>
+        <select name="core_tagid" onchange="window.location='?api=changeCoreTagidById&id=<?php echo $value['id']; ?>&coreTagid='+this.value">
+        <?php foreach ($adm['coreTag'] as $id => $coreTag) { ?>
+        <option value="<?php echo $id; ?>"<?php if($id==$value['core_tagid']){echo ' selected';} ?>><?php echo $coreTag; ?></option>
+        <?php } ?>
+    </select>
+    </td>
     <td><?php echo $adm['sub_type'][$value['sub_type']]; ?></td>
     <td>
         <a href="?api=delTag&id=<?php echo $value['id']; ?>"><font color="red">删除</font></a>
         推荐分数：<select name="pt" onchange="window.location='?api=changePtById&id=<?php echo $value['id']; ?>&pt='+this.value">
         <?php for ($i=0; $i < 5; $i++){ ?>
         <option value="<?php echo $i; ?>"<?php if($i==$value['suggest_pt']){echo ' selected';} ?>><?php echo $i; ?></option>
-        <?php } ?>
-    </select>
-
-        修改分类：<select name="type" onchange="window.location='?api=changeTypeById&id=<?php echo $value['id']; ?>&type='+this.value">
-        <?php foreach ($ML_TAG_TYPE as $typename => $id) { ?>
-        <option value="<?php echo $id; ?>"<?php if($id==$value['type']){echo ' selected';} ?>><?php echo $typename; ?></option>
         <?php } ?>
     </select>
 
@@ -75,9 +85,16 @@ function page_index($adm)
 <tr>
     <td>
 标签(每行一个)：<br/><textarea name="tags"></textarea><br/>
+分类：<br/>
     <select name="type">
         <?php foreach ($ML_TAG_TYPE as $typename => $id) { ?>
         <option value="<?php echo $id; ?>"><?php echo $typename; ?></option>
+        <?php } ?>
+    </select><br/>
+核心标签：<br/>
+    <select name="core_tagid">
+        <?php foreach ($adm['coreTag'] as $id => $core_tag) { ?>
+        <option value="<?php echo $id; ?>"><?php echo $core_tag; ?></option>
         <?php } ?>
     </select><br/>
     <input type="submit" value="保存"/> <a href="?api=rebuildRdsTaghash">重建标签类型索引</a>
@@ -85,5 +102,12 @@ function page_index($adm)
 </tr>
 </table>
 <?php
+}
+
+function page_redisTagStat($data)
+{
+    foreach ($data['tags'] as $key => $value) {
+        echo $value['tag'].''.$value['article_cnt']."<br/>";
+    }
 }
 ?>
