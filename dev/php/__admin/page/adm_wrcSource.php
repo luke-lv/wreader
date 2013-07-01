@@ -88,6 +88,26 @@ class adm_wrcSource extends admin_ctrl
         $this->model->std_delById($id);
         $this->back();
     }
+    protected function api_reRedis()
+    {
+        $srcId = $this->input('id');
+
+        $oBizA2R = new ml_biz_articleid2redis();
+
+        //get all article
+        $oArticle = new ml_model_wrcArticle();
+        $oArticle->std_listBySrcIdByPage($srcId , 0 , 1 , 0);
+        $aRows = $oArticle->get_data();
+
+        if (!empty($aRows)) {
+            foreach ($aRows as $key => $value) {
+                $oBizA2R->execute($value['id'] , $value['tags']);
+            }
+        }
+        
+        $this->_redirect($_SERVER['HTTP_REFERER'] , '重建完成' , 1);    
+    }
+    //protected function 
 }
 
 new adm_wrcSource();

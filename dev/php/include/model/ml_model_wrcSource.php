@@ -73,6 +73,14 @@ class ml_model_wrcSource extends Lib_datamodel_db
 
     }
 
+    function getRowsByIds($aId)
+    {
+        if(!$this->init_db($uid , self::DB_SLAVE))
+            return false;
+
+        $sql = 'select * from '.$this->table.' where id in ('.implode(',', $aId).')';
+        return $this->fetch($sql);
+    }
 
     function listBySpidertime($spider_time , $page , $pagesize = 10)
     {

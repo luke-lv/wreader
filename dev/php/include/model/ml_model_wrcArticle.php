@@ -55,7 +55,10 @@ class ml_model_wrcArticle extends Lib_datamodel_db
 
         $page = $page <1 ? 1 : $page;
         $start = ($page-1)*$pagesize;
-        $sql = 'select * from '.$this->table.' where source_id = '.$srcId.' and status='.self::STATUS_NORMAL.' order by id desc limit '.$start.','.$pagesize;
+        $limit = '';
+        if($pagesize > 0)
+            $limit = 'limit '.$start.','.$pagesize;
+        $sql = 'select * from '.$this->table.' where source_id = '.$srcId.' and status='.self::STATUS_NORMAL.' order by id desc '.$limit;
         return $this->fetch($sql);
     }
 
@@ -72,7 +75,7 @@ class ml_model_wrcArticle extends Lib_datamodel_db
 
     function std_getRowById($id)
     {
-        $Ym = $this->_calc_date_by_articleId($id);
+        $Ym = $this->_calc_Ym_by_articleId($id);
         if(!$this->init_db($Ym , self::DB_SLAVE))
             return false;
         $sql = 'select * from '.$this->table.' where id="'.$id.'"';
@@ -81,7 +84,7 @@ class ml_model_wrcArticle extends Lib_datamodel_db
 
     function std_addRow($article_id , $srcId , $data = array())
     {
-        $Ym = $this->_calc_date_by_articleId($article_id);
+        $Ym = $this->_calc_Ym_by_articleId($article_id);
         if(!$this->init_db($Ym , self::DB_MASTER))
             return false;
         
@@ -94,7 +97,7 @@ class ml_model_wrcArticle extends Lib_datamodel_db
     }
     function std_updateRow($id , $data = array())
     {
-        $Ym = $this->_calc_date_by_articleId($id);
+        $Ym = $this->_calc_Ym_by_articleId($id);
         if(!$this->init_db($Ym , self::DB_MASTER))
             return false;
         $dataDefine = ml_factory::load_dataDefine($this->dataDefine);
@@ -105,7 +108,7 @@ class ml_model_wrcArticle extends Lib_datamodel_db
     }
     function std_delById($id)
     {
-        $Ym = $this->_calc_date_by_articleId($id);
+        $Ym = $this->_calc_Ym_by_articleId($id);
         if(!$this->init_db($Ym , self::DB_MASTER))
             return false;
 
@@ -143,9 +146,37 @@ class ml_model_wrcArticle extends Lib_datamodel_db
         $sql = 'select * from '.$this->table.' order by _ctime desc';
         return $this->fetch($sql);
     }
+    public function getArticleByIds($aAid)
+    {
+        if(empty($aAid))
+            return true;
 
 
-    private function _calc_date_by_articleId($article_id)
+        foreach ($aAid as $aid) {
+            $Ym = $this->_calc_Ym_by_articleId($aid);
+            $aYmAid[$Ym][] = $aid;
+        }
+
+        $aArticle = array();
+        foreach ($aYmAid as $Ym => $aAidYm) {
+            if(!$this->init_db($Ym , self::DB_SLAVE))
+                return false;
+            $sql = 'select * from '.$this->table.' where id in ('.$this->_build_in_sql($aAidYm).')';
+            $rs = $this->fetch($sql);
+
+            $aArticle = array_merge($aArticle , $this->get_data());
+        }
+        $aAid2Row = Tool_array::format_2d_array($aArticle , 'id' , Tool_array::FORMAT_FIELD2ROW);
+        foreach ($aAid as $key => $value) {
+            $aRs[] = $aAid2Row[$value];
+        }
+        
+        $this->set_data($aRs);
+        return true;
+    }
+
+
+    private function _calc_Ym_by_articleId($article_id)
     {
         $date = strtotime(base_convert(substr($article_id , 0 , 5),36,10));
         return date('Ym' , $date);
@@ -160,6 +191,10 @@ class ml_model_wrcArticle extends Lib_datamodel_db
         return base_convert($date, 10, 36)
         .str_pad(bin2hex($srcId) , 5,0, STR_PAD_LEFT)
         .$this->_title_hash($title);
+    }
+    private function _build_in_sql($aAid)
+    {
+        return '"'.implode('","', $aAid).'"';
     }
 }
 ?>

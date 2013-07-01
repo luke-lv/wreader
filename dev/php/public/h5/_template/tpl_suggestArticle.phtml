@@ -1,0 +1,26 @@
+<?php include($this->_tpl_dir.'/_tpl_htmlHeader.phtml'); ?>
+
+<?php include($this->_tpl_dir.'/_tpl_navArticlelist.phtml'); ?>
+
+
+    <div class="container">
+      <table class="table table-striped">
+        <tbody>
+          <?php foreach ($articleList as $key => $value) { ?>
+          <tr>
+            <td>
+              <h3><?php echo Tool_string::un_html($value['title']); ?></h3>
+              <div class="row-fluid">
+                <div class="span4"><?php echo ml_tool_standardShow::time($value['pub_time']); ?> 来自 <a href="http://<?php echo $value['site_info']['domain'] ?>"><?php echo Tool_string::un_html($value['site_info']['site_name']) ?></a></div>
+                <div class="span4"></div>
+              </div>
+            </td>
+          </tr>
+          <?php } ?>
+          
+        </tbody>
+      </table>
+
+    </div>
+
+<?php include($this->_tpl_dir.'/_tpl_htmlFooter.phtml'); ?>

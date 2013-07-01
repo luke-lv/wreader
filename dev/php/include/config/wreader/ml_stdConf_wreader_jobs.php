@@ -38,6 +38,7 @@ return array(
 		'jobs' => array(
 			ML_WR_JOB_TECH_PHP => array(
 				'name' => 'php应用开发',
+				'sign' => 'php',
 			),
 			ML_WR_JOB_TECH_JS => array(
 				'name' => 'ria开发',

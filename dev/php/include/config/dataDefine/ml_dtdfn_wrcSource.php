@@ -21,6 +21,10 @@
 				'cn'=>'域名',
 				'type' => 's',
 				'length'=>50),
+			'site_name' => array(
+				'cn'=>'网站名称',
+				'type' => 's',
+				'length'=>50),
 			'tags' => array(
 				'cn'=>'标签',
 				'type' => 's',

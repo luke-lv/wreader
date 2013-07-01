@@ -12,13 +12,13 @@ class ml_tool_rssContent
 		}
 		return $string;
 	}
-	static public function parseHtml2Content($str)
+	static public function parseHtml2Content($str , $charset='utf-8')
 	{
 		$str = substr($str, 0 , strpos($str, '</html>')+7);
 		$str = substr($str, strpos($str, '<html')+7);
 
 
-		$o = new Readability($str);
+		$o = new Readability($str , $charset);
 		$rs = $o->getContent();
 
 		return $rs['content'];

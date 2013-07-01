@@ -18,31 +18,17 @@ include_once(SERVER_ROOT_PATH.'/include/config/ml_queue_name.php');
 class ml_mq_content2redis extends MqClass{
     const QUEUE_NAME = ML_QUEUENAME_CONTENT2REDIS;
 
-    private $oTag;
-    private $oRdsCB;
+    private $oBizA2R;
     protected function _construct()
     {
-        $this->oTag = new ml_model_admin_dbTag();
-        $this->oRdsCB = new ml_model_rdsContentBase();
+        $this->oBizA2R = new ml_biz_articleid2redis();
     }
     public function run_job(){
         //接收的数据
         $arr = $this->src_data;
         
         $aTag = explode(' ', $arr['tags']);
-        $aTag = array_filter($aTag);
-        if(empty($aTag))
-            return false;
-
-        $this->oTag->core_tag_get_by_tags($aTag);
-        $aCoreTag = $this->oTag->get_data();
-
-        if(!empty($aCoreTag))
-        {
-            foreach ($aCoreTag as $key => $value) {
-                $this->oRdsCB->addArticleToTag($value['tag_hash'] , $arr['article_id']);
-            }
-        }
+        $this->oBizA2R->execute($arr['article_id'] , $aTag);
         
         return true;
     }

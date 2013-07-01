@@ -46,11 +46,13 @@ class _cron_spider_base
 	private function _spider_rss($srcRow)
 	{
 		$oLastRss = new Lib_lastRss();
+		echo $srcRow['rss']."\n";
 		$rssData = $oLastRss->Get($srcRow['rss']);
 		if(!$rssData){
 			$rssData = $oLastRss->Get($srcRow['rss']);
 			if(!$rssData){
 				//出错 报错
+				echo 'fetch_rss_error'."\n";
 			}
 		}
 
@@ -72,8 +74,11 @@ class _cron_spider_base
 
 
 					if($srcRow['spider_type'] == ML_SPIDERTYPE_RSSHTML)
-						$articleRow['description'] = $this->_fetchByHtml($articleRow['link']);
-					
+					{
+						echo 'fetch_content:'.$articleRow['link']."\n";
+						$articleRow['description'] = $this->_fetchByHtml($articleRow['link'] , $srcRow['charset']==ML_CHARSET_GBK?'gbk':'utf-8');
+						
+					}
 					
 
 					//charset
@@ -104,9 +109,10 @@ class _cron_spider_base
 
 					}
 
-					//
 					
 					$articleRow = $this->_formatBySource($srcRow['codeSign'] , $articleRow);
+
+
 
 					$this->_write_in_article($srcRow['id'],$articleRow);
 					
@@ -129,7 +135,7 @@ class _cron_spider_base
 		
 	}
 
-	private function _fetchByHtml($link)
+	private function _fetchByHtml($link , $charset='utf-8')
 	{
 		$html = Tool_http::get($link);
 		
@@ -141,7 +147,7 @@ class _cron_spider_base
 			 */
 
 			
-			 return ml_tool_rssContent::parseHtml2Content($html);
+			 return ml_tool_rssContent::parseHtml2Content($html , $charset);
 
 		}
 		return false;
@@ -202,11 +208,10 @@ class _cron_spider_base
 		);
 		$this->oArticleContent->std_addRow($srcId , $article_id , $data);
 
-		//
-		echo $article_id;
-		var_dump($articleRow['tags']);
-		ml_tool_queue_contentBase::add_content2redis($article_id , $articleRow['tags']);
-
+		if(!empty($articleRow['tags']))
+		{
+			ml_tool_queue_contentBase::add_content2redis($article_id , $articleRow['tags']);
+		}
 
 		return true;
 	}

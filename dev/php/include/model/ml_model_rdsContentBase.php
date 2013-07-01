@@ -24,4 +24,15 @@ class ml_model_rdsContentBase extends ml_model_redis
         }
         return $aRs;
     }
+    public function unionByTaghashes($destKey , $aTagHash)
+    {
+        if(!empty($aTagHash))
+        {
+            foreach ($aTagHash as $key => $value) {
+                $aKeys[] = self::KEY_PREFIX.$value;
+            }
+        }
+        
+        return $this->zUnion($destKey , $aKeys);
+    }
 }

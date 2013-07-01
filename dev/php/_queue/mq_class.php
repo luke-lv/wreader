@@ -63,7 +63,7 @@ class MqClass{
     private $log_dir = '';
     
     //构造函数
-    public function __construct($queue , $log_dir){
+    public function __construct($queue , $log_dir=SYSDEF_LOG_DEBUG_PATH){
         $this->queue = $queue;
         $this->log_dir = $log_dir;
         if(!$this->queue->isConn()){

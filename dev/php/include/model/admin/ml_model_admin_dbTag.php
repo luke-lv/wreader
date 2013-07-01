@@ -214,5 +214,9 @@ class ml_model_admin_dbTag extends Lib_datamodel_db
         return $this->fetch($sql);
     }
 
+    static public function tag_hash($tag)
+    {
+        return crc32($tag);
+    }
 
 }

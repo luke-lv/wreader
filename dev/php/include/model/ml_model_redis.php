@@ -162,7 +162,16 @@ Tool_logger::runningLog(__CLASS__ , 'decr',$key);
             return false;
         }
     }
+    public function setTimeOut($key, $cache_sec){
 
+        try{
+            return $this->oRedis->setTimeOut($key , $cache_sec);
+        }catch(Exception $oRedis){
+            Tool_logger::monitorLog(__CLASS__,'redis setTimeOut  key | '.$key ,Tool_logger::LOG_LEVEL_NOTICE);
+            //Tool_logger::debugLog('redis expireAt ', 'key | '.$key);
+            return false;
+        }
+    }
     public function zSize($key){
 
         try{
@@ -254,6 +263,18 @@ Tool_logger::runningLog(__CLASS__ , 'decr',$key);
             return $this->oRedis->zInter($key, $array);
         }catch(Exception $oRedis){
             Tool_logger::monitorLog(__CLASS__,'redis zInter  key | '.$key ,Tool_logger::LOG_LEVEL_NOTICE);
+            //Tool_logger::debugLog('redis zInter ', 'key | '.$key);
+            return false;
+        }
+    }
+    public function zUnion($key, $array){
+        $aWeight = array();
+        $aWeight = array_pad($aWeight, count($array), 1);
+
+        try{
+            return $this->oRedis->zUnion($key, $array , $aWeight);
+        }catch(Exception $oRedis){
+            Tool_logger::monitorLog(__CLASS__,'redis zUnion  key | '.$key ,Tool_logger::LOG_LEVEL_NOTICE);
             //Tool_logger::debugLog('redis zInter ', 'key | '.$key);
             return false;
         }
