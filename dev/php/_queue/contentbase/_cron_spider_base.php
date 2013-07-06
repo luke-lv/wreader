@@ -10,6 +10,8 @@ class _cron_spider_base
 	private $oArticleContent;
 	private $oAdminCommon;
 
+	
+
 	public function set_spider_time($spidertime)
 	{
 		$this->oArticle = new ml_model_wrcArticle();
