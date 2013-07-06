@@ -152,11 +152,13 @@ class Readability {
             $id           = $parentNode->getAttribute("id");
 
             // Look for a special classname
-            if (preg_match("/(comment|meta|footer|footnote)/i", $className)) {
+            if (preg_match("/(comment|meta|foot|footnote)/i", $className)) {
+                
                 $contentScore -= 50;
             } else if(preg_match(
                 "/((^|\\s)(post|hentry|entry[-]?(content|text|body)?|article[-]?(content|text|body)?)(\\s|$))/i",
                 $className)) {
+                
                 $contentScore += 25;
             }
 
@@ -166,6 +168,7 @@ class Readability {
             } else if (preg_match(
                 "/^(post|hentry|entry[-]?(content|text|body)?|article[-]?(content|text|body)?)$/i",
                 $id)) {
+                
                 $contentScore += 25;
             }
 

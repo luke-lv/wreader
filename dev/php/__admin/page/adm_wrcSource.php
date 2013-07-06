@@ -28,7 +28,7 @@ class adm_wrcSource extends admin_ctrl
     {
         $page = $this->input('p');
         $pagesize = $this->input('pagesize' , 'g' , 10);
-        $this->model->std_listByPage($page , $pagesize);
+        $this->model->std_listByPage($page , $pagesize , 1);
         $data['rows'] = $this->model->get_data();
         $this->model->std_getCount();
         $data['total'] = $this->model->get_data();
@@ -86,6 +86,14 @@ class adm_wrcSource extends admin_ctrl
     {
         $id = $this->input('id');
         $this->model->std_delById($id);
+        $this->back();
+    }
+    protected function api_setStatusById()
+    {
+        $id = $this->input('id');
+        $status = $this->input('status');
+        
+        $this->model->std_setStatusById($id , $status);
         $this->back();
     }
     protected function api_reRedis()

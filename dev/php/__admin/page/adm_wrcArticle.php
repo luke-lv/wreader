@@ -14,7 +14,7 @@ class adm_wrcArticle extends admin_ctrl
         
         $this->dataDefine = 'wrcArticle';
         $this->model = new ml_model_wrcArticle($this->dataDefine);
-        $this->modelContent = new ml_model_wrcARticleContent();
+        $this->modelContent = new ml_model_wrcArticleContent();
         //
     }
     
@@ -27,17 +27,19 @@ class adm_wrcArticle extends admin_ctrl
     
     protected function run()
     {
+        $Ym = $this->input('ym');
         $page = $this->input('p','g',1);
         $pagesize = $this->input('pagesize' , 'g' , 10);
         $srcId = $this->input('srcId');
         if (!$srcId) {
             $this->_redirect('adm_wrcSource.php');
         }
-        $this->model->std_listBySrcIdByPage($srcId ,0, $page , $pagesize);
+        $this->model->std_listBySrcIdByPage($srcId ,$Ym, $page , $pagesize);
         $data['rows'] = $this->model->get_data();
-        $this->model->std_getCountBySrcId($srcId);
+        $this->model->std_getCountBySrcId($srcId , $Ym);
         $data['total'] = $this->model->get_data();
         $data['pagesize'] = $pagesize;
+        $data['srcId'] = $srcId;
 
         $this->output($data);
     }

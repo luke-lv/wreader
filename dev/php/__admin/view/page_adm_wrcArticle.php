@@ -50,6 +50,7 @@
 	{
 		$dataDefine=ml_factory::load_dataDefine($data['_dataDefine']);
 ?>
+		<a href="?ym=201306&srcId=<?php echo $data['srcId']; ?>">6月</a>
 		<table width="98%" border="0" align="center" cellspacing="0" class="adminlist">
 			<tr>
 				<th>#</th>

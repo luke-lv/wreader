@@ -171,6 +171,8 @@ class ml_model_wrcArticle extends Lib_datamodel_db
             $aRs[] = $aAid2Row[$value];
         }
         
+        $aRs = array_filter($aRs);
+
         $this->set_data($aRs);
         return true;
     }

@@ -1,5 +1,5 @@
 <?php
-include('../../__global.php');
+include(dirname(dirname(dirname(__FILE__))).'/__global.php');
 include(SERVER_ROOT_PATH.'/include/config/ml_spider_config.php');
 include(SERVER_ROOT_PATH.'/include/ml_function_lib.php');
 
@@ -72,22 +72,21 @@ class _cron_spider_base
 				{
 
 
-
 					if($srcRow['spider_type'] == ML_SPIDERTYPE_RSSHTML)
 					{
 						echo 'fetch_content:'.$articleRow['link']."\n";
 						$articleRow['description'] = $this->_fetchByHtml($articleRow['link'] , $srcRow['charset']==ML_CHARSET_GBK?'gbk':'utf-8');
-						
 					}
-					
 
-					//charset
-					if($srcRow['charset'] == ML_CHARSET_GBK)
+					if($srcRow['charset']==ML_CHARSET_GBK)
 					{
-						$articleRow['description'] = Tool_string::gb2utf($articleRow['description']);
 						$articleRow['title'] = Tool_string::gb2utf($articleRow['title']);
 					}
 
+					
+					//sleep(3);
+
+					
 					
 					$seg = ml_function_lib::segmentChinese($articleRow['title']);
 					$rs = $this->oAdminCommon->tags_get_by_tag($seg);
@@ -138,7 +137,8 @@ class _cron_spider_base
 	private function _fetchByHtml($link , $charset='utf-8')
 	{
 		$html = Tool_http::get($link);
-		
+		if($charset == 'gbk')
+			$html = Tool_string::gb2utf($html);
 
 		if($html)
 		{
@@ -147,7 +147,8 @@ class _cron_spider_base
 			 */
 
 			
-			 return ml_tool_rssContent::parseHtml2Content($html , $charset);
+			 return ml_tool_rssContent::parseHtml2Content($html , 'utf-8');
+
 
 		}
 		return false;
@@ -169,8 +170,8 @@ class _cron_spider_base
 		$classname = 'ml_tool_contentFormater_src'.ucfirst($srcCodesign);
 		if (class_exists($classname)) {
 
-			if(method_exists($classname, 'formatLink'))
-				$articleRow['link'] = $classname::formatLink($articleRow['link']);
+			//if(method_exists($classname, 'formatLink'))
+			//	$articleRow['link'] = $classname::formatLink($articleRow['link']);
 
 		}
 		return $articleRow;

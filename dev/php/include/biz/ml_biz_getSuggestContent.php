@@ -117,6 +117,7 @@ class ml_biz_getSuggestContent
 
 		$this->oArticle->getArticleByIds($aAids);
 		$this->_data = $this->oArticle->get_data();
+		
 		return true;
 	}
 	private function _fetchSourceInfo($aSrcId)
