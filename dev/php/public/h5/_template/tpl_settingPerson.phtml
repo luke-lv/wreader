@@ -1,0 +1,18 @@
+<?php include($this->_tpl_dir.'/_tpl_htmlHeader.phtml'); ?>
+
+<?php include($this->_tpl_dir.'/_tpl_navSetting.phtml'); ?>
+
+
+    <div class="container-fluid" style="margin-top: 50px;">
+      <?php include($this->_tpl_dir.'/_tpl_settingNav.phtml'); ?>
+      
+      <h4>
+      当前帐号:<a href=""><?php echo $__visitor['nick']; ?></a>
+      <a href="./tmp_setjob.php" class="btn btn-mini pull-right">切换</a><br/>
+		</h4>	
+	<h4>成长情况</h4>
+	职业:<?php echo $jobInfo['name']; ?><br/>
+	级别:<?php echo $levelInfo[$__visitor['job']['level']]['name']; ?><br/>
+    </div>
+
+<?php include($this->_tpl_dir.'/_tpl_htmlFooter.phtml'); ?>

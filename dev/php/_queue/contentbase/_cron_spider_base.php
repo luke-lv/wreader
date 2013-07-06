@@ -77,7 +77,7 @@ class _cron_spider_base
 					if($srcRow['spider_type'] == ML_SPIDERTYPE_RSSHTML)
 					{
 						echo 'fetch_content:'.$articleRow['link']."\n";
-						$articleRow['description'] = $this->_fetchByHtml($articleRow['link'] , $srcRow['charset']==ML_CHARSET_GBK?'gbk':'utf-8');
+						$articleRow['description'] = $this->_fetchByHtml($articleRow['link'] , $srcRow);
 					}
 
 					if($srcRow['charset']==ML_CHARSET_GBK)
@@ -136,20 +136,22 @@ class _cron_spider_base
 		
 	}
 
-	private function _fetchByHtml($link , $charset='utf-8')
+	private function _fetchByHtml($link , $srcRow)
 	{
 		$html = Tool_http::get($link);
-		if($charset == 'gbk')
+
+
+		if($srcRow['charset'] == ML_CHARSET_GBK)
 			$html = Tool_string::gb2utf($html);
 
 		if($html)
 		{
-			/**
-			 * todo 字符集判断
-			 */
-
+			$classname = $this->_calcFormaterClassNameByCodeSign($srcRow['codeSign']);
 			
-			 return ml_tool_rssContent::parseHtml2Content($html , 'utf-8');
+			if(class_exists($classname) && method_exists($classname, 'getContentByPage'))
+				return $classname::getContentByPage($html);
+			else
+			 	return ml_tool_rssContent::parseHtml2Content($html);
 
 
 		}
@@ -169,7 +171,7 @@ class _cron_spider_base
 	
 	private function _formatBySource($srcCodesign , $articleRow)
 	{
-		$classname = 'ml_tool_contentFormater_src'.ucfirst($srcCodesign);
+		$classname = $this->_calcFormaterClassNameByCodeSign($srcCodesign);
 		if (class_exists($classname)) {
 
 			//if(method_exists($classname, 'formatLink'))
@@ -217,6 +219,11 @@ class _cron_spider_base
 		}
 
 		return true;
+	}
+
+	private function _calcFormaterClassNameByCodeSign($codeSign)
+	{
+		return 'ml_tool_contentFormater_src'.ucfirst(substr($codeSign, 0 , strpos($codeSign, '_')));
 	}
 }
 

@@ -24,12 +24,15 @@ return array(
 		'jobs' => array(
 			ML_WR_JOB_PRODUCT_MANAGER => array(
 				'name' => '产品经理',
+				'sign' => 'productManager',
 			),
 			ML_WR_JOB_PRODUCT_DESIGNER => array(
 				'name' => '产品设计师',
+				'sign' => 'productDesigner',
 			),
 			ML_WR_JOB_PRODUCT_INTERACTIVE => array(
 				'name' => '交互设计师',
+				'sign' => 'productInteractive',
 			),
 		),
 	),
@@ -42,24 +45,31 @@ return array(
 			),
 			ML_WR_JOB_TECH_JS => array(
 				'name' => 'ria开发',
+				'sign' => 'js',
 			),
 			ML_WR_JOB_TECH_CSS => array(
 				'name' => '页面构建',
+				'sign' => 'css',
 			),
 			ML_WR_JOB_TECH_DBA => array(
 				'name' => 'DBA',
+				'sign' => 'dba',
 			),
 			ML_WR_JOB_TECH_SRVOP => array(
 				'name' => '运维',
+				'sign' => 'serverOperater',
 			),
 			ML_WR_JOB_TECH_ARCH => array(
 				'name' => '架构师',
+				'sign' => 'serverArch',
 			),
 			ML_WR_JOB_TECH_IOSDEV => array(
 				'name' => 'IOS开发',
+				'sign' => 'ios',
 			),
 			ML_WR_JOB_TECH_ANDROIDDEV => array(
 				'name' => '安卓开发',
+				'sign' => 'android',
 			),
 		),
 	),

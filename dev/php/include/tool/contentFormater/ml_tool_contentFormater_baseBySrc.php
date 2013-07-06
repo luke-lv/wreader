@@ -4,5 +4,5 @@ class ml_tool_contentFormater_baseBySrc
 {
 	public function formatLink(){}
 	public function formatContent(){}
-
+	public function getContentByPage(){}
 }

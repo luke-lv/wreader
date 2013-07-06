@@ -8,7 +8,13 @@
 		public function main()
 		{
 			ml_factory::load_standard_conf('wreader_jobs');
-			$job = ML_WR_JOB_TECH_PHP;
+
+
+
+
+
+
+			$job = $this->__visitor['job']['job_id'];
 
 			$this->oBizSuggArt = new ml_biz_getSuggestContent($job);
 			$this->oBizSuggArt->execute();

@@ -62,6 +62,7 @@ class ml_controller extends ml_controller_base
     protected $_option = array(); //接收参数的集合
     private $_tpl_dir;
     private $_uri_dir;
+    private $_output_data = array();
 
     /**
      * @var object session对象单例
@@ -247,7 +248,11 @@ class ml_controller extends ml_controller_base
 
         $tpl_path = $this->_tpl_dir . $aPath['path'].'tpl_'.$aPath['filename'].'.phtml';
 
-        if(is_array($data)) extract($data);
+
+        if(is_array($data))
+            $this->_output_data = array_merge($this->_output_data , $data);
+
+         extract($this->_output_data);
         $this->set_scope_var('$site_root_url', 'http://'.$_SERVER['HTTP_HOST']);
         if($this->__visitor['uid'])
         {
@@ -277,6 +282,7 @@ var scope = '.$scope.'
         $isLogin = $this->__visitor['online']==ML_USER_ONLINE ? true : false;
         $ifme = $this->__isself;
         $page_title = $this->_page_title;
+        $__visitor = $this->__visitor;
 
         if(count($this->_meta_keyword)>0)
             $meta['keywords'] = implode(',' , array_unique($this->_meta_keyword));
@@ -376,6 +382,14 @@ var scope = '.$scope.'
         $this->_meta_keyword[] = $string;
         return ;
     }
+    public function add_output_data($key , $data)
+    {
+        $this->_output_data[$key] = $data;
+    }
+
+
+
+
     /**
      * login相关若干方法
      * Enter description here ...
