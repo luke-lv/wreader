@@ -16,6 +16,28 @@ class ml_model_wruUserJob extends Lib_datamodel_db
         parent::__construct('wru_userjob' , $db_config['wru_userjob']);
     }
     
+    protected function hook_after_fetch()
+    {
+        
+        if(isset($this->_data[0]['attend_tag']))
+        {
+            foreach ($this->_data as &$row) {
+                $row['attend_tag'] = explode(',', $row['attend_tag']);
+            }
+        }
+        else if(isset($this->_data['attend_tag']))
+        {
+            $this->_data['attend_tag'] = explode(',', $this->_data['attend_tag']);
+        }
+    }
+    
+    protected function hook_before_write($array)
+    {
+        $array['attend_tag'] = is_array($array['attend_tag']) ? implode(',', $array['attend_tag']) : '';
+        return $array;
+    }
+
+
     function std_listByPage($page = 1 , $pagesize = 10)
     {
         if(!$this->init_db($uid , self::DB_SLAVE))

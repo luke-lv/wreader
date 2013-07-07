@@ -14,9 +14,7 @@
 
 
 
-			$job = $this->__visitor['job']['job_id'];
-
-			$this->oBizSuggArt = new ml_biz_getSuggestContent($job);
+			$this->oBizSuggArt = new ml_biz_getSuggestContent($this->__visitor['job']);
 			$this->oBizSuggArt->execute();
 			$this->oBizSuggArt->getArticleListByPage(1);
 			$data['articleList'] = $this->oBizSuggArt->get_data();

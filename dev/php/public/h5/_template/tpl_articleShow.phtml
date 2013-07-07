@@ -7,14 +7,18 @@
       <h3><?php echo Tool_string::un_html($articleInfo['title']); ?></h3>
       
         <?php echo ml_tool_standardShow::time($articleInfo['pub_time']); ?>
-        来自 <a href="http://<?php echo $sourceInfo['domain']; ?>"><?php echo Tool_string::un_html($sourceInfo['site_name']); ?></a><br/>
+        来自 <a href="http://<?php echo $sourceInfo['domain']; ?>"><?php echo Tool_string::un_html($sourceInfo['site_name']); ?></a>
+        <small><a href="<?php echo $articleInfo['link']; ?>" target="_blank">原文</a></small><br/>
         标签 <?php foreach ($articleInfo['tags'] as $key => $value) {?>
           <a href=""><?php echo Tool_string::un_html($value); ?></a>
         <?php } ?>
       
       <hr>
-      <div>
-        <?php echo $articleInfo['content']; ?>
+      <div<?php if($__visitor['h5mTheme']['data']['font-size']){?> style="font-size: <?php echo $__visitor['h5mTheme']['data']['font-size'] ?>px"<?php } ?>>
+        <?php 
+
+          echo ml_tool_standardShow::no_html( ml_tool_contentFormater_baseBySrc::outputFormatContent($sourceInfo['codeSign'] , $articleInfo['content'])); 
+          ?>
       </div>
 
       <div class="btn-group">

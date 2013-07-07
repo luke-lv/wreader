@@ -24,7 +24,7 @@ class ml_model_rdsContentBase extends ml_model_redis
         }
         return $aRs;
     }
-    public function unionByTaghashes($destKey , $aTagHash)
+    public function unionByTaghashes($destKey , $aTagHash , $aUnionKey = array())
     {
         if(!empty($aTagHash))
         {
@@ -33,6 +33,11 @@ class ml_model_rdsContentBase extends ml_model_redis
             }
         }
         
+        if(!empty($aUnionKey))
+        {
+            $aKeys = array_merge($aKeys , $aUnionKey);
+        }
+
         return $this->zUnion($destKey , $aKeys);
     }
 }

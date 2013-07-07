@@ -9,6 +9,13 @@ class ml_tool_contentFormater_src2cto
 		$tmp = substr($tmp, 0 , strpos($tmp, '</dd>'));
 		return $tmp;
 	}
+
+	public function outputFormatContent($content)
+	{
+
+		$content = str_replace('</div>', '<br/>', $content);
+		return $content;
+	}
 }
 
 

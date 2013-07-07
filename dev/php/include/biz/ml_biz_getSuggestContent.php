@@ -2,6 +2,7 @@
 class ml_biz_getSuggestContent
 {
 	private $_job;
+	private $_userJob;
 	private $_jobConf;
 	private $_jobAbility;
 	private $oRdsCB;
@@ -10,6 +11,7 @@ class ml_biz_getSuggestContent
 	private $oSource;
 
 	private $_aBasicArticle;
+	private $_aAttendTagArticle;
 
 	private $_aRsArticle;
 	private $_data;
@@ -18,9 +20,10 @@ class ml_biz_getSuggestContent
 	const SC_KEYPREFIX = 'BSC_';
 	const SC_BASICEXPIRE = 600;
 
-	public function __construct($job)
+	public function __construct($userJob)
 	{
-		$this->_job = $job;
+		$this->_userJob = $userJob;
+		$this->_job = $this->_userJob['job_id'];
 		$this->oRdsCB = new ml_model_rdsContentBase();
 	}
 
@@ -49,6 +52,19 @@ class ml_biz_getSuggestContent
 		{
 			return true;
 		}
+	}
+	private function _fetchattendTagArticle()
+	{
+		$rdsKey = self::SC_KEYPREFIX.'uAttTgArtUn_'.$this->_userJob['uid'];
+		$rdsBasicKey = self::SC_KEYPREFIX.'jbBscArtUn_'.$this->_jobConf['sign'];
+
+		$aHash = $this->_tag2hash($this->_userJob['attend_tag']);
+		$this->oRdsCB->unionByTaghashes($rdsKey , $aHash , array($rdsBasicKey));
+		$this->_aAttendTagArticle = $this->oRdsCB->zRevRange($rdsKey , 0 , -1);
+	
+
+		$this->oRdsCB->delete($rdsKey);
+		return true;
 	}
 	private function _tag2hash($aTag)
 	{
@@ -80,12 +96,15 @@ class ml_biz_getSuggestContent
 		}
 
 		$this->_fetchBasicTagArticle();
-		$this->_aRsArticle = $this->_aBasicArticle;
+		$this->_fetchattendTagArticle();
+
+		$this->_aRsArticle = $this->_aAttendTagArticle + $this->_aBasicArticle;
+		
 
 
 		return true;		
 	}
-	public function getArticleListByPage($page , $pagesize = 10)
+	public function getArticleListByPage($page , $pagesize = 100)
 	{
 		$start = ($page-1)*$pagesize;
 		$aAids = array_slice($this->_aRsArticle, $start , $pagesize);
@@ -99,6 +118,10 @@ class ml_biz_getSuggestContent
 
 		foreach ($aArticle as &$value) {
 			$value['site_info'] = $aSid2site[$value['source_id']];
+			if(in_array($value['id'], $this->_aBasicArticle))
+				$value['suggestType'] = 0;
+			else if(in_array($value['id'], $this->_aAttendTagArticle))
+				$value['suggestType'] = 1;
 		}
 
 		$this->_data = $aArticle;

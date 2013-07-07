@@ -43,23 +43,10 @@ class ml_tool_standardShow
         return '￥'.$price;
     }
 
-//    static function rmb_price($price){
-//        if(floatval($x)<100){
-//                
-//            return '￥'.$x;
-//        }
-//        else{
-//            $parint=intval($x);
-//            if(strlen($parint)<=4){
-//          return $parint;
-//            }else{
-//
-//            }
-//
-//                
-//                
-//        }
-//    }
+    static public function no_html($string)
+    {
+        return strip_tags($string , '<b> <i> <strong> <pre> <img> <br> <a>');
+    }
 
 
 }

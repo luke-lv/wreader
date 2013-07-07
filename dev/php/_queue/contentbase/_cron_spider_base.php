@@ -146,7 +146,7 @@ class _cron_spider_base
 
 		if($html)
 		{
-			$classname = $this->_calcFormaterClassNameByCodeSign($srcRow['codeSign']);
+			$classname = ml_tool_contentFormater_baseBySrc::calcFormaterClassName($srcRow['codeSign']);
 			
 			if(class_exists($classname) && method_exists($classname, 'getContentByPage'))
 				return $classname::getContentByPage($html);
@@ -171,7 +171,7 @@ class _cron_spider_base
 	
 	private function _formatBySource($srcCodesign , $articleRow)
 	{
-		$classname = $this->_calcFormaterClassNameByCodeSign($srcCodesign);
+		$classname = ml_tool_contentFormater_baseBySrc::calcFormaterClassName($srcCodesign);
 		if (class_exists($classname)) {
 
 			//if(method_exists($classname, 'formatLink'))
@@ -221,9 +221,6 @@ class _cron_spider_base
 		return true;
 	}
 
-	private function _calcFormaterClassNameByCodeSign($codeSign)
-	{
-		return 'ml_tool_contentFormater_src'.ucfirst(substr($codeSign, 0 , strpos($codeSign, '_')));
-	}
+	
 }
 
