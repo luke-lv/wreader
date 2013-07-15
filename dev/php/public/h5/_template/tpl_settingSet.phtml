@@ -1,0 +1,56 @@
+<?php include($this->_tpl_dir.'/_tpl_htmlHeader.phtml'); ?>
+
+<?php include($this->_tpl_dir.'/_tpl_navSetting.phtml'); ?>
+
+
+    <div class="container-fluid" style="margin-top: 50px;">
+      <?php include($this->_tpl_dir.'/_tpl_settingNav.phtml'); ?>
+      
+      <h4>显示主题</h4>
+      <div class="divTheme" style="width: 130px;float: left;<?php if($__visitor['h5mTheme']['theme'] == ''){ ?> border: solid 1px #ff0000;<?php } ?>">
+        <img theme="ori" class="btnTheme" src="./img/themePreview_ori.png" width="130px"><br/>
+        <a href="javascript:;" theme="ori" class="wrBtnThm">标准</a>
+      </div>
+      <div class="divTheme" style="width: 130px;float: left;margin-left: 10px;<?php if($__visitor['h5mTheme']['theme'] == 'gray'){ ?> border: solid 1px #ff0000;<?php } ?>">
+        <img theme="gray" class="btnTheme" src="./img/themePreview_gray.png" width="130px"><br/>
+        <a href="javascript:;" theme="gray" class="wrBtnThm">灰色</a>
+      </div>
+      <div class="clearfix"></div>
+      <h4>字体大小</h4>
+      <a class="btn<?php if($__visitor['h5mTheme']['font-size'] == '12'){echo " btn-success";} ?> btnFontsize" fs="12" style="font-size: 12px">小</a>
+      <a class="btn<?php if($__visitor['h5mTheme']['font-size'] == '16'){echo " btn-success";} ?> btnFontsize" fs="16" style="font-size: 16px">中</a>
+      <a class="btn<?php if($__visitor['h5mTheme']['font-size'] == '20'){echo " btn-success";} ?> btnFontsize" fs="20" style="font-size: 20px">大</a>
+      
+    </div>
+
+<?php include($this->_tpl_dir.'/_tpl_htmlFooter.phtml'); ?>
+<script type="text/javascript">
+  $('.btnTheme').click(function(){
+    
+    var changeThemeObj = $(this);
+    $.post(
+      'api/wr_setTheme.php',
+      {theme:$(this).attr('theme')},
+      function(){
+        $('.divTheme').each(function(){
+          $(this).css('border','');
+        });
+        changeThemeObj.parent().css('border' , 'solid 1px #ff0000');
+      }
+    );
+  });
+  $('.btnFontsize').click(function(){
+    
+    var changeFontsizeObj = $(this);
+    $.post(
+      'api/wr_setTheme.php',
+      {fontsize:$(this).attr('fs')},
+      function(){
+        $('.btnFontsize').each(function(){
+          $(this).removeClass('btn-success');
+        });
+        changeFontsizeObj.addClass('btn-success');
+      }
+    );
+  });
+</script>

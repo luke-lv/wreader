@@ -29,11 +29,23 @@ class ml_model_wruUserJob extends Lib_datamodel_db
         {
             $this->_data['attend_tag'] = explode(',', $this->_data['attend_tag']);
         }
+
+        if(isset($this->_data[0]['readmore_tag']))
+        {
+            foreach ($this->_data as &$row) {
+                $row['readmore_tag'] = explode(',', $row['readmore_tag']);
+            }
+        }
+        else if(isset($this->_data['attend_tag']))
+        {
+            $this->_data['readmore_tag'] = explode(',', $this->_data['readmore_tag']);
+        }
     }
     
     protected function hook_before_write($array)
     {
         $array['attend_tag'] = is_array($array['attend_tag']) ? implode(',', $array['attend_tag']) : '';
+        $array['readmore_tag'] = is_array($array['readmore_tag']) ? implode(',', $array['readmore_tag']) : '';
         return $array;
     }
 

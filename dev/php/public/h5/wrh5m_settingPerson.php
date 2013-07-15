@@ -5,40 +5,11 @@
 
 	class wrh5m_settingPerson extends wr_h5mobileController
 	{
-		private $oBizSuggArt;
 		public function main()
 		{
+			$jobInfo = ml_tool_jobs::getJobConf($this->__visitor['userJob']['job_id']);
 
-			/*
-			$aJobsConf = ml_factory::load_standard_conf('wreader_jobs');
-			$aJobid2Info = array();
-			foreach ($aJobsConf as $row) {
-				$aJobid2Info = $aJobid2Info + $row['jobs'];
-			}
-			
-
-
-			$oUser = new ml_model_wruUser();
-			$oUser->std_getRowById($this->__visitor['uid']);
-			$userInfo = $oUser->get_data();
-
-
-			$oUserJob = new ml_model_wruUserJob();
-			$oUserJob->std_getRowById($userInfo['job']);
-			$userJobInfo = $oUserJob->get_data();
-
-			$jobInfo = $aJobid2Info[$userJobInfo['job_id']];
-
-			$data = array(
-				'userInfo' => $userInfo,
-				'userJobInfo' => $userJobInfo,
-				'jobInfo' => $jobInfo,
-				'levelInfo' => ml_factory::load_standard_conf('wreader_jobLevel'),
-			);
- */
-			//var_dump($data);
-			
-
+			$data['jobInfo'] = $jobInfo;
 			$this->page_output('settingPerson' , $data);
 		}
 	}

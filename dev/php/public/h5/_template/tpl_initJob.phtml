@@ -1,0 +1,52 @@
+<?php include($this->_tpl_dir.'/_tpl_htmlHeader.phtml'); ?>
+
+<div class="container-fluid">
+
+<h4>第一步，请选择你的职业：</h4>
+
+<div style="height: 400px">
+  <div class="accordion" id="jobSelector">
+    <?php foreach ($jobConf as $key => $jobType) { ?>
+    <div class="accordion-group">
+      <div class="accordion-heading">
+        <a class="accordion-toggle text-success" data-toggle="collapse" data-parent="#jobSelector" href="#collapse_<?php echo $key; ?>">
+          <?php echo $jobType['name']; ?>
+        </a>
+      </div>
+      <div id="collapse_<?php echo $key ?>" class="accordion-body collapse">
+        <div class="accordion-inner">
+              <?php foreach ($jobType['jobs'] as $job_id => $job) { ?>
+                <li><h5><a href="" jobId="<?php echo $job_id; ?>" class="wrJobItem text-success"><?php echo $job['name']; ?></a></h5></li>
+              <?php } ?>
+        </div>
+      </div>
+    </div>
+    <?php } ?>
+  </div>
+
+</div>
+<div>
+  <h4><a href="" class="btn btn-primary pull-right btn-success" id="btnSave">下一步</a><span id="jobShower" class="pull-right"></span></h4>
+</div>
+</div>
+
+
+<?php include($this->_tpl_dir.'/_tpl_htmlFooter.phtml'); ?>
+<script type="text/javascript">
+  var jobId = 0;
+  $('.wrJobItem').click(function(){
+    $('#jobShower').html($(this).html())
+    jobId = $(this).attr('jobId');
+    return false;
+  });
+  $('#btnSave').click(function(){
+    $.post(
+      'api/wr_initJob.php'
+      ,{job_id:jobId}
+      ,function(){
+        window.location='/';
+      }
+    );
+    return false;
+  });
+</script>

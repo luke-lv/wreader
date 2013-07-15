@@ -267,9 +267,7 @@ Tool_logger::runningLog(__CLASS__ , 'decr',$key);
             return false;
         }
     }
-    public function zUnion($key, $array){
-        $aWeight = array();
-        $aWeight = array_pad($aWeight, count($array), 1);
+    public function zUnion($key, $array , $aWeight){
 
         try{
             return $this->oRedis->zUnion($key, $array , $aWeight);

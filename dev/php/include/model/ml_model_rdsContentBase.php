@@ -24,7 +24,7 @@ class ml_model_rdsContentBase extends ml_model_redis
         }
         return $aRs;
     }
-    public function unionByTaghashes($destKey , $aTagHash , $aUnionKey = array())
+    public function unionByTaghashes($destKey , $aTagHash , $aUnionKey = array() , $aTagHash2Weight = array())
     {
         if(!empty($aTagHash))
         {
@@ -38,6 +38,14 @@ class ml_model_rdsContentBase extends ml_model_redis
             $aKeys = array_merge($aKeys , $aUnionKey);
         }
 
-        return $this->zUnion($destKey , $aKeys);
+        $aWeight = array_pad(array(), count($aKeys), 1);
+        $prefix_len = strlen(self::KEY_PREFIX);
+        foreach ($aKeys as $key => $value) {
+            $tagHash = substr($value , $prefix_len);
+            if(isset($aTagHash2Weight[$tagHash]))
+                $aWeight[$key] = $aTagHash2Weight[$tagHash];
+        }
+        
+        return $this->zUnion($destKey , $aKeys , $aWeight);
     }
 }

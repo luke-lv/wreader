@@ -1,7 +1,7 @@
 <?php
 define('SINADEF_SSO_COOKIECONF_PATH' , '/usr/local/sinasrv2/lib/php/cookie.conf');
 
-define('SITE_ROOT_URL','http://trip.com');
+define('SITE_ROOT_URL','http://test.gulibaby.com');
 //定义第三方登录头像上传接口地址
 define('OPENAPI_HEAD_UPLOAD','http://upload.image.meila.com/interface/bg_ml_3rdheader.php');
 

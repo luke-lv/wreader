@@ -7,12 +7,33 @@
       <?php include($this->_tpl_dir.'/_tpl_settingNav.phtml'); ?>
       
       <h4>
-      当前帐号:<a href=""><?php echo $__visitor['nick']; ?></a>
-      <a href="./tmp_setjob.php" class="btn btn-mini pull-right">切换</a><br/>
-		</h4>	
-	<h4>成长情况</h4>
-	职业:<?php echo $jobInfo['name']; ?><br/>
-	级别:<?php echo $levelInfo[$__visitor['job']['level']]['name']; ?><br/>
+        当前帐号:<a href=""><?php echo $__visitor['nick']; ?></a>
+        <a href="./tmp_setjob.php" class="btn btn-mini pull-right">切换</a><br/>
+		  </h4>	
+	    
+      <h4>成长情况</h4>
+      <div style="padding-left: 20px">
+      	职业:<?php echo $jobInfo['name']; ?><br/>
+      	级别:<?php echo $levelInfo[$__visitor['job']['level']]['name']; ?><br/>
+      </div>
+      <h4>其他关注</h4>
+      <div style="padding-left: 20px">
+        <textarea class="input-large" placeholder="标签以空格分隔噢" id="iptAttendTag"><?php echo Tool_string::un_html(implode(' ',$__visitor['userJob']['attend_tag'])) ?></textarea>
+        <a href="" class="btn btn-mini pull-right" id="saveAttendTag">保存修改</a>
+      </div>
     </div>
 
 <?php include($this->_tpl_dir.'/_tpl_htmlFooter.phtml'); ?>
+<script type="text/javascript">
+  $('#saveAttendTag').click(function(){
+
+    $.post(
+      'api/wr_setAttendTag.php',
+      {tag:$('#iptAttendTag').value()},
+      function(){
+        alert('x');
+      }
+    );
+    
+  });
+</script>

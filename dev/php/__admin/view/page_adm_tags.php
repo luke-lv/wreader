@@ -36,6 +36,7 @@ function page_index($adm)
     <th>分类</th>
     <th>核心标签</th>
     <th>子分类</th>
+    <th>难度级别</th>
     <th>操作</th>
 </tr>
 <?php foreach ($adm['tags'] as $key => $value) {?>
@@ -58,6 +59,7 @@ function page_index($adm)
     </select>
     </td>
     <td><?php echo $adm['sub_type'][$value['sub_type']]; ?></td>
+    <td><?php echo $value['sub_type']; ?></td>
     <td>
         <a href="?api=delTag&id=<?php echo $value['id']; ?>"><font color="red">删除</font></a>
         推荐分数：<select name="pt" onchange="window.location='?api=changePtById&id=<?php echo $value['id']; ?>&pt='+this.value">

@@ -15,6 +15,7 @@ define('ML_LOGIN_NEEDVCODE', 'needvcode');
 abstract class ml_controller_base
 {
     //~~需要应用程序重定的方法~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    abstract function beforeRun();
     /**
      * @develop_template
      * 接收并初始化参数
@@ -71,6 +72,7 @@ class ml_controller extends ml_controller_base
 
 
     public function init(){}
+    public function beforeRun(){}
     public function initParam(){}
     public function checkParam(){}
     public function main(){}
@@ -80,32 +82,21 @@ class ml_controller extends ml_controller_base
         
         $this->start_time = microtime(1);
 
-        //在这里301定向到meila
-/*
-        $path = str_replace($_SERVER['DOCUMENT_ROOT'],'',$_SERVER['SCRIPT_FILENAME']);
-        $url = $_SERVER['REQUEST_URI'];
-        $Aurl = explode("/", $url);
-        $Apath = explode("/", $path);
-        if($_SERVER['HTTP_HOST']=='www.meila.com'&&$Apath[0]=="index.php"||
-           $_SERVER['HTTP_HOST']=='www.meila.com'&&$Apath[0]=="page"||
-           $_SERVER['HTTP_HOST']=='www.meila.com'&&$Apath[0]=="activity"){//活动估计以后得搬到page下
-           Header( "HTTP/1.1 301 Moved Permanently" );
-           $this->redirect("http://meila.com".$url);
-        }
-*/            
+
+        
+            
         
         if (SYSDEF_DEBUG && function_exists('xhprof_enable')){
             xhprof_enable(XHPROF_FLAGS_MEMORY);
         }
         $this->_scope['$pageid'] = get_class($this);
         ml_factory::set_controller($this);
-/*
+
         $this->_login = ml_biz_login::get_instance();
 
 
-        $this->init();
-
         $this->_check_vistor();
+
         ml_tool_ua::add_usid();
         if (!$this->__visitor['online']) {
             $this->_login->cookie_login();
@@ -125,7 +116,7 @@ class ml_controller extends ml_controller_base
             $this->api_output(ML_RCODE_NOACTIVE);
 
         }
- */
+ 
         //投放微博用户访问路径
         $this->_wb_visit_log();
         $this->init();
@@ -258,7 +249,7 @@ class ml_controller extends ml_controller_base
         {
             $aVisitor = array(
                 'uid' => $this->__visitor['uid'],
-                'nickname' => $this->__visitor['nickname'],
+                'nick' => $this->__visitor['nick'],
                 'headPic' => ml_tool_picid::uid2portrait($this->__visitor['uid'],'sml'),
             );
             $this->set_scope_var('$visitor' , $aVisitor);
@@ -267,7 +258,7 @@ class ml_controller extends ml_controller_base
         {
             $aOwner = array(
                 'uid' => $this->__owner['uid'],
-                'nickname' => $this->__owner['nickname'],
+                'nick' => $this->__owner['nick'],
                 'headPic' => ml_tool_picid::uid2portrait($this->__visitor['uid'],'sml'),
             );
             $this->set_scope_var('$owner' , $aOwner);
@@ -419,7 +410,7 @@ var scope = '.$scope.'
             if($userinfo)
             {
                 $this->__owner['uid'] = $userinfo['uid'];
-                $this->__owner['nickname'] = $userinfo['nickname'];
+                $this->__owner['nick'] = $userinfo['nick'];
                 $this->__owner['email'] = $userinfo['email'];
                 $this->__owner['verifyE'] = $userinfo['verify_email'];
                 $this->__owner['status'] = $userinfo['status'];
@@ -440,6 +431,7 @@ var scope = '.$scope.'
      * 返回bool
      */
     public function check_permission($permission) {
+
         switch ($permission) {
             case ML_PERMISSION_LOGOUT_ONLY:
                 return $this->__visitor['online']==ML_USER_OFFLINE?true:false;
@@ -457,6 +449,7 @@ var scope = '.$scope.'
                 return $tmp?true:false;
                 break;
             case ML_PERMISSION_LOGIN_ONLY:
+
                 return $this->__visitor['online']==ML_USER_ONLINE?true:false;
                 break;
             case ML_PERMISSION_UNVERIFY_CANREAD:
@@ -490,14 +483,21 @@ var scope = '.$scope.'
 
         //$this->set_scope_var('weiboinfo', $a);
         $userinfo = $this->_login->is_ml_login();
+
         if($userinfo)
         {
             $this->__visitor['uid'] = $userinfo['uid'];
-            $this->__visitor['nickname'] = $userinfo['nickname'];
+            $this->__visitor['nick'] = $userinfo['nick'];
             $this->__visitor['email'] = $userinfo['email'];
             $this->__visitor['verifyE'] = $userinfo['verify_email'];
             $this->__visitor['status'] = $userinfo['status'];
             $this->__visitor['online'] = ML_USER_ONLINE;
+            $this->__visitor['userJob'] = $userinfo['userJob'];
+
+            $oUserJob = new ml_model_wruUserJob();
+            $oUserJob->std_getRowById($userinfo['job']);
+            $this->__visitor['userJob'] = $oUserJob->get_data();
+
 
             if ($this->__visitor['status'] == ML_USERSTATUS_THIRD) {
                 if ($this->__visitor['verifyE'] == ML_NOEMAIL) {

@@ -22,7 +22,7 @@ define('ML_PAGE_LOGIN' , '/page/login.php');             //登录页
 define('ML_PAGE_ACTIVE' , '/page/user/active.php');  //激活页
 
 
-define('ML_COOKIE_DOMAIN', '.wreader.cn');            //美啦cookie域
+define('ML_COOKIE_DOMAIN', '.gulibaby.com');            //美啦cookie域
 
 
 

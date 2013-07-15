@@ -18,6 +18,7 @@ class ml_model_wruUserSetting extends Lib_datamodel_db
 
     protected function hook_after_fetch()
     {
+
         if(isset($this->_data[0]['data']))
         {
             foreach ($this->_data as &$row) {
@@ -42,17 +43,23 @@ class ml_model_wruUserSetting extends Lib_datamodel_db
         if(!$this->init_db($uid , self::DB_SLAVE))
             return false;
         $sql = 'select * from '.$this->table.' where uid='.$uid.' and type = '.$type;
+        
         return $this->fetch_row($sql);
     }
 
-    function std_addRow($data = array())
+    function setByUidType($uid , $type , $data = array())
     {
         if(!$this->init_db($uid , self::DB_MASTER))
             return false;
-        $dataDefine = ml_factory::load_dataDefine($this->dataDefine);
-
-        return $this->insert($data);
+        
+        $fields = array(
+            'uid' => $uid,
+            'type' => $type,
+            'data' => $data,
+        );
+        return $this->replace($fields);
     }
+
     function std_updateRow($id , $data = array())
     {
         if(!$this->init_db($uid , self::DB_MASTER))

@@ -14,13 +14,13 @@
         <?php } ?>
       
       <hr>
-      <div<?php if($__visitor['h5mTheme']['data']['font-size']){?> style="font-size: <?php echo $__visitor['h5mTheme']['data']['font-size'] ?>px"<?php } ?>>
+      <div style="font-size: <?php echo $__visitor['h5mTheme']['font-size']?$__visitor['h5mTheme']['font-size']:12; ?>px；line-height=180%;">
         <?php 
-
-          echo ml_tool_standardShow::no_html( ml_tool_contentFormater_baseBySrc::outputFormatContent($sourceInfo['codeSign'] , $articleInfo['content'])); 
+          $articleShow = ml_tool_standardShow::no_html( ml_tool_contentFormater_baseBySrc::outputFormatContent($sourceInfo['codeSign'] , $articleInfo['content'])); 
+          echo $articleShow;
           ?>
       </div>
-
+      <input type="hidden" name="articleLen" value="<?php echo Tool_string::count_all_character($articleShow); ?>"/>
       <div class="btn-group">
         <button class="btn btn-large"><i class="icon-star"></i></button>
         <button class="btn btn-large"><i class="icon-share"></i></button>

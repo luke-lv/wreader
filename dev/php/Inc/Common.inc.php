@@ -18,7 +18,7 @@ date_default_timezone_set('Asia/Shanghai');
 define('SERVER_ROOT_PATH',str_replace('\\','/',substr(dirname(__FILE__),0,-4)));
 define('IN_SYSTEM',true);
 //系统调试开关
-define('SYSDEF_DEBUG' , false);
+define('SYSDEF_DEBUG' , true);
 
 
 if (SYSDEF_DEBUG){

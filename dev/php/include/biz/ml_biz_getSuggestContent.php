@@ -16,9 +16,14 @@ class ml_biz_getSuggestContent
 	private $_aRsArticle;
 	private $_data;
 
+	const SC_SUGTYPE_TREE = 'tree';
+	const SC_SUGTYPE_ATTEND = 'attend';
+	const SC_SUGTYPE_SELF = 'self';
 
 	const SC_KEYPREFIX = 'BSC_';
 	const SC_BASICEXPIRE = 600;
+
+	const SC_READMORE_WEIGHT = 1.01;
 
 	public function __construct($userJob)
 	{
@@ -32,7 +37,10 @@ class ml_biz_getSuggestContent
 	{
 		$rdsKey = self::SC_KEYPREFIX.'jbBscArtUn_'.$this->_jobConf['sign'];
 
-
+		$aReadmoreTagHash = array_combine(
+								$this->_tag2hash($this->_userJob['readmore_tag']), array_pad(array()
+								, count($this->_userJob['readmore_tag']), self::SC_READMORE_WEIGHT));
+		
 		//$this->_aBasicArticle = $this->oRdsCB->zrange($rdsKey , 0 , -1);
 
 		if(empty($this->_aBasicArticle))
@@ -41,7 +49,7 @@ class ml_biz_getSuggestContent
 			$aHash = $this->_tag2hash($aTag);
 
 
-			$this->oRdsCB->unionByTaghashes($rdsKey , $aHash);
+			$this->oRdsCB->unionByTaghashes($rdsKey , $aHash , array() , $aReadmoreTagHash);
 			$this->_aBasicArticle = $this->oRdsCB->zRevRange($rdsKey , 0 , -1);
 		
 
@@ -58,8 +66,12 @@ class ml_biz_getSuggestContent
 		$rdsKey = self::SC_KEYPREFIX.'uAttTgArtUn_'.$this->_userJob['uid'];
 		$rdsBasicKey = self::SC_KEYPREFIX.'jbBscArtUn_'.$this->_jobConf['sign'];
 
+		$aReadmoreTagHash = array_combine(
+								$this->_tag2hash($this->_userJob['readmore_tag']), array_pad(array()
+								, count($this->_userJob['readmore_tag']), self::SC_READMORE_WEIGHT));
+
 		$aHash = $this->_tag2hash($this->_userJob['attend_tag']);
-		$this->oRdsCB->unionByTaghashes($rdsKey , $aHash , array($rdsBasicKey));
+		$this->oRdsCB->unionByTaghashes($rdsKey , $aHash , array($rdsBasicKey) , $aReadmoreTagHash);
 		$this->_aAttendTagArticle = $this->oRdsCB->zRevRange($rdsKey , 0 , -1);
 	
 
@@ -99,6 +111,7 @@ class ml_biz_getSuggestContent
 		$this->_fetchattendTagArticle();
 
 		$this->_aRsArticle = $this->_aAttendTagArticle + $this->_aBasicArticle;
+		//$this->_aRsArticle = $this->_aBasicArticle;
 		
 
 
@@ -119,9 +132,9 @@ class ml_biz_getSuggestContent
 		foreach ($aArticle as &$value) {
 			$value['site_info'] = $aSid2site[$value['source_id']];
 			if(in_array($value['id'], $this->_aBasicArticle))
-				$value['suggestType'] = 0;
+				$value['suggestType'] = self::SC_SUGTYPE_TREE;
 			else if(in_array($value['id'], $this->_aAttendTagArticle))
-				$value['suggestType'] = 1;
+				$value['suggestType'] = self::SC_SUGTYPE_ATTEND;
 		}
 
 		$this->_data = $aArticle;

@@ -1,5 +1,5 @@
       <ul class="nav nav-tabs">
-        <li class="<?php if($page_id == 'wrh5m_settingPerson'){echo 'active';}; ?>"><a href="#home">个人信息</a></li>
-        <li><a href="#profile">设置</a></li>
+        <li class="<?php if($page_id == 'wrh5m_settingPerson'){echo 'active';}; ?>"><a href="<?php echo wrh5m_urlMaker::settingPerson(); ?>">个人信息</a></li>
+        <li class="<?php if($page_id == 'wrh5m_settingSet'){echo 'active';}; ?>"><a href="<?php echo wrh5m_urlMaker::settingSet(); ?>">设置</a></li>
         <li><a href="#messages">消息</a></li>
       </ul>
