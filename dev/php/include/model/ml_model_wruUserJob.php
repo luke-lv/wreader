@@ -44,8 +44,10 @@ class ml_model_wruUserJob extends Lib_datamodel_db
     
     protected function hook_before_write($array)
     {
-        $array['attend_tag'] = is_array($array['attend_tag']) ? implode(',', $array['attend_tag']) : '';
-        $array['readmore_tag'] = is_array($array['readmore_tag']) ? implode(',', $array['readmore_tag']) : '';
+        if(isset($array['attend_tag']))
+            $array['attend_tag'] = is_array($array['attend_tag']) ? implode(',', $array['attend_tag']) : '';
+        if(isset($array['readmore_tag']))
+            $array['readmore_tag'] = is_array($array['readmore_tag']) ? implode(',', $array['readmore_tag']) : '';
         return $array;
     }
 
@@ -85,13 +87,12 @@ class ml_model_wruUserJob extends Lib_datamodel_db
 
         return $this->insert($data);
     }
-    function std_updateRow($id , $data = array())
+    function std_updateRow($uid , $data = array())
     {
         if(!$this->init_db($uid , self::DB_MASTER))
             return false;
-        $dataDefine = ml_factory::load_dataDefine($this->dataDefine);
-
-        $where = 'id='.$id;
+        
+        $where = 'uid='.$uid;
 
         return $this->update($data , $where);
     }

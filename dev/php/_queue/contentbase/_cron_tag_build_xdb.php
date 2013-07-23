@@ -1,7 +1,7 @@
 <?php
 include(dirname(dirname(dirname(__FILE__))).'/__global.php');
 include(SERVER_ROOT_PATH.'/include/config/ml_spider_config.php');
-include(SERVER_ROOT_PATH.'/include/ml_function_lib.php');
+
 
 class _cron_tag_build_xdb
 {
@@ -16,13 +16,16 @@ class _cron_tag_build_xdb
 		$this->oAdminCommon->tags_getAll();
 		$rows = $this->oAdminCommon->get_data();
 
-		$tags = Tool_array::format_2d_array($rows , 'tag' , Tool_array::FORMAT_VALUE_ONLY);
+		//$tags = Tool_array::format_2d_array($rows , 'tag' , Tool_array::FORMAT_VALUE_ONLY);
 
 		$fp = fopen('tags_build.tmp', 'w');
-		foreach ($tags as $value) {
-			fwrite($fp, $value."\t13.8\t13.8\tsn\n");
+		foreach ($rows as $row) {
+			$idf = 13.8*$row['segment_idf'];
+
+			fwrite($fp, $row['tag']."\t13.8\t".$idf."\tsn\n");
 		}
 		fclose($fp);
+		
 
 		$dest_tmp = SERVER_ROOT_PATH.'/include/config/scws/wreader_tmp.xdb';
 		$dest = SERVER_ROOT_PATH.'/include/config/scws/wreader.xdb';

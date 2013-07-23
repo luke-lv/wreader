@@ -14,7 +14,7 @@
         <?php } ?>
       
       <hr>
-      <div style="font-size: <?php echo $__visitor['h5mTheme']['font-size']?$__visitor['h5mTheme']['font-size']:12; ?>px；line-height=180%;">
+      <div style="font-size:<?php echo $__visitor['h5mTheme']['font-size']?$__visitor['h5mTheme']['font-size']:12; ?>px">
         <?php 
           $articleShow = ml_tool_standardShow::no_html( ml_tool_contentFormater_baseBySrc::outputFormatContent($sourceInfo['codeSign'] , $articleInfo['content'])); 
           echo $articleShow;
@@ -29,3 +29,39 @@
     </div>
 
 <?php include($this->_tpl_dir.'/_tpl_htmlFooter.phtml'); ?>
+<script type="text/javascript">
+  var readAtEnd = false;
+  var timeStart = Date.parse(new Date()) / 1000;
+
+  
+  setInterval(function(){
+    timeLst = Date.parse(new Date()) / 1000 - timeStart;
+    $('#tt').html(timeLst);
+  } , 1000);
+
+  $(window).scroll(function(){
+    var scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+    var scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight;
+    var clientHeight = document.documentElement.clientHeight || document.body.clientHeight;
+
+    readTime = (Date.parse(new Date()) / 1000) - timeStart;
+
+    if(!readAtEnd && (scrollHeight -( scrollTop + clientHeight)) < 400){
+      readAtEnd = true;
+      
+      if(!scope.articleReaded && (readTime > scope.minReadTime || readTime > scope.maxReadTime))
+      {
+        scope.articleReaded = 1;
+        $.post(
+          'api/wr_articleReadOver.php',
+          {'aid':scope.aid},
+          function(){
+          }
+        );
+      }
+    }
+    else if(readAtEnd && (scrollHeight -( scrollTop + clientHeight)) > 400){
+      readAtEnd = false;
+    }
+  });
+</script>

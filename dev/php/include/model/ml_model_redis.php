@@ -235,10 +235,10 @@ Tool_logger::runningLog(__CLASS__ , 'decr',$key);
         }
     }
 
-    public function zRevRange($key, $start, $end){
+    public function zRevRange($key, $start, $end , $withscores = false){
 
         try{
-            return $this->oRedis->zRevRange($key, $start, $end);
+            return $this->oRedis->zRevRange($key, $start, $end , $withscores);
         }catch(Exception $oRedis){
             Tool_logger::monitorLog(__CLASS__,'redis zRevRange  key | '.$key ,Tool_logger::LOG_LEVEL_NOTICE);
             //Tool_logger::debugLog('redis zRevRange ', 'key | '.$key);

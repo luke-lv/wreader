@@ -21,6 +21,7 @@ define('ML_WR_JOB_TECH_ARCH', 10108);
 return array(
 	ML_WR_JOBTYPE_PD => array(
 		'name' => '产品系',
+		'tag_category' => ML_TAGCATEGORY_PD,
 		'jobs' => array(
 			ML_WR_JOB_PRODUCT_MANAGER => array(
 				'name' => '产品经理',
@@ -38,6 +39,7 @@ return array(
 	),
 	ML_WR_JOBTYPE_TECH => array(
 		'name' => '技术系',
+		'tag_category' => ML_TAGCATEGORY_TECH,
 		'jobs' => array(
 			ML_WR_JOB_TECH_PHP => array(
 				'name' => 'php应用开发',

@@ -70,6 +70,7 @@
 				<td>
 					<a href="?dtdfn=<?php echo $data['_dataDefine'] ?>&page=articleShow&id=<?php echo $row['id'] ?>">查看</a>
 					<a href="?dtdfn=<?php echo $data['_dataDefine'] ?>&page=editForm&id=<?php echo $row['id'] ?>">编辑</a>
+					<a href="?dtdfn=<?php echo $data['_dataDefine'] ?>&api=reSegment&id=<?php echo $row['id'] ?>">分词</a>
 					<a href="javascript:;" onclick="if(window.confirm('xxx')){window.location='?dtdfn=<?php echo $data['_dataDefine'] ?>&api=delById&id=<?php echo $row['id'] ?>'}"><font color="red">删除</font></a>
 				</td>
 			</tr>

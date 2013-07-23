@@ -1,6 +1,7 @@
 <?php
 class ml_biz_getSuggestContent
 {
+	private $_uid;
 	private $_job;
 	private $_userJob;
 	private $_jobConf;
@@ -23,10 +24,12 @@ class ml_biz_getSuggestContent
 	const SC_KEYPREFIX = 'BSC_';
 	const SC_BASICEXPIRE = 600;
 
-	const SC_READMORE_WEIGHT = 1.01;
+	const SC_READMORE_WEIGHT = 1.05;
+	const SC_ATTEND_WEIGHT = 1.2;
 
-	public function __construct($userJob)
+	public function __construct($uid , $userJob)
 	{
+		$this->_uid = $uid;
 		$this->_userJob = $userJob;
 		$this->_job = $this->_userJob['job_id'];
 		$this->oRdsCB = new ml_model_rdsContentBase();
@@ -37,19 +40,17 @@ class ml_biz_getSuggestContent
 	{
 		$rdsKey = self::SC_KEYPREFIX.'jbBscArtUn_'.$this->_jobConf['sign'];
 
-		$aReadmoreTagHash = array_combine(
-								$this->_tag2hash($this->_userJob['readmore_tag']), array_pad(array()
-								, count($this->_userJob['readmore_tag']), self::SC_READMORE_WEIGHT));
 		
 		//$this->_aBasicArticle = $this->oRdsCB->zrange($rdsKey , 0 , -1);
 
 		if(empty($this->_aBasicArticle))
 		{
 			$aTag = $this->_jobAbility['basicAbilityTag'];
-			$aHash = $this->_tag2hash($aTag);
 
+			$aHash = $this->_tag2hash(array_keys($aTag));
+			$aWeight = array_combine($aHash ,array_values($aTag));
 
-			$this->oRdsCB->unionByTaghashes($rdsKey , $aHash , array() , $aReadmoreTagHash);
+			$this->oRdsCB->unionByTaghashes($rdsKey , $aHash , array() , $aWeight);
 			$this->_aBasicArticle = $this->oRdsCB->zRevRange($rdsKey , 0 , -1);
 		
 
@@ -63,16 +64,39 @@ class ml_biz_getSuggestContent
 	}
 	private function _fetchattendTagArticle()
 	{
-		$rdsKey = self::SC_KEYPREFIX.'uAttTgArtUn_'.$this->_userJob['uid'];
+		$rdsKey = self::SC_KEYPREFIX.'uAttTgArtUn_'.$this->_uid;
 		$rdsBasicKey = self::SC_KEYPREFIX.'jbBscArtUn_'.$this->_jobConf['sign'];
 
-		$aReadmoreTagHash = array_combine(
-								$this->_tag2hash($this->_userJob['readmore_tag']), array_pad(array()
-								, count($this->_userJob['readmore_tag']), self::SC_READMORE_WEIGHT));
+
+		$oRdsReaded = new ml_model_rdsUserReaded();
+		$aReadedTag = $oRdsReaded->getReadedTag($this->_uid , true);
+		
+		$aReadedTagHash = array_keys($aReadedTag);
+
+		$aAttendTagHash = $this->_tag2hash($this->_userJob['attend_tag']);
+
+		$aAllTaghash = array_unique( array_values( array_merge($aReadedTagHash , array_values($aAttendTagHash))));
+		
+		$aAllHash2Weight = array_combine(
+								$aAllTaghash, array_pad(array()
+								, count($aAllTaghash), 1));
+
+		foreach ($aAllHash2Weight as $hash => &$value) {
+
+			if(in_array($hash, $aAttendTagHash))
+				$value = self::SC_ATTEND_WEIGHT;
+			else if(in_array($hash, $aReadedTagHash)){
+
+				$value = self::SC_READMORE_WEIGHT + ((int)$aReadedTag[$hash] /5);
+			}
+			
+		}
+		
 
 		$aHash = $this->_tag2hash($this->_userJob['attend_tag']);
-		$this->oRdsCB->unionByTaghashes($rdsKey , $aHash , array($rdsBasicKey) , $aReadmoreTagHash);
+		$this->oRdsCB->unionByTaghashes($rdsKey , $aHash , array($rdsBasicKey) , $aAllHash2Weight);
 		$this->_aAttendTagArticle = $this->oRdsCB->zRevRange($rdsKey , 0 , -1);
+
 	
 
 		$this->oRdsCB->delete($rdsKey);
@@ -111,18 +135,24 @@ class ml_biz_getSuggestContent
 		$this->_fetchattendTagArticle();
 
 		$this->_aRsArticle = $this->_aAttendTagArticle + $this->_aBasicArticle;
+
 		//$this->_aRsArticle = $this->_aBasicArticle;
 		
 
 
 		return true;		
 	}
-	public function getArticleListByPage($page , $pagesize = 100)
+	public function getArticleListByPage($page , $pagesize = 500)
 	{
 		$start = ($page-1)*$pagesize;
 		$aAids = array_slice($this->_aRsArticle, $start , $pagesize);
 		$rs = $this->_fetchArticleInfo($aAids);
 		$aArticle = $this->get_data();
+
+		$oRdsReaded = new ml_model_rdsUserReaded();
+		$aReaded = $oRdsReaded->getReadedByArticleId($this->_uid , $aAids);
+
+
 		if(!$rs)
 			return false;
 		$aSrcId = array_unique(Tool_array::format_2d_array($aArticle , 'source_id' , Tool_array::FORMAT_VALUE_ONLY));
@@ -135,6 +165,8 @@ class ml_biz_getSuggestContent
 				$value['suggestType'] = self::SC_SUGTYPE_TREE;
 			else if(in_array($value['id'], $this->_aAttendTagArticle))
 				$value['suggestType'] = self::SC_SUGTYPE_ATTEND;
+
+			$value['readed'] = $aReaded[$value['id']]==1 ? true : false;
 		}
 
 		$this->_data = $aArticle;

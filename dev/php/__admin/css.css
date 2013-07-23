@@ -51,7 +51,7 @@ a:hover,a.a:hover,a.b:hover,a.ml:hover{ font-size:12px; color:#ff6600;}
 .adminlist td.td_title{ background:url(../data/images/bg01.gif) repeat-x; padding-left:5px;}
 
 .adminlist2 {background:#fff;}
-.adminlist2 th {margin: 0px; padding: 6px 14px 2px 24px; text-align:left; font-family:Microsoft YaHei;color:#006b74; border-bottom:3px solid #dddddd;} 
+.adminlist2 th {margin: 0px; padding: 6px 14px 2px 24px; text-align:center; font-family:Microsoft YaHei;color:#006b74; border-bottom:3px solid #dddddd;} 
 .adminlist2 tr { padding:4px;height:22px;}
 .adminlist2 td {border-bottom: 1px dotted #cccccc;padding: 4px 0; line-height:22px; font-size: 12px;background:#ffffff; font-size:12px;}
 .adminlist2 td.td_title{ background:url(../data/images/bg01.gif) repeat-x; padding-left:5px;}

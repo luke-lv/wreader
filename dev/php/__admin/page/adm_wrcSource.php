@@ -109,11 +109,12 @@ class adm_wrcSource extends admin_ctrl
 
         if (!empty($aRows)) {
             foreach ($aRows as $key => $value) {
+                echo $value['title']."\n";
                 $oBizA2R->execute($value['id'] , $value['tags']);
             }
         }
         
-        $this->_redirect($_SERVER['HTTP_REFERER'] , '重建完成' , 1);    
+        //$this->_redirect($_SERVER['HTTP_REFERER'] , '重建完成' , 1);    
     }
     //protected function 
 }

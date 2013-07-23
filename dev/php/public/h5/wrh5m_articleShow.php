@@ -26,6 +26,24 @@
 			$oSource->std_getRowById($articleInfo['source_id']);
 			$data['sourceInfo'] = $oSource->get_data();
 
+			$oReaded = new ml_model_wruReadedArticle();
+			$oReaded->std_getRowById($this->__visitor['uid'] , $aid);
+			$aReaded = $oReaded->get_data();
+
+			$this->set_scope_var('articleReaded' , empty($aReaded) ? 0 : 1);
+
+
+			$contentLength = Tool_string::count_all_character($articleInfo['content']);
+			$minReadTime = 0;//round($contentLength/(1300/60));
+			$maxReadTime = round($contentLength/(300/60) * 2);
+
+			$oRdsReaded = new ml_model_rdsUserReaded();
+			$oRdsReaded->addReadedArticleId($this->__visitor['uid'] , $aid);
+
+			$this->set_scope_var('minReadTime' , $minReadTime);
+			$this->set_scope_var('maxReadTime' , $maxReadTime);
+			$this->set_scope_var('articlePageTime' , time());
+			$this->set_scope_var('aid' , $aid);
 			$this->page_output('articleShow' , $data);
 		}
 	}

@@ -83,7 +83,7 @@ class ml_tool_admin_view
         }
     }
 
-    static public function dtdfn_input($type ,$name, $dtdfn , $value = null)
+    static public function dtdfn_input($type ,$name, $dtdfn , $value = null , $id = null)
     {
         if(in_array($type, array('i','s')))
         {
@@ -95,8 +95,12 @@ class ml_tool_admin_view
             foreach ($dtdfn['enum'] as $key => $cn) {
                 $options.='<option value="'.$key.'"'.($value==$key?' selected':'').'>'.$cn.'</option>';
             }
-            return '<select name="'.$name.'">'.$options.'</select>';
+
+            $id_str = !is_null($id) ? ' id="'.$id.'"' : '';
+            return '<select name="'.$name.'"'.$id_str.'>'.$options.'</select>';
         }
 
     }
+
+
 }

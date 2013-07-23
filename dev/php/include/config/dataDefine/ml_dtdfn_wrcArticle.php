@@ -20,6 +20,10 @@
 				'type' => 's',
 				'length'=>50,
 				'format' => 'url'),
+			'tags' => array(
+				'cn'=>'标签',
+				'type' => 's',
+				'length'=>50),
 		)
 	);
 ?>

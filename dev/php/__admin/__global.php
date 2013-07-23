@@ -151,12 +151,13 @@ class admin_ctrl
         else
             $page = $_GET['page'] ? 'page_'.$_GET['page'] : 'page_index';    
         
-        echo '<html>
+        echo '<!DOCTYPE html>
+    <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>登录管理后台</title>
 <link href="../css.css" rel="stylesheet" type="text/css">
-<script src="/static/js/jquery-1.8.0.min.js" type="text/javascript" ></script>
+<script src="../jquery.js" type="text/javascript" ></script>
 </head>
 <body>';
         

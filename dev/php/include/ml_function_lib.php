@@ -402,12 +402,18 @@ class ml_function_lib
         $scws->set_duality(($data['option'] & SCWS_TEST_DUALITY) ? true : false); 
         $scws->send_text($str);
 
+        
         while ($result = $scws->get_result())
         {
-            
-            foreach ($result as $tmp)
+        
+            foreach ($result as $tmp){
+                if(in_array($tmp['word'], $aBlack))
+                    continue;
+
                 $words[] = $tmp['word'];
+            }
         }
+
         return $words;
 
     }

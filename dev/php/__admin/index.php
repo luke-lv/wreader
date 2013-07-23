@@ -27,6 +27,10 @@ $is_admin = true;//$o->get_session('level') == K_ADM_LV_ADMINISTRATOR;
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>登录管理后台</title>
 <link href="./css.css" rel="stylesheet" type="text/css">
+<link href="./bootstrap.min.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="./jquery.js"></script>
+<script type="text/javascript" src="./bootstrap.min.js"></script>
+<script type="text/javascript" src="./bootstrap-typeahead.js"></script>
 <script>
 function hideMenu()
 {
@@ -65,6 +69,7 @@ function hideMenu()
       <tr><td width="100%" align="center"><a href="/__admin/page/adm_wrcSource.php" target="admin_iframe">源管理</a></td></tr>
       <tr><td width="100%" align="center"><a href="/__admin/page/adm_wrcArticle.php" target="admin_iframe">文章管理</a></td></tr>
       <tr><td width="100%" align="center"><a href="/__admin/page/adm_tags.php" target="admin_iframe">标签管理</a></td></tr>
+      <tr><td width="100%" align="center"><a href="/__admin/page/adm_wrcJobContent.php" target="admin_iframe">职业知识库管理</a></td></tr>
       </table>
   </td></tr>
 

@@ -21,33 +21,37 @@ class ml_model_admin_dbTag extends Lib_datamodel_db
 
         parent::__construct('wrc_source' , $db_config['wrc_source']);
     }
-    public function tags_list($page , $pagesize = 20 , $type=0)
+    public function tags_list($page , $pagesize = 20 , $category=0 , $is_core = false)
     {
         if(!$this->init_db())
             return false;
 
         $start = ($page-1)*$pagesize;
-        $where = ' where type='.$type;
+        $where = ' where category='.$category;
+        if($is_core)
+            $where .= ' and is_core = 1';
         $sql = 'select * from '.self::TB_TAGS.$where.' order by id desc limit '.$start.','.$pagesize;
         
 
         return $this->fetch($sql);
     }
-    public function tags_count($type=0)
+    public function tags_count($category=0 , $is_core = 0)
     {
         if(!$this->init_db())
             return false;
 
         $start = ($pageid-1)*$pagesize;
-            $where = 'type='.$type;
-        
+        $where = 'category='.$category;
+        if($is_core)
+            $where .= ' and is_core = 1';   
+
         $this->table = self::TB_TAGS;
 
         return $this->fetch_count($where);
     }
 
 
-    public function tags_batch_add($type , $core_tagid , $aTags)
+    public function tags_batch_add($type , $category , $core_tagid , $aTags)
     {
         if(!$this->init_db())
             return false;
@@ -55,6 +59,7 @@ class ml_model_admin_dbTag extends Lib_datamodel_db
         foreach ($aTags as $value) {
             $a = array(
                 'type' => $type,
+                'category' => $category,
                 'core_tagid' => $core_tagid,
                 'tag' => $value,
                 'tag_hash' => crc32($value),
@@ -65,13 +70,23 @@ class ml_model_admin_dbTag extends Lib_datamodel_db
         return;
     }
 
-    public function tags_change_type_by_id($type , $id)
+    public function tags_change_category_by_id($category , $id)
     {
         if(!$this->init_db())
             return false;
 
             $this->table = self::TB_TAGS;
-            $this->update(array('type'=>$type) , '`id`='.$id , 1);
+            $this->update(array('category'=>$category) , '`id`='.$id , 1);
+        
+        return;
+    }
+    public function tags_change_level_by_id($level , $id)
+    {
+        if(!$this->init_db())
+            return false;
+
+            $this->table = self::TB_TAGS;
+            $this->update(array('level'=>$level) , '`id`='.$id , 1);
         
         return;
     }
@@ -105,13 +120,23 @@ class ml_model_admin_dbTag extends Lib_datamodel_db
         
         return;
     }
-    public function tags_change_sub_type_by_id($type , $id)
+    public function tags_change_type_by_id($type , $id)
     {
         if(!$this->init_db())
             return false;
 
             $this->table = self::TB_TAGS;
-            $this->update(array('sub_type'=>$type) , '`id`='.$id , 1);
+            $this->update(array('type'=>$type) , '`id`='.$id , 1);
+        
+        return;
+    }
+    public function tags_change_content_name_by_id($tagid , $id)
+    {
+        if(!$this->init_db())
+            return false;
+
+            $this->table = self::TB_TAGS;
+            $this->update(array('contentName_tagid'=>$tagid) , '`id`='.$id , 1);
         
         return;
     }
@@ -163,11 +188,11 @@ class ml_model_admin_dbTag extends Lib_datamodel_db
         $sql = 'select * from '.self::TB_TAGS.' where `tag` like "%'.$tag.'%"';
         return $this->fetch($sql);
     }
-    public function core_tags_get_all($type = 0)
+    public function core_tags_get_all($category = 0)
     {
         if(!$this->init_db())
             return false;
-        $condition = $type > 0 ? ' and type = '.$type : '';
+        $condition = $category > 0 ? ' and category = '.$category : '';
         $sql = 'select * from '.self::TB_TAGS.' where is_core = 1'.$condition;
         return $this->fetch($sql);
     }
@@ -197,12 +222,33 @@ class ml_model_admin_dbTag extends Lib_datamodel_db
         $this->set_data($aCoreTag);
         return true;
     }
+    public function core_tag_get_by_type_category($category = 0 , $type = 0)
+    {
+        if(!$this->init_db())
+            return false;
+        
+        
+        $where = ' and type = '.$type;
+        if($category)
+            $where .= ' and category in (0,'.$category.')';
+        $sql = 'select * from '.self::TB_TAGS.' where is_core = 1'.$where;
+
+        return $this->fetch($sql);
+    }
     public function tags_del($id)
     {
         if(!$this->init_db())
             return false;
 
         $sql = 'delete from '.self::TB_TAGS.' where `id` = '.$id;
+        return $this->query($sql);
+    }
+    public function tags_del_by_ids($aId)
+    {
+        if(!$this->init_db())
+            return false;
+
+        $sql = 'delete from '.self::TB_TAGS.' where `id` in ('.implode(',', $aId).')';
         return $this->query($sql);
     }
     public function tags_getAll()

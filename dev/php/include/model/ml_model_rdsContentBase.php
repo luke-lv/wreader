@@ -40,10 +40,11 @@ class ml_model_rdsContentBase extends ml_model_redis
 
         $aWeight = array_pad(array(), count($aKeys), 1);
         $prefix_len = strlen(self::KEY_PREFIX);
+        
         foreach ($aKeys as $key => $value) {
             $tagHash = substr($value , $prefix_len);
-            if(isset($aTagHash2Weight[$tagHash]))
-                $aWeight[$key] = $aTagHash2Weight[$tagHash];
+        
+            $aWeight[$key] = $aTagHash2Weight[$tagHash] ? $aTagHash2Weight[$tagHash] : 1 ;
         }
         
         return $this->zUnion($destKey , $aKeys , $aWeight);

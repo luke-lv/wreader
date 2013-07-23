@@ -1,7 +1,7 @@
 <?php
 include(dirname(dirname(dirname(__FILE__))).'/__global.php');
 include(SERVER_ROOT_PATH.'/include/config/ml_spider_config.php');
-include(SERVER_ROOT_PATH.'/include/ml_function_lib.php');
+
 
 class _cron_spider_base
 {

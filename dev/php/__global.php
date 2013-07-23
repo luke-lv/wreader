@@ -7,6 +7,7 @@ include_once(SERVER_ROOT_PATH.'/include/config/dataRule/ml_datarule_base.php');
 // include_once(SERVER_ROOT_PATH.'/include/config/ml_catelog.php');    //品类配置文件
 include_once(SERVER_ROOT_PATH.'/include/ml_controller.php');        //群博客基本参数
 include_once(SERVER_ROOT_PATH.'/include/ml_factory.php');            //群博客基本参数
+include_once(SERVER_ROOT_PATH.'/include/ml_function_lib.php');            //群博客基本参数
 include_once(SERVER_ROOT_PATH.'/include/config/ml_mail_config.php');     //美啦邮件基本定义
 
 

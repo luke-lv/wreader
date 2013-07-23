@@ -102,7 +102,7 @@ class ml_model_wrcArticle extends Lib_datamodel_db
             return false;
         $dataDefine = ml_factory::load_dataDefine($this->dataDefine);
 
-        $where = 'id='.$id;
+        $where = 'id="'.$id.'"';
 
         return $this->update($data , $where);
     }

@@ -9,7 +9,7 @@
           <?php foreach ($articleList as $key => $value) { ?>
           <tr>
             <td class="artLsType_<?php echo $value['suggestType'] ?>">
-              <h3><a href="wrh5m_articleShow.php?aid=<?php echo $value['id']; ?>" style="word-break: normal"><?php echo str_replace('&nbsp;' , ' ' , Tool_string::un_html($value['title'])); ?></a></h3>
+              <h3><a <?php if($value['readed']){ ?>class="muted"<?php } ?> href="wrh5m_articleShow.php?aid=<?php echo $value['id']; ?>" style="word-break: normal"><?php echo str_replace('&nbsp;' , ' ' , Tool_string::un_html($value['title'])); ?></a></h3>
               <div class="row-fluid">
                 <div class="span4"><?php echo ml_tool_standardShow::time($value['pub_time']); ?> 来自 <a href="http://<?php echo $value['site_info']['domain'] ?>" target="_blank"><?php echo Tool_string::un_html($value['site_info']['site_name']) ?></a></div>
               </div>

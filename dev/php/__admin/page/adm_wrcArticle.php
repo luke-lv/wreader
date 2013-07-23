@@ -94,6 +94,21 @@ class adm_wrcArticle extends admin_ctrl
         $this->model->std_delById($id);
         $this->back();
     }
+    protected function api_reSegment()
+    {
+        $id = $this->input('id');
+        $this->model->std_getRowById($id);
+        $articleInfo = $this->model->get_data();
+
+        $aTag = ml_function_lib::segmentChinese($articleInfo['title']);
+
+        $oTag = new ml_model_admin_dbTag();
+        $oTag->tags_get_by_tag($aTag);
+        $aTag = Tool_array::format_2d_array($oTag->get_data() , 'tag' , Tool_array::FORMAT_VALUE_ONLY);
+
+        $this->model->std_updateRow($id , array('tags' => $aTag));
+        $this->back();
+    }
 }
 
 new adm_wrcArticle();

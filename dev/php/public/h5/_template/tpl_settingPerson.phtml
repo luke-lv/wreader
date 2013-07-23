@@ -8,7 +8,6 @@
       
       <h4>
         当前帐号:<a href=""><?php echo $__visitor['nick']; ?></a>
-        <a href="./tmp_setjob.php" class="btn btn-mini pull-right">切换</a><br/>
 		  </h4>	
 	    
       <h4>成长情况</h4>
@@ -18,8 +17,8 @@
       </div>
       <h4>其他关注</h4>
       <div style="padding-left: 20px">
-        <textarea class="input-large" placeholder="标签以空格分隔噢" id="iptAttendTag"><?php echo Tool_string::un_html(implode(' ',$__visitor['userJob']['attend_tag'])) ?></textarea>
-        <a href="" class="btn btn-mini pull-right" id="saveAttendTag">保存修改</a>
+        <textarea class="input-large" placeholder="标签以空格分隔噢" id="iptAttendTag"><?php echo Tool_string::esc_edit_html(implode(' ',$__visitor['userJob']['attend_tag'])) ?></textarea>
+        <a href="javascript:;" class="btn btn-mini pull-right" id="saveAttendTag">保存修改</a><span class="text-success pull-right" style="margin-right: 20px" id="msgAttend"></span>
       </div>
     </div>
 
@@ -29,9 +28,12 @@
 
     $.post(
       'api/wr_setAttendTag.php',
-      {tag:$('#iptAttendTag').value()},
+      {tags:$('#iptAttendTag').val()},
       function(){
-        alert('x');
+        $('#msgAttend').html('保存成功');
+        setTimeout(function(){
+          $('#msgAttend').html('');
+        } , 1000);
       }
     );
     

@@ -165,17 +165,18 @@ $defaultUids = array(
     );
 
 
-define('ML_TAGTYPE_OTHER', 0);
-define('ML_TAGTYPE_TECH', 1);
-define('ML_TAGTYPE_PD', 2);
-define('ML_TAGTYPE_OP', 3);
-define('ML_TAGTYPE_TEST', 4);
-define('ML_TAGTYPE_BIZ', 5);
-define('ML_TAGTYPE_BRAND', 6);
-define('ML_TAGTYPE_PEOPLE', 7);
-define('ML_TAGTYPE_BOOK', 8);
-define('ML_TAGTYPE_MANAGE', 9);
-$ML_TAG_TYPE = array(
+define('ML_TAGCATEGORY_OTHER', 0);
+define('ML_TAGCATEGORY_TECH', 1);
+define('ML_TAGCATEGORY_PD', 2);
+define('ML_TAGCATEGORY_OP', 3);
+define('ML_TAGCATEGORY_TEST', 4);
+define('ML_TAGCATEGORY_BIZ', 5);
+define('ML_TAGCATEGORY_BRAND', 6);
+define('ML_TAGCATEGORY_PEOPLE', 7);
+define('ML_TAGCATEGORY_BOOK', 8);
+define('ML_TAGCATEGORY_MANAGE', 9);
+define('ML_TAGCATEGORY_CONTENTTYPE', 99);
+$ML_TAG_CATEGORY = array(
     '其他' => 0,
     '技术' => 1,
     '产品' => 2,
@@ -186,9 +187,33 @@ $ML_TAG_TYPE = array(
     '人物' => 7,
     '书' => 8,
     '管理' => 9,
+    '内容方向' => 99,
 );
-$ML_TAG_SUBTYPE = array(
-    
+define('ML_TAGTYPE_COMMON', 0);
+define('ML_TAGTYPE_CONTENTNAME', 1);
+define('ML_TAGTYPE_CONTENTTYPE', 2);
+$ML_TAG_TYPE = array(
+    '普通标签' => 0,
+    '内容关键字' => 1,
+    '内容方向' => 2,
+);
+define('ML_JOBLEVEL_LOW' , 0);
+define('ML_JOBLEVEL_MID' , 1);
+define('ML_JOBLEVEL_HIGH' , 2);
+define('ML_JOBLEVEL_PRO' , 4);
+$ML_JOBLEVEL = array(
+    '初级' => 0,
+    '中级' => 1,
+    '高级' => 3,
+    '专家' => 4,
+);
+define('ML_RECOMMENDLEVEL_LOW' , 0);
+define('ML_RECOMMENDLEVEL_MID' , 1);
+define('ML_RECOMMENDLEVEL_HIGH' , 2);
+$ML_RECOMMENDLEVEL = array(
+    '低级' => 0,
+    '中级' => 1,
+    '高级' => 3,
 );
 
 

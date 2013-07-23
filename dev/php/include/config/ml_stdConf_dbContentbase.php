@@ -74,4 +74,26 @@ return array(
         'tb_n' => 2,
         'tb_prefix' => 'wrc_article_content'
     ),
+    'wrc_jobContent' => array(
+        'connect' => array(
+            'master' => array(
+                'host' => array(
+                    0 => 'localhost:3306'
+                ),
+                'user' => 'wreader',
+                'pw' => 'cucued',
+                'name' => 'wreader_dev',
+            ),
+            'slave' => array(
+                'host' => array(
+                    0 => 'localhost:3306'
+                ),
+                'user' => 'wreader',
+                'pw' => 'cucued',
+                'name' => 'wreader_dev',
+            )
+        ),
+        'tb_n' => 1,
+        'tb_prefix' => 'wrc_jobContent'
+    ),
 );

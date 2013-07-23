@@ -1,22 +1,15 @@
 <?php
 function page_index($adm)
 {
-    global $ML_TAG_TYPE;
-    $aId2tag = array_flip($ML_TAG_TYPE);
+    global $ML_TAG_CATEGORY , $ML_TAG_TYPE;
+    $aId2tag = array_flip($ML_TAG_CATEGORY);
 ?>
 <table class="adminlist" width="100%">
 <tr>
 <td width="50%">
-<?php foreach ($aId2tag as $type => $name) {
-    echo '<a href="?type='.$type.'">'.$name.'</a> | ';
+<?php foreach ($aId2tag as $ctg => $name) {
+    echo '<a href="?category='.$ctg.'">'.$name.'</a> | ';
 } ?>
-
-<?php if($adm['sub_type']){ ?>
-<br/>
-<?php foreach ($adm['sub_type'] as $key => $value) {
-    echo '<a href="?type='.ML_TAGTYPE_COLOR.'&subtype='.$key.'">'.$value.'</a> | ';
-
-}} ?>
 </td>
 <td width="30%">
     <a href="?page=nearHotTag">最近常见标签</a>
@@ -31,22 +24,39 @@ function page_index($adm)
 </tr></table>
 <table class="adminlist" width="100%">
 <tr>
-    <th>#</th>
+    <th>#<input type="checkbox" id="cbSelAll" value=""/></th>
     <th>标签</th>
+    <th>类型</th>
     <th>分类</th>
-    <th>核心标签</th>
-    <th>子分类</th>
+    <th>核心标签（<a href="?category=<?php echo $adm['category']; ?>&is_core=true">查看</a>）</th>
     <th>难度级别</th>
     <th>操作</th>
 </tr>
+<form id="formList" method="post">
 <?php foreach ($adm['tags'] as $key => $value) {?>
 <tr>
-    <td><a id="id<?php echo $value['id']; ?>" name="id<?php echo $value['id']; ?>"></a><?php echo $value['id']; ?></td>
+    <td><a id="id<?php echo $value['id']; ?>" name="id<?php echo $value['id']; ?>"></a><?php echo $value['id']; ?>
+        <input type="checkbox" class="cbList" name="ids[]" value="<?php echo $value['id']; ?>"/></td>
     <td><?php echo $value['tag']; ?></td>
     <td>
         <select name="type" onchange="window.location='?api=changeTypeById&id=<?php echo $value['id']; ?>&type='+this.value">
-        <?php foreach ($ML_TAG_TYPE as $typename => $id) { ?>
-        <option value="<?php echo $id; ?>"<?php if($id==$value['type']){echo ' selected';} ?>><?php echo $typename; ?></option>
+        <?php foreach ($ML_TAG_TYPE as $type => $id) { ?>
+        <option value="<?php echo $id; ?>"<?php if($id==$value['type']){echo ' selected';} ?>><?php echo $type; ?></option>
+        <?php } ?>
+    </select>
+
+        <select name="type" onchange="window.location='?api=changeContentNameById&id=<?php echo $value['id']; ?>&tag_id='+this.value">
+            <option value="0">无</option>
+        <?php foreach ($adm['contentNameTag'] as $id => $v) { ?>
+        <option value="<?php echo $id; ?>"<?php if($id==$value['contentName_tagid']){echo ' selected';} ?>><?php echo $v; ?></option>
+        <?php }?>
+        </select>
+
+    </td>
+    <td>
+        <select name="category" onchange="window.location='?api=changeCategoryById&id=<?php echo $value['id']; ?>&category='+this.value">
+        <?php foreach ($ML_TAG_CATEGORY as $categoryname => $id) { ?>
+        <option value="<?php echo $id; ?>"<?php if($id==$value['category']){echo ' selected';} ?>><?php echo $categoryname; ?></option>
         <?php } ?>
     </select>
     </td>
@@ -58,8 +68,10 @@ function page_index($adm)
         <?php } ?>
     </select>
     </td>
-    <td><?php echo $adm['sub_type'][$value['sub_type']]; ?></td>
-    <td><?php echo $value['sub_type']; ?></td>
+    <td><select name="level" onchange="window.location='?api=changeLevelById&id=<?php echo $value['id']; ?>&level='+this.value">
+        <?php for($i=0;$i<5;$i++) { ?>
+        <option value="<?php echo $i; ?>"<?php if($i==$value['level']){echo ' selected';} ?>><?php echo $i; ?></option>
+        <?php } ?></td>
     <td>
         <a href="?api=delTag&id=<?php echo $value['id']; ?>"><font color="red">删除</font></a>
         推荐分数：<select name="pt" onchange="window.location='?api=changePtById&id=<?php echo $value['id']; ?>&pt='+this.value">
@@ -68,18 +80,13 @@ function page_index($adm)
         <?php } ?>
     </select>
 
-        <?php if($adm['sub_type']){ ?>
-        修改子分类：<select name="sub_type" onchange="window.location='?api=changeSubTypeById&id=<?php echo $value['id']; ?>&sub_type='+this.value">
-        <?php foreach ($adm['sub_type'] as $id => $typename) { ?>
-        <option value="<?php echo $id; ?>"<?php if($id==$value['sub_type']){echo ' selected';} ?>><?php echo $typename; ?></option>
-        <?php } ?>
-    </select>
-        <?php } ?>
     </td>
 </tr>
 <?php } ?>
+</form>
 <tr>
     <td colspan="4"><?php  echo ml_tool_admin_view::get_page($adm['total'] , 20 , $adm['page']);  ?></td>
+    <td colspan="4"><input type="button" id="btnDel" value="删除" style="background-color:red;"/></td>
 </tr>
 </table>
 <table class="adminlist" width="100%">
@@ -88,9 +95,9 @@ function page_index($adm)
     <td>
 标签(每行一个)：<br/><textarea name="tags"></textarea><br/>
 分类：<br/>
-    <select name="type">
-        <?php foreach ($ML_TAG_TYPE as $typename => $id) { ?>
-        <option value="<?php echo $id; ?>"><?php echo $typename; ?></option>
+    <select name="category">
+        <?php foreach ($ML_TAG_CATEGORY as $categoryname => $id) { ?>
+        <option value="<?php echo $id; ?>"><?php echo $categoryname; ?></option>
         <?php } ?>
     </select><br/>
 核心标签：<br/>
@@ -99,10 +106,35 @@ function page_index($adm)
         <option value="<?php echo $id; ?>"><?php echo $core_tag; ?></option>
         <?php } ?>
     </select><br/>
+标签类型：<br/>
+<select name="type">
+        <?php foreach ($ML_TAG_TYPE as $type => $value) { ?>
+        <option value="<?php echo $value; ?>"><?php echo $type; ?></option>
+        <?php } ?>
+    </select><br/>
     <input type="submit" value="保存"/> <a href="?api=rebuildRdsTaghash">重建标签类型索引</a>
     </td>
 </tr>
 </table>
+<script type="text/javascript">
+    $('#cbSelAll').click(function(){
+        if(!$(this).attr('checked')){
+            $('.cbList').each(function(){
+                $(this).attr('checked' , false);
+            });
+        }else{
+            $('.cbList').each(function(){
+                $(this).attr('checked' , true);
+            });
+        }
+    });
+    $('#btnDel').click(function(){
+        if(window.confirm('xxx')){
+            $('#formList').attr('action' , '?api=delByIds');
+            $('#formList').submit();
+        }
+    });
+</script>
 <?php
 }
 
