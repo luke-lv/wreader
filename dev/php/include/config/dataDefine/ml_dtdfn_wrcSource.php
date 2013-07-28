@@ -1,5 +1,7 @@
 <?php
 	include_once(SERVER_ROOT_PATH.'/include/config/ml_spider_config.php');
+	global $ML_TAG_CATEGORY;
+
 	return array(
 		'table'=>'wrc_source',
 		'hash_table' => false,
@@ -45,6 +47,14 @@
 				'cn'=>'编码',
 				'type' => 'enum',
 				'enum'=>array(ML_CHARSET_UTF8=>'utf8' , ML_CHARSET_GBK=>'gbk')),
+			'category' => array(
+				'cn'=>'内容分类',
+				'type' => 'enum',
+				'enum'=>array_flip($ML_TAG_CATEGORY)),
+			'contentName_tagid' => array(
+				'cn'=>'内容名称',
+				'type' => 'enum'),
+				
 		)
 	);
 ?>

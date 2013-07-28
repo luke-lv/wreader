@@ -8,22 +8,28 @@ foreach ($jobConf as $job_type) {
 	}
 }
 
-global $ML_JOBLEVEL , $ML_RECOMMENDLEVEL;
+global $ML_JOBLEVEL , $ML_RECOMMENDLEVEL , $ML_TAG_CATEGORY;
 
 	return array(
 		'table'=>'wrc_jobContent',
 		'hash_table' => false,
 		'field'=>array(
-			'job_id' => array(
-				'cn'=>'所属职业',
+			'category' => array(
+				'cn'=>'内容领域',
 				'type' => 'enum',
-				'enum' => $aJob),
+				'enum' => array_flip($ML_TAG_CATEGORY)),
+			'name' => array(
+				'cn'=>'能力名称',
+				'type' => 's'),
 			'level' => array(
 				'cn'=>'级别',
 				'type' => 'enum',
 				'enum' => array_flip($ML_JOBLEVEL)),
-			'contentName_taghash' => array(
+			'contentName_tagid' => array(
 				'cn'=>'内容名称',
+				'type' => 'i'),
+			'contentType_tagid' => array(
+				'cn'=>'内容方向',
 				'type' => 'i'),
 			'recommend_level' => array(
 				'cn'=>'推荐级别',

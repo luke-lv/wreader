@@ -228,6 +228,12 @@ class admin_ctrl
     {
         Tool_logger::saveRunningLog();
     }
+    protected function alert($msg)
+    {
+        ?>
+        <script type="text/javascript">alert('<?php echo $msg; ?>');</script>
+        <?php
+    }
 }
 
 

@@ -396,6 +396,7 @@ class Lib_datamodel_db extends Lib_datamodel_abstract
         return mysql_affected_rows($this->_conn);
     }
     
+    
     /**
      * 在调试模式下获得最后一次执行的SQL语句
      * @return string

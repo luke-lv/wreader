@@ -21,29 +21,41 @@ class ml_model_admin_dbTag extends Lib_datamodel_db
 
         parent::__construct('wrc_source' , $db_config['wrc_source']);
     }
-    public function tags_list($page , $pagesize = 20 , $category=0 , $is_core = false)
+    public function tags_list($page , $pagesize = 20 , $category=0 , $is_core = false,$type = 0)
     {
         if(!$this->init_db())
             return false;
 
         $start = ($page-1)*$pagesize;
-        $where = ' where category='.$category;
+        $where = ' where 1 ';
+        if($category)
+            $where .= ' and category='.$category;
         if($is_core)
             $where .= ' and is_core = 1';
-        $sql = 'select * from '.self::TB_TAGS.$where.' order by id desc limit '.$start.','.$pagesize;
-        
+        if($type)
+            $where .= ' and type = '.$type;
+
+        $limit = '';
+        if($pagesize > 0){
+            $limit =  ' limit '.$start.','.$pagesize;
+        }
+        $sql = 'select * from '.self::TB_TAGS.$where.' order by id desc'.$limit;
 
         return $this->fetch($sql);
     }
-    public function tags_count($category=0 , $is_core = 0)
+    public function tags_count($category=0 , $is_core = 0 , $type = 0)
     {
         if(!$this->init_db())
             return false;
 
         $start = ($pageid-1)*$pagesize;
-        $where = 'category='.$category;
+        $where = ' 1 ';
+        if($category)
+            $where .= ' and category='.$category;
         if($is_core)
-            $where .= ' and is_core = 1';   
+            $where .= ' and is_core = 1';
+        if($type)
+            $where .= ' and type = '.$type;
 
         $this->table = self::TB_TAGS;
 
@@ -127,6 +139,16 @@ class ml_model_admin_dbTag extends Lib_datamodel_db
 
             $this->table = self::TB_TAGS;
             $this->update(array('type'=>$type) , '`id`='.$id , 1);
+        
+        return;
+    }
+    public function tags_change_idf_by_id($idf , $id)
+    {
+        if(!$this->init_db())
+            return false;
+
+            $this->table = self::TB_TAGS;
+            $this->update(array('segment_idf'=>$idf) , '`id`='.$id , 1);
         
         return;
     }

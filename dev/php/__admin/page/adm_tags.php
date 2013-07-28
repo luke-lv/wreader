@@ -5,12 +5,17 @@ include('../__global.php');
 
 class adm_tags extends admin_ctrl
 {
+    private $idfList = array(
+        1,0.9,0.8,0.7
+    );
+
     function run()
     {
 
         $page = $this->input('p','all',1);
         $category = $this->input('category','all',0);
         $tag = $this->input('tag','all',0);
+        $type = $this->input('type','all',0);
         $is_core = $this->input('is_core' , 'all' , 0);
 
             $oAdmComm = new ml_model_admin_dbTag();
@@ -31,11 +36,12 @@ class adm_tags extends admin_ctrl
         else
         {
             
-            $oAdmComm->tags_list($page,20,$category , $is_core);
+            $oAdmComm->tags_list($page,20,$category , $is_core , $type);
             $data['tags'] = $oAdmComm->get_data();
 
-            $oAdmComm->tags_count($category , $is_core);
+            $oAdmComm->tags_count($category , $is_core , $type);
             $data['total'] = $oAdmComm->get_data();
+            
             $data['page'] = $page;
         }
 
@@ -49,6 +55,7 @@ class adm_tags extends admin_ctrl
         ksort($aCoreTag);
         $data['coreTag'] = $aCoreTag;
         $data['category'] = $category;
+        $data['idfList'] = $this->idfList;
 
 
         
@@ -130,6 +137,20 @@ class adm_tags extends admin_ctrl
 
         $this->back('#id'.$id);
     }
+
+    function api_changeIdfById()
+    {
+        $id = $this->input('id');
+        $idf= $this->input('idf');
+        $oAdmComm = new ml_model_admin_dbTag();
+        $oAdmComm->tags_change_idf_by_id($idf , $id);
+
+        $this->back('#id'.$id);
+    }
+
+
+
+    
     function api_changeContentNameById()
     {
         $id = $this->input('id');

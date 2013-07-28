@@ -29,11 +29,22 @@ class ml_model_wrcArticle extends Lib_datamodel_db
             $this->_data['tags'] = explode(',', $this->_data['tags']);
         }
 
+        if(isset($this->_data[0]['jobContentId']))
+        {
+            foreach ($this->_data as &$row) {
+                $row['jobContentId'] = explode(',', $row['jobContentId']);
+            }
+        }
+        else if(isset($this->_data['jobContentId']))
+        {
+            $this->_data['jobContentId'] = explode(',', $this->_data['jobContentId']);
+        }
     }
     
     protected function hook_before_write($array)
     {
         $array['tags'] = is_array($array['tags']) ? implode(',', $array['tags']) : '';
+        $array['jobContentId'] = is_array($array['jobContentId']) ? implode(',', $array['jobContentId']) : '';
         return $array;
     }
 

@@ -61,10 +61,10 @@ class _cron_spider_base
 		//对比更新时间与最后抓取时间
 		if(!$this->_is_fetched_by_time($srcRow['id'] , $rssData['items'][0]['pubDate']))
 		{
-			echo 'x';
+			
 			foreach ($rssData['items'] as $articleRow) 
 			{
-				var_dump($articleRow);
+				
 				$articleRow['link'] = Tool_string::trimCdata($articleRow['link']);
 				$articleRow['title'] = Tool_string::trimCdata($articleRow['title']);
 				
@@ -115,7 +115,11 @@ class _cron_spider_base
 					
 					$articleRow = $this->_formatBySource($srcRow['codeSign'] , $articleRow);
 
+					$oBizTag2jc = new ml_biz_articleTag2jobContent();
+					$articleRow['jobContentId'] = $oBizTag2jc->execute($tags);
 
+
+echo "\n\n\n\n\n\n";
 
 					$this->_write_in_article($srcRow['id'],$articleRow);
 					

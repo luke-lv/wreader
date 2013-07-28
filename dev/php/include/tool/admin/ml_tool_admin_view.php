@@ -20,41 +20,41 @@ class ml_tool_admin_view
         else
             $url = '?'.$url_query;
         
-        //�ӵڼ�ҳ��ʼ
+        //´ÓµÚ¼¸Ò³¿ªÊ¼
         $from = $curr_page - 6;
         $from = $from < 1 ? 1 : $from;
     
-        //���ڼ�ҳ����
+        //µ½µÚ¼¸Ò³½áÊø
         $to = $curr_page + 6;
         $to = $to > $total_page ? $total_page : $to;
         
            
     
-        //��ҳ
+        //Ê×Ò³
         if($total_page > 1 && $curr_page <> 1)
         {
             $url_page = $format ? str_replace('{page}' , 1 , $format) : $url.'&p=1';
             $sHtml .= "<a href=\"".($url_page)."\">|&lt;</a>&nbsp;&nbsp;"; 
         }
     
-        //��ҳ֮ǰ��
+        //±¾Ò³Ö®Ç°µÄ
         for($i = $from ; $i < $curr_page ; $i++)
         {
             $url_page = $format ? str_replace('{page}' , $i , $format) : $url.'&p='.$i;
            $sHtml .= "<a href=\"" . ($url_page). "\">" . $i ."</a>&nbsp;&nbsp;";
         }
         
-        //��ҳ
+        //±¾Ò³
         $sHtml .= '<font color="#ff0000;">'.$curr_page.'</font>&nbsp;&nbsp;';
         
-        //��ҳ֮���
+        //±¾Ò³Ö®ºóµÄ
         for($i = $curr_page+1 ; $i <= $to ; $i++)
         {
             $url_page = $format ? str_replace('{page}' , $i , $format) : $url.'&p='.$i;
            $sHtml .= "<a href=\"" . ($url_page) . "\">" . $i ."</a>&nbsp;&nbsp;";
         }
         
-        //βҳ
+        //Î²Ò³
         if($total_page > 1 && $curr_page <> $total_page)
         {
             $url_page = $format ? str_replace('{page}' , $total_page , $format) : $url.'&p='.$total_page;
@@ -102,5 +102,17 @@ class ml_tool_admin_view
 
     }
 
+    static public function html_select($name , $aValue2str , $value = '' , $id = '' , $class = '' , $isUnshiftNone = false)
+    {
+        if ($isUnshiftNone) {
+            $options.='<option value="0">无</option>';
+        }
+        foreach ($aValue2str as $key => $cn) {
+                $options.='<option value="'.$key.'"'.($value==$key?' selected':'').'>'.$cn.'</option>';
+            }
 
+            $id_str = !empty($id) ? ' id="'.$id.'"' : '';
+            $class_str = !empty($class) ? ' class="'.$class.'"' : '';
+            return '<select name="'.$name.'"'.$id_str.$class_str.'>'.$options.'</select>';
+    }
 }

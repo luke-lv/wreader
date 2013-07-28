@@ -33,10 +33,18 @@ class adm_wrcSource extends admin_ctrl
         $this->model->std_getCount();
         $data['total'] = $this->model->get_data();
         $data['pagesize'] = $pagesize;
+
+        $oTag = new ml_model_admin_dbTag();
+        $oTag->tags_list(1 , 0 , 0 , true , ML_TAGTYPE_CONTENTNAME);
+        $data['aTag'] = Tool_array::format_2d_array($oTag->get_data() , 'tag' , Tool_array::FORMAT_ID2VALUE);
+
         $this->output($data);
     }
     protected function page_addForm()
     {
+        $oTag = new ml_model_admin_dbTag();
+        $oTag->tags_list(1 , 0 , 0 , true , ML_TAGTYPE_CONTENTNAME);
+        $data['aTag'] = Tool_array::format_2d_array($oTag->get_data() , 'tag' , Tool_array::FORMAT_ID2VALUE);
         $this->output($data);
     }
     protected function page_editForm()
@@ -44,6 +52,9 @@ class adm_wrcSource extends admin_ctrl
         $id = $this->input('id');
         $this->model->std_getRowById($id);
         $data['row'] = $this->model->get_data();
+        $oTag = new ml_model_admin_dbTag();
+        $oTag->tags_list(1 , 0 , 0 , true , ML_TAGTYPE_CONTENTNAME);
+        $data['aTag'] = Tool_array::format_2d_array($oTag->get_data() , 'tag' , Tool_array::FORMAT_ID2VALUE);
         $this->output($data);
     }
     
@@ -96,6 +107,7 @@ class adm_wrcSource extends admin_ctrl
         $this->model->std_setStatusById($id , $status);
         $this->back();
     }
+
     protected function api_reRedis()
     {
         $srcId = $this->input('id');

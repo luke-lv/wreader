@@ -49,6 +49,7 @@
 	function page_index($data)
 	{
 		$dataDefine=ml_factory::load_dataDefine($data['_dataDefine']);
+
 ?>
 		<a href="?ym=201306&srcId=<?php echo $data['srcId']; ?>">6月</a>
 		<table width="98%" border="0" align="center" cellspacing="0" class="adminlist">
@@ -57,15 +58,17 @@
 				<th>标题</th>
 				<th>标签</th>
 				<th>发布时间</th>
+				<th>所属职业能力</th>
 				<th>链接</th>
 				<th>操作</th>
 			</tr>
 			<?php foreach ($data['rows'] as $key => $row) { ?>
-			<tr>
+			<tr aid="<?php echo $row['id']; ?>">
 				<td><?php echo $row['id']; ?></td>
 				<td><?php ml_tool_admin_view::echoline($data['_dataDefine'] , 'title' , $row['title']); ?></td>
 				<td><?php ml_tool_admin_view::echoline($data['_dataDefine'] , 'tags' , implode(' ' , $row['tags'])); ?></td>
 				<td><?php ml_tool_admin_view::echoline($data['_dataDefine'] , 'pub_time' , $row['pub_time']); ?></td>
+				<td><?php echo ml_tool_admin_view::html_select('jobContentId' , $data['aJobContent'] , $row['jobContentId'][0] , '' , 'selJobContent' , true); ?></td>
 				<td><a href="<?php ml_tool_admin_view::echoline($data['_dataDefine'] , 'link' , $row['link']); ?>" target="_blank">链接</a></td>
 				<td>
 					<a href="?dtdfn=<?php echo $data['_dataDefine'] ?>&page=articleShow&id=<?php echo $row['id'] ?>">查看</a>
@@ -79,6 +82,12 @@
 				<td colspan="<?php echo count($dataDefine['field'])+2; ?>"><?php echo ml_tool_admin_view::get_page($data['total'] , $data['pagesize'] , $data['page']); ?></td>
 			</tr>
 		</table>
+		<script type="text/javascript">
+			$('.selJobContent').change(function(){
+				aid = $(this).parent().parent().attr('aid');
+				window.location.href="?api=changeJobContentIdById&id="+aid+"&jobContentId="+$(this).val();
+			});
+		</script>
 <?php
 	}
 	function page_articleShow($data)

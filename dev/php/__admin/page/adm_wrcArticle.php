@@ -36,6 +36,18 @@ class adm_wrcArticle extends admin_ctrl
         }
         $this->model->std_listBySrcIdByPage($srcId ,$Ym, $page , $pagesize);
         $data['rows'] = $this->model->get_data();
+        $aJobContentId = array();
+
+
+        $oSrc = new ml_model_wrcSource();
+        $oSrc->std_getRowById($srcId);
+        $aSrc = $oSrc->get_data();
+        $category = $aSrc['category'];
+
+        $oJobContent = new ml_model_wrcJobContent();
+        $oJobContent->get_by_category($category);
+        $data['aJobContent'] = Tool_array::format_2d_array($oJobContent->get_data() , 'name' , Tool_array::FORMAT_ID2VALUE);
+
         $this->model->std_getCountBySrcId($srcId , $Ym);
         $data['total'] = $this->model->get_data();
         $data['pagesize'] = $pagesize;
@@ -94,6 +106,13 @@ class adm_wrcArticle extends admin_ctrl
         $this->model->std_delById($id);
         $this->back();
     }
+    protected function api_changeJobContentIdById()
+    {
+        $id = $this->input('id');
+        $jobContentId = $this->input('jobContentId');
+        $this->model->std_updateRow($id , array('jobContentId' => array($jobContentId)));
+        $this->back();
+    }
     protected function api_reSegment()
     {
         $id = $this->input('id');
@@ -106,7 +125,17 @@ class adm_wrcArticle extends admin_ctrl
         $oTag->tags_get_by_tag($aTag);
         $aTag = Tool_array::format_2d_array($oTag->get_data() , 'tag' , Tool_array::FORMAT_VALUE_ONLY);
 
-        $this->model->std_updateRow($id , array('tags' => $aTag));
+        $dataUpdate['tags'] = $aTag;
+
+        $oBiz = new ml_biz_articleTag2jobContent();
+        $aJobContentId = $oBiz->execute($aTag);
+
+        if(!empty($aJobContentId))
+        {
+            $dataUpdate['jobContentId'] = $aJobContentId;
+        }
+
+        $this->model->std_updateRow($id , $dataUpdate);
         $this->back();
     }
 }

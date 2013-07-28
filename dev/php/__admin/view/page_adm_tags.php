@@ -3,6 +3,7 @@ function page_index($adm)
 {
     global $ML_TAG_CATEGORY , $ML_TAG_TYPE;
     $aId2tag = array_flip($ML_TAG_CATEGORY);
+    $idfList = array_combine($adm['idfList'], $adm['idfList']);
 ?>
 <table class="adminlist" width="100%">
 <tr>
@@ -10,6 +11,7 @@ function page_index($adm)
 <?php foreach ($aId2tag as $ctg => $name) {
     echo '<a href="?category='.$ctg.'">'.$name.'</a> | ';
 } ?>
+    <a href="?">全部</a>
 </td>
 <td width="30%">
     <a href="?page=nearHotTag">最近常见标签</a>
@@ -26,15 +28,16 @@ function page_index($adm)
 <tr>
     <th>#<input type="checkbox" id="cbSelAll" value=""/></th>
     <th>标签</th>
-    <th>类型</th>
+    <th>类型 (<a href="?category=<?php echo $adm['category']; ?>&type=<?php echo ML_TAGTYPE_CONTENTNAME; ?>">内容名称</a>|<a href="?category=<?php echo $adm['category']; ?>&type=<?php echo ML_TAGTYPE_CONTENTTYPE; ?>">内容方向</a>)</th>
     <th>分类</th>
     <th>核心标签（<a href="?category=<?php echo $adm['category']; ?>&is_core=true">查看</a>）</th>
     <th>难度级别</th>
+    <th>分词IDF</th>
     <th>操作</th>
 </tr>
 <form id="formList" method="post">
 <?php foreach ($adm['tags'] as $key => $value) {?>
-<tr>
+<tr class="trTag" tagid="<?php echo $value['id']; ?>">
     <td><a id="id<?php echo $value['id']; ?>" name="id<?php echo $value['id']; ?>"></a><?php echo $value['id']; ?>
         <input type="checkbox" class="cbList" name="ids[]" value="<?php echo $value['id']; ?>"/></td>
     <td><?php echo $value['tag']; ?></td>
@@ -72,6 +75,9 @@ function page_index($adm)
         <?php for($i=0;$i<5;$i++) { ?>
         <option value="<?php echo $i; ?>"<?php if($i==$value['level']){echo ' selected';} ?>><?php echo $i; ?></option>
         <?php } ?></td>
+    <td>
+        <?php echo ml_tool_admin_view::html_select('segment_idf',$idfList , $value['segment_idf'] , 'selIdf'); ?>
+    </td>
     <td>
         <a href="?api=delTag&id=<?php echo $value['id']; ?>"><font color="red">删除</font></a>
         推荐分数：<select name="pt" onchange="window.location='?api=changePtById&id=<?php echo $value['id']; ?>&pt='+this.value">
@@ -117,6 +123,11 @@ function page_index($adm)
 </tr>
 </table>
 <script type="text/javascript">
+    $('#selIdf').change(function(){
+        tagid=$(this).parent().parent().attr('tagid');
+        
+        window.location.href = '?api=changeIdfById&id='+tagid+'&idf='+$(this).val();
+    });
     $('#cbSelAll').click(function(){
         if(!$(this).attr('checked')){
             $('.cbList').each(function(){

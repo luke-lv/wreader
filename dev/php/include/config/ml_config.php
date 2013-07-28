@@ -165,7 +165,7 @@ $defaultUids = array(
     );
 
 
-define('ML_TAGCATEGORY_OTHER', 0);
+
 define('ML_TAGCATEGORY_TECH', 1);
 define('ML_TAGCATEGORY_PD', 2);
 define('ML_TAGCATEGORY_OP', 3);
@@ -177,7 +177,6 @@ define('ML_TAGCATEGORY_BOOK', 8);
 define('ML_TAGCATEGORY_MANAGE', 9);
 define('ML_TAGCATEGORY_CONTENTTYPE', 99);
 $ML_TAG_CATEGORY = array(
-    '其他' => 0,
     '技术' => 1,
     '产品' => 2,
     '运营' => 3,

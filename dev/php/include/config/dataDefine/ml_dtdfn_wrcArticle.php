@@ -24,6 +24,10 @@
 				'cn'=>'标签',
 				'type' => 's',
 				'length'=>50),
+			'jobContentId' => array(
+				'cn'=>'职业能力',
+				'type' => 's',
+				'length'=>50),
 		)
 	);
 ?>
