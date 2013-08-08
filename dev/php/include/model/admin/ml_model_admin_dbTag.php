@@ -63,21 +63,32 @@ class ml_model_admin_dbTag extends Lib_datamodel_db
     }
 
 
-    public function tags_batch_add($type , $category , $core_tagid , $aTags)
+
+    public function tags_batch_add($category , $aTags , $data)
     {
         if(!$this->init_db())
             return false;
 
+        $arr = array();
+        if($data['tag']['contentName_tagid'])
+            $arr['contentName_tagid'];
+        if($data['tag']['contentType_tagid'])
+            $arr['contentType_tagid'];
+        if($data['tag']['type'])
+            $arr['type'];
+        if($data['tag']['core_tagid'])
+            $arr['core_tagid'];
+
         foreach ($aTags as $value) {
             $a = array(
-                'type' => $type,
                 'category' => $category,
-                'core_tagid' => $core_tagid,
                 'tag' => $value,
                 'tag_hash' => crc32($value),
             );
+            $array = array_merge($a , $arr);
+
             $this->table = self::TB_TAGS;
-            $this->insert($a);
+            $this->insert($array);
         }
         return;
     }
@@ -99,6 +110,16 @@ class ml_model_admin_dbTag extends Lib_datamodel_db
 
             $this->table = self::TB_TAGS;
             $this->update(array('level'=>$level) , '`id`='.$id , 1);
+        
+        return;
+    }
+    public function tags_change_jobContentId_by_id($jobContentId , $id)
+    {
+        if(!$this->init_db())
+            return false;
+
+            $this->table = self::TB_TAGS;
+            $this->update(array('jobContentId'=>$jobContentId) , '`id`='.$id , 1);
         
         return;
     }
@@ -161,6 +182,22 @@ class ml_model_admin_dbTag extends Lib_datamodel_db
             $this->update(array('contentName_tagid'=>$tagid) , '`id`='.$id , 1);
         
         return;
+    }
+    public function tags_change_content_type_by_id($tagid , $id)
+    {
+        if(!$this->init_db())
+            return false;
+
+            $this->table = self::TB_TAGS;
+            $this->update(array('contentType_tagid'=>$tagid) , '`id`='.$id , 1);
+        
+        return;
+    }
+    public function get_by_id($id){
+        if(!$this->init_db())
+            return false;
+        $sql = 'select * from '.self::TB_TAGS.' where id='.$id;
+        return $this->fetch_row($sql);
     }
     public function tags_get_by_tag($arrTags)
     {
@@ -280,6 +317,26 @@ class ml_model_admin_dbTag extends Lib_datamodel_db
 
         $sql = 'select * from '.self::TB_TAGS;
         return $this->fetch($sql);
+    }
+    public function tags_getAllRelation($aTags)
+    {
+        $this->tags_get_by_tag($aTags);
+        $rows = $this->get_data();
+        foreach ($rows as $row) {
+            if($row['contentType_tagid'])
+                $aExtTagid[] = $row['contentType_tagid'];
+            if($row['contentName_tagid'])
+                $aExtTagid[] = $row['contentName_tagid'];
+            if($row['core_tagid'])
+                $aExtTagid[] = $row['core_tagid'];
+        }
+        $aExtTagid = array_unique(array_filter($aExtTagid));
+
+        $this->tags_get_by_ids($aExtTagid);
+        $rows = array_merge($rows , $this->get_data());
+        $rows = Tool_array::format_2d_array($rows , 'id' , Tool_array::FORMAT_FIELD2ROW);
+        $this->set_data($rows);
+        return true;
     }
 
     static public function tag_hash($tag)

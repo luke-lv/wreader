@@ -11,7 +11,7 @@ class ml_model_wrcJobContent extends Lib_datamodel_db
     function __construct($dataDefine = '')
     {
         $this->dataDefine = $dataDefine;
-        $db_config = ml_factory::load_standard_conf('dbContentBase');        //目前只有一个配置文件，所以
+        $db_config = ml_factory::load_standard_conf('dbContentbase');        //目前只有一个配置文件，所以
 
         parent::__construct('wrc_jobContent' , $db_config['wrc_jobContent']);
     }
@@ -91,11 +91,37 @@ class ml_model_wrcJobContent extends Lib_datamodel_db
 
         return $this->fetch($sql);   
     }
-    function get_by_category($category)
+    function get_by_category($category , $page=1   , $pagesize = 10 , $contentName_tagid = 0)
     {
         if(!$this->init_db($uid , self::DB_SLAVE))
             return false;
-        $sql = 'select * from '.$this->table.' where category = '.$category.' and status = '.self::STATUS_NORMAL;
+        if($pagesize > 0)
+        {
+            $start = ($page-1)*$pagesize;
+            $limit = ' limit '.$start.' , '.$pagesize;
+        }
+        
+        if($contentName_tagid)
+            $cn_condition = ' and contentName_tagid = '.$contentName_tagid;
+        $sql = 'select * from '.$this->table.' where category = '.$category.$cn_condition.' and status = '.self::STATUS_NORMAL.$limit;
+        return $this->fetch($sql);   
+    }
+
+    function count_by_category($category , $contentName_tagid = 0)
+    {
+        if(!$this->init_db($uid , self::DB_SLAVE))
+            return false;
+        if($contentName_tagid)
+            $cn_condition = ' and contentName_tagid = '.$contentName_tagid;
+        $sql = 'category = '.$category.$cn_condition.' and status = '.self::STATUS_NORMAL;
+        return $this->fetch_count($sql);   
+    }
+function get_contentName_by_category($category , $page , $pagesize = 10)
+    {
+        if(!$this->init_db($uid , self::DB_SLAVE))
+            return false;
+        
+        $sql = 'select distinct(contentName_tagid) from '.$this->table.' where category = '.$category.' and status = '.self::STATUS_NORMAL;
         return $this->fetch($sql);   
     }
     function get_by_categorys($aCategory)

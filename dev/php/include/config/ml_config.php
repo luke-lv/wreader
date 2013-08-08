@@ -212,9 +212,13 @@ define('ML_RECOMMENDLEVEL_HIGH' , 2);
 $ML_RECOMMENDLEVEL = array(
     '低级' => 0,
     '中级' => 1,
-    '高级' => 3,
+    '高级' => 2,
 );
-
+$ML_RECOMMENDLEVEL_WEIGHT = array(
+    ML_RECOMMENDLEVEL_LOW => 1,
+    ML_RECOMMENDLEVEL_MID => 1.2,
+    ML_RECOMMENDLEVEL_HIGH => 1.5,
+);
 
 
 

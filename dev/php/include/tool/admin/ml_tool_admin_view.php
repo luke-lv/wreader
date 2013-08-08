@@ -2,12 +2,14 @@
 
 class ml_tool_admin_view
 {
+    const ECHO_EXTRA_LEN = 'len';
     static public function get_page($total, $numperpage, $curr_page ,$url_query = '', $format = '')
     {
         if($total < $numperpage)
             return '';
         $sHtml = '';
         $total_page = ceil( $total / $numperpage );
+        $curr_page = $_GET['p'] ? $_GET['p']:1;
         $curr_page = $curr_page > $total_page ? $total_page : $curr_page;
         //
         
@@ -64,12 +66,14 @@ class ml_tool_admin_view
         return $sHtml;
     }
 
-    static public function echoline($dataDefine , $field , $value)
+    static public function echoline($dataDefine , $field , $value , $extra = array())
     {
         $df = ml_factory::load_dataDefine($dataDefine);
 
         if(in_array($df['field'][$field]['type'], array('i','s')))
         {
+            if($extra[self::ECHO_EXTRA_LEN] > 0)
+                $value = Tool_string::substr_by_width($value , 0 ,$extra[self::ECHO_EXTRA_LEN]);
             echo htmlspecialchars($value);
         }
         else if($df['field'][$field]['type']=='enum')

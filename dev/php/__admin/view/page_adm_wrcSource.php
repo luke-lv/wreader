@@ -123,7 +123,7 @@
 			</tr>
 			<tr>
 				<td><?php echo $dataDefine['contentName_tagid']['cn'] ?></td>
-				<td><?php echo ml_tool_admin_view::html_select('contentName_tagid' , $data['aTag'] , $data['row']['contentName_tagid']); ?></td>
+				<td><?php echo ml_tool_admin_view::html_select('contentName_tagid' , $data['aTag'] , $data['row']['contentName_tagid'],'','',true); ?></td>
 			</tr>
 			
 			<tr>

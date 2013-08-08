@@ -43,8 +43,10 @@ class ml_model_wrcArticle extends Lib_datamodel_db
     
     protected function hook_before_write($array)
     {
-        $array['tags'] = is_array($array['tags']) ? implode(',', $array['tags']) : '';
-        $array['jobContentId'] = is_array($array['jobContentId']) ? implode(',', $array['jobContentId']) : '';
+        if($array['tags'])
+            $array['tags'] = is_array($array['tags']) ? implode(',', $array['tags']) : '';
+        if($array['jobContentId'])
+            $array['jobContentId'] = is_array($array['jobContentId']) ? implode(',', $array['jobContentId']) : '';
         return $array;
     }
 

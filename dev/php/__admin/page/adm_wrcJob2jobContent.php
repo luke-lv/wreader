@@ -8,6 +8,7 @@ class adm_wrcJob2jobContent extends admin_ctrl
     private $dataDefine;
     private $model;
 
+
     public function _construct()
     {
         
@@ -31,10 +32,12 @@ class adm_wrcJob2jobContent extends admin_ctrl
         $this->model->std_listByPage($page , $pagesize);
         $data['rows'] = $this->model->get_data();
         $data['pagesize'] = $pagesize;
+        $this->model->std_getCount();
+        $data['total'] = $this->model->get_data();
 
         $aJobContentId = array();
         foreach ($data['rows'] as $row) {
-            $aJobContentId = array_merge($aJobContentId , $row['jobContentIds']);
+            $aJobContentId = array_merge($aJobContentId , array_keys($row['jobContentIds']));
         }
         $oJobContent = new ml_model_wrcJobContent();
         $oJobContent->get_by_ids(array_unique($aJobContentId));
@@ -51,6 +54,7 @@ class adm_wrcJob2jobContent extends admin_ctrl
         $oJobContent->get_by_categorys($category);
         $data['aJobContent'] = Tool_array::format_2d_array($oJobContent->get_data() , 'name' , Tool_array::FORMAT_ID2VALUE);
         $data['category'] = $category;
+        $data['job_id'] = $job_id;
 
         $this->output($data);
     }
@@ -80,8 +84,14 @@ class adm_wrcJob2jobContent extends admin_ctrl
         $category = $_POST['category'];
 
         $data['job_id'] = $job_id;
+        $data['level'] = $level;
         $data['category'] = $category;
-        $data['jobContentIds'] = $jobContentId;
+        $jobContentIds = $jobContentId;
+        foreach ($jobContentIds as $jcid) {
+            $data['jobContentIds'][$jcid] = array(
+                'rcmdLv' => $_POST['recommendlevel'][$jcid],
+            );
+        }
 
         $this->model->std_addRow($data);
         $this->back();
@@ -95,7 +105,12 @@ class adm_wrcJob2jobContent extends admin_ctrl
 
         $data['job_id'] = $job_id;
         $data['category'] = $category;
-        $data['jobContentIds'] = $jobContentId;
+        $jobContentIds = $jobContentId;
+        foreach ($jobContentIds as $jcid) {
+            $data['jobContentIds'][$jcid] = array(
+                'rcmdLv' => $_POST['recommendlevel'][$jcid],
+            );
+        }
 
         $this->model->std_updateRow($id , $data);
         $this->back();

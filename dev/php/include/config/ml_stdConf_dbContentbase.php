@@ -118,6 +118,28 @@ return array(
         'tb_n' => 1,
         'tb_prefix' => 'wrc_tag2jobContent'
     ),
+    'wrc_tagGroup2jobContent' => array(
+        'connect' => array(
+            'master' => array(
+                'host' => array(
+                    0 => 'localhost:3306'
+                ),
+                'user' => 'wreader',
+                'pw' => 'cucued',
+                'name' => 'wreader_dev',
+            ),
+            'slave' => array(
+                'host' => array(
+                    0 => 'localhost:3306'
+                ),
+                'user' => 'wreader',
+                'pw' => 'cucued',
+                'name' => 'wreader_dev',
+            )
+        ),
+        'tb_n' => 1,
+        'tb_prefix' => 'wrc_tagGroup2jobContent'
+    ),
     'wrc_job2jobContent' => array(
         'connect' => array(
             'master' => array(

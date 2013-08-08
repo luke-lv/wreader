@@ -33,7 +33,8 @@ class ml_model_wruUserSetting extends Lib_datamodel_db
     
     protected function hook_before_write($array)
     {
-        $array['data'] = json_encode($array['data']);
+        if($array['data'])
+            $array['data'] = json_encode($array['data']);
         return $array;
     }
     

@@ -38,23 +38,22 @@ class ml_biz_getSuggestContent
 
 	private function _fetchBasicTagArticle()
 	{
-		$rdsKey = self::SC_KEYPREFIX.'jbBscArtUn_'.$this->_jobConf['sign'];
-
-		
-		//$this->_aBasicArticle = $this->oRdsCB->zrange($rdsKey , 0 , -1);
-
+		global $ML_RECOMMENDLEVEL_WEIGHT;
 		if(empty($this->_aBasicArticle))
 		{
-			$aTag = $this->_jobAbility['basicAbilityTag'];
+			$oJob2jc = new ml_model_wrcJob2jobContent();
+			$oJob2jc->get_by_jobid($this->_job);
+			$row = $oJob2jc->get_data();
+			$aJobContentId = array_keys($row['jobContentIds']);
+			foreach ($aJobContentId as $jcid) {
+				$aWeight[] = $ML_RECOMMENDLEVEL_WEIGHT[$row['jobContentIds'][$jcid]['rcmdLv']];
+			}
 
-			$aHash = $this->_tag2hash(array_keys($aTag));
-			$aWeight = array_combine($aHash ,array_values($aTag));
-
-			$this->oRdsCB->unionByTaghashes($rdsKey , $aHash , array() , $aWeight);
-			$this->_aBasicArticle = $this->oRdsCB->zRevRange($rdsKey , 0 , -1);
+			$this->oRdsCB->unionByJobContentId($this->_job , $aJobContentId , $aWeight);
+			$this->_aBasicArticle = $this->oRdsCB->listArticleByJobId($this->_job);
 		
 
-			$this->oRdsCB->setTimeOut($rdsKey , self::SC_BASICEXPIRE);
+			//$this->oRdsCB->setTimeOut($rdsKey , self::SC_BASICEXPIRE);
 			return true;
 		}
 		else
@@ -132,11 +131,11 @@ class ml_biz_getSuggestContent
 		}
 
 		$this->_fetchBasicTagArticle();
-		$this->_fetchattendTagArticle();
+		//$this->_fetchattendTagArticle();
 
-		$this->_aRsArticle = $this->_aAttendTagArticle + $this->_aBasicArticle;
+		//$this->_aRsArticle = $this->_aAttendTagArticle + $this->_aBasicArticle;
 
-		//$this->_aRsArticle = $this->_aBasicArticle;
+		$this->_aRsArticle = $this->_aBasicArticle;
 		
 
 

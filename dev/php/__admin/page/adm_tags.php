@@ -36,7 +36,7 @@ class adm_tags extends admin_ctrl
         else
         {
             
-            $oAdmComm->tags_list($page,20,$category , $is_core , $type);
+            $oAdmComm->tags_list($page,50,$category , $is_core , $type);
             $data['tags'] = $oAdmComm->get_data();
 
             $oAdmComm->tags_count($category , $is_core , $type);
@@ -48,9 +48,19 @@ class adm_tags extends admin_ctrl
 
         $contentNameTag = $oAdmComm->core_tag_get_by_type_category($category , ML_TAGTYPE_CONTENTNAME);
         $data['contentNameTag'] = Tool_array::format_2d_array($oAdmComm->get_data() , 'tag' , Tool_array::FORMAT_ID2VALUE);
+        $contentNameTag = $oAdmComm->core_tag_get_by_type_category($category , ML_TAGTYPE_CONTENTTYPE);
+        $data['contentTypeTag'] = Tool_array::format_2d_array($oAdmComm->get_data(), 'tag' , Tool_array::FORMAT_ID2VALUE);
         
+        $oJc = new ml_model_wrcJobContent();
+        $oJc->get_by_category($category, 1, 0);
+
+        $data['jobContent'] = Tool_array::format_2d_array($oJc->get_data(), 'name' , Tool_array::FORMAT_ID2VALUE);
+
         $oAdmComm->core_tags_get_all($category);
-        $aCoreTag = Tool_array::format_2d_array($oAdmComm->get_data() , 'tag' , Tool_array::FORMAT_ID2VALUE);
+        $aCoreTag = $oAdmComm->get_data();
+        $oAdmComm->core_tags_get_all(ML_TAGCATEGORY_CONTENTTYPE);
+        $aCoreTag = array_merge($aCoreTag , $oAdmComm->get_data());
+        $aCoreTag = Tool_array::format_2d_array($aCoreTag , 'tag' , Tool_array::FORMAT_ID2VALUE);
         $aCoreTag[0] = '无';
         ksort($aCoreTag);
         $data['coreTag'] = $aCoreTag;
@@ -111,6 +121,20 @@ class adm_tags extends admin_ctrl
         
         return $this->output($data);
     }
+    function page_addForm()
+    {
+        $category = (int)$this->input('category');
+        $data['category'] = $category;
+        $oTag = new ml_model_admin_dbTag();
+        $oTag->tags_list(1 , 0 , $category , true , ML_TAGTYPE_CONTENTNAME);
+        $data['aCnTag'] = Tool_array::format_2d_array($oTag->get_data() , 'tag' , Tool_array::FORMAT_ID2VALUE);
+
+        $oTag->tags_list(1 , 0 , $category , true , ML_TAGTYPE_CONTENTTYPE);
+        $data['aCtTag'] = Tool_array::format_2d_array($oTag->get_data() , 'tag' , Tool_array::FORMAT_ID2VALUE);
+
+
+        $this->output($data);
+    }
 
 
     function api_batch_add()
@@ -120,11 +144,14 @@ class adm_tags extends admin_ctrl
             $value = trim($value);
         }
         $category = $this->input('category');
-        $core_tagid = $this->input('core_tagid');
-        $type = $this->input('type');
+        $contentName_tagid = $this->input('contentName_tagid');
+        $contentType_tagid = $this->input('contentType_tagid');
+
+
         $oAdmComm = new ml_model_admin_dbTag();
-        
-        $oAdmComm->tags_batch_add($type , $category , $core_tagid, $tags);
+        $data['contentName_tagid'] = $contentName_tagid;
+        $data['contentType_tagid'] = $contentType_tagid;
+        $oAdmComm->tags_batch_add($category , $tags , $data);
         $this->back();
     }
 
@@ -150,13 +177,30 @@ class adm_tags extends admin_ctrl
 
 
 
-    
+    function api_changeJobContentIdById()
+    {
+        $id = $this->input('id');
+        $jcid = $this->input('jobContentId');
+        $oAdmComm = new ml_model_admin_dbTag();
+        $oAdmComm->tags_change_jobContentId_by_id($jcid , $id);
+
+        $this->back('#id'.$id);
+    }
     function api_changeContentNameById()
     {
         $id = $this->input('id');
         $tag_id = $this->input('tag_id');
         $oAdmComm = new ml_model_admin_dbTag();
         $oAdmComm->tags_change_content_name_by_id($tag_id , $id);
+
+        $this->back('#id'.$id);
+    }
+    function api_changeContentTypeById()
+    {
+        $id = $this->input('id');
+        $tag_id = $this->input('tag_id');
+        $oAdmComm = new ml_model_admin_dbTag();
+        $oAdmComm->tags_change_content_type_by_id($tag_id , $id);
 
         $this->back('#id'.$id);
     }

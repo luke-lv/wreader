@@ -31,10 +31,6 @@ global $ML_JOBLEVEL , $ML_RECOMMENDLEVEL , $ML_TAG_CATEGORY;
 			'contentType_tagid' => array(
 				'cn'=>'内容方向',
 				'type' => 'i'),
-			'recommend_level' => array(
-				'cn'=>'推荐级别',
-				'type' => 'enum',
-				'enum' => array_flip($ML_RECOMMENDLEVEL)),
 		)
 	);
 ?>

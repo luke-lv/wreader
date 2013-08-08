@@ -8,6 +8,7 @@ function page_index($adm)
 <table class="adminlist" width="100%">
 <tr>
 <td width="50%">
+    <a href="?page=addForm">新建标签</a>
 <?php foreach ($aId2tag as $ctg => $name) {
     echo '<a href="?category='.$ctg.'">'.$name.'</a> | ';
 } ?>
@@ -33,6 +34,7 @@ function page_index($adm)
     <th>核心标签（<a href="?category=<?php echo $adm['category']; ?>&is_core=true">查看</a>）</th>
     <th>难度级别</th>
     <th>分词IDF</th>
+    <th>职业能力</th>
     <th>操作</th>
 </tr>
 <form id="formList" method="post">
@@ -55,6 +57,12 @@ function page_index($adm)
         <?php }?>
         </select>
 
+        <select name="type" onchange="window.location='?api=changeContentTypeById&id=<?php echo $value['id']; ?>&tag_id='+this.value">
+            <option value="0">无</option>
+        <?php foreach ($adm['contentTypeTag'] as $id => $v) { ?>
+        <option value="<?php echo $id; ?>"<?php if($id==$value['contentType_tagid']){echo ' selected';} ?>><?php echo $v; ?></option>
+        <?php }?>
+        </select>
     </td>
     <td>
         <select name="category" onchange="window.location='?api=changeCategoryById&id=<?php echo $value['id']; ?>&category='+this.value">
@@ -76,7 +84,10 @@ function page_index($adm)
         <option value="<?php echo $i; ?>"<?php if($i==$value['level']){echo ' selected';} ?>><?php echo $i; ?></option>
         <?php } ?></td>
     <td>
-        <?php echo ml_tool_admin_view::html_select('segment_idf',$idfList , $value['segment_idf'] , 'selIdf'); ?>
+        <?php echo ml_tool_admin_view::html_select('segment_idf',$idfList , $value['segment_idf'] ,'', 'selIdf'); ?>
+    </td>
+    <td>
+        <?php echo ml_tool_admin_view::html_select('jobContentId',$adm['jobContent'] , $value['jobContentId'] , '' , 'selJc' , true); ?>
     </td>
     <td>
         <a href="?api=delTag&id=<?php echo $value['id']; ?>"><font color="red">删除</font></a>
@@ -91,42 +102,21 @@ function page_index($adm)
 <?php } ?>
 </form>
 <tr>
-    <td colspan="4"><?php  echo ml_tool_admin_view::get_page($adm['total'] , 20 , $adm['page']);  ?></td>
+    <td colspan="4"><?php  echo ml_tool_admin_view::get_page($adm['total'] , 50 , $adm['page']);  ?></td>
     <td colspan="4"><input type="button" id="btnDel" value="删除" style="background-color:red;"/></td>
 </tr>
 </table>
-<table class="adminlist" width="100%">
-<form action="?api=batch_add" method="post">
-<tr>
-    <td>
-标签(每行一个)：<br/><textarea name="tags"></textarea><br/>
-分类：<br/>
-    <select name="category">
-        <?php foreach ($ML_TAG_CATEGORY as $categoryname => $id) { ?>
-        <option value="<?php echo $id; ?>"><?php echo $categoryname; ?></option>
-        <?php } ?>
-    </select><br/>
-核心标签：<br/>
-    <select name="core_tagid">
-        <?php foreach ($adm['coreTag'] as $id => $core_tag) { ?>
-        <option value="<?php echo $id; ?>"><?php echo $core_tag; ?></option>
-        <?php } ?>
-    </select><br/>
-标签类型：<br/>
-<select name="type">
-        <?php foreach ($ML_TAG_TYPE as $type => $value) { ?>
-        <option value="<?php echo $value; ?>"><?php echo $type; ?></option>
-        <?php } ?>
-    </select><br/>
-    <input type="submit" value="保存"/> <a href="?api=rebuildRdsTaghash">重建标签类型索引</a>
-    </td>
-</tr>
-</table>
+
 <script type="text/javascript">
-    $('#selIdf').change(function(){
+    $('.selIdf').change(function(){
         tagid=$(this).parent().parent().attr('tagid');
         
         window.location.href = '?api=changeIdfById&id='+tagid+'&idf='+$(this).val();
+    });
+    $('.selJc').change(function(){
+        tagid=$(this).parent().parent().attr('tagid');
+        
+        window.location.href = '?api=changeJobContentIdById&id='+tagid+'&jobContentId='+$(this).val();
     });
     $('#cbSelAll').click(function(){
         if(!$(this).attr('checked')){
@@ -147,6 +137,37 @@ function page_index($adm)
     });
 </script>
 <?php
+}
+
+function page_addForm($data)
+{
+    global $ML_TAG_CATEGORY;
+    ?>
+<table class="adminlist" width="100%">
+<form action="?api=batch_add" method="post">
+<tr>
+    <td>
+        分类：<br/>
+    <?php echo ml_tool_admin_view::html_select('category' , array_flip($ML_TAG_CATEGORY) , $data['category'] , 'selCategory');?><br/>
+
+标签(每行一个)：<br/><textarea name="tags"></textarea><br/>
+
+内容名称：
+    <?php echo ml_tool_admin_view::html_select('contentName_tagid' , $data['aCnTag'] , '' , '' , '' , true); ?><br/>
+
+内容类型：
+    <?php echo ml_tool_admin_view::html_select('contentType_tagid' , $data['aCtTag'] , '' , '' , '' , true); ?><br/>
+
+    <input type="submit" value="保存"/> <a href="?api=rebuildRdsTaghash">重建标签类型索引</a>
+    </td>
+</tr>
+</table>
+<script>
+    $('#selCategory').change(function(){
+        window.location.href='?page=addForm&category='+$(this).val();
+    });
+</script>
+    <?php
 }
 
 function page_redisTagStat($data)

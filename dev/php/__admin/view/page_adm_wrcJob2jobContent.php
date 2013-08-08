@@ -3,7 +3,8 @@
 	{
 		$dataDefine=ml_factory::load_dataDefine($data['_dataDefine']);
 		$dataDefine = $dataDefine['field'];
-		global $ML_TAG_CATEGORY;
+		global $ML_TAG_CATEGORY , $ML_RECOMMENDLEVEL;
+
 
 
 ?>
@@ -15,7 +16,11 @@
 			
 			<tr>
 				<td>职业</td>
-				<td><?php echo ml_tool_admin_view::dtdfn_input($dataDefine['job_id']['type'] , 'job_id' , $dataDefine['job_id'] ,$data['row']['job_id'], 'selJobId'); ?></td>
+				<td><?php echo ml_tool_admin_view::dtdfn_input($dataDefine['job_id']['type'] , 'job_id' , $dataDefine['job_id'] ,$data['job_id'], 'selJobId'); ?></td>
+			</tr>
+			<tr>
+				<td>级别</td>
+				<td><?php echo ml_tool_admin_view::dtdfn_input($dataDefine['level']['type'] , 'level' , $dataDefine['level'] ,$data['level'], ''); ?></td>
 			</tr>
 			<tr>
 				<td>领域</td>
@@ -30,8 +35,9 @@
 				<td><?php foreach ($data['aJobContent'] as $jobContentId => $name) {
 					?>
 					<input type="checkbox" name="jobContentId[]" value=<?php echo $jobContentId; ?>><?php echo $name; ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					<?php
-				} ?></td>
+					推荐级别：<?php echo ml_tool_admin_view::html_select('recommendlevel['.$jobContentId.']' , array_flip($ML_RECOMMENDLEVEL)); ?>
+					<br/>
+				<?php } ?></td>
 			</tr>
 			<tr>
 				<td colspan="2"><input type="submit" value="保存"/></td>
@@ -56,7 +62,7 @@
 	{
 		$dataDefine=ml_factory::load_dataDefine($data['_dataDefine']);
 		$dataDefine = $dataDefine['field'];
-		global $ML_TAG_CATEGORY;
+		global $ML_TAG_CATEGORY , $ML_RECOMMENDLEVEL;
 ?>
 		<table width="98%" border="0" align="center" cellspacing="0" class="adminlist">
 			<form action="?dtdfn=<?php echo $data['_dataDefine'] ?>&api=edit&id=<?php echo $data['row']['id']; ?>" method="post">
@@ -66,6 +72,10 @@
 			<tr>
 				<td>职业</td>
 				<td><?php echo ml_tool_admin_view::dtdfn_input($dataDefine['job_id']['type'] , 'job_id' , $dataDefine['job_id'] ,$data['row']['job_id'], 'selJobId'); ?></td>
+			</tr>
+			<tr>
+				<td>级别</td>
+				<td><?php echo ml_tool_admin_view::dtdfn_input($dataDefine['level']['type'] , 'level' , $dataDefine['level'] ,$data['row']['level']); ?></td>
 			</tr>
 			<tr>
 				<td>领域</td>
@@ -79,7 +89,10 @@
 				<td>能力</td>
 				<td><?php foreach ($data['aJobContent'] as $jobContentId => $name) {
 					?>
-					<input type="checkbox" name="jobContentId[]" value=<?php echo $jobContentId; ?><?php if(in_array($jobContentId, $data['row']['jobContentIds'])){echo ' checked';} ?>><?php echo $name; ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					<input type="checkbox" name="jobContentId[]" value=<?php echo $jobContentId; ?><?php if(in_array($jobContentId, array_keys($data['row']['jobContentIds']))){echo ' checked';} ?>><?php echo $name; ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					<input type="checkbox" name="jobContentId[]" value=<?php echo $jobContentId; ?>><?php echo $name; ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					推荐级别：<?php echo ml_tool_admin_view::html_select('recommendlevel['.$jobContentId.']' , array_flip($ML_RECOMMENDLEVEL) , $data['row']['jobContentIds'][$jobContentId]['rcmdLv']); ?>
+					<br/>
 					<?php
 				} ?></td>
 			</tr>
@@ -113,6 +126,7 @@
 				<th>#</th>
 				
 				<th>职业</th>
+				<th>级别</th>
 				<th>能力</th>
 				<th>操作</th>
 			</tr>
@@ -121,7 +135,8 @@
 				<td><?php echo $row['id']; ?></td>
 				
 				<td><?php ml_tool_admin_view::echoline('wrcJob2jobContent' , 'job_id' , $row['job_id']); ?></td>
-				<td><?php foreach ($row['jobContentIds'] as $jcid) {
+				<td><?php ml_tool_admin_view::echoline('wrcJob2jobContent' , 'level' , $row['level']); ?></td>
+				<td><?php foreach ($row['jobContentIds'] as $jcid => $jc_param) {
 					echo $data['aJobContent'][$jcid].' , '; 
 				} ?></td>
 				<td>

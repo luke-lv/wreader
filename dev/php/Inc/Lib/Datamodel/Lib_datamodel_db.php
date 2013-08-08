@@ -133,6 +133,7 @@ class Lib_datamodel_db extends Lib_datamodel_abstract
     {
         if(!isset($this->_db_config['connect'][$type]))
         {
+            
             Tool_logger::monitorLog(__CLASS__ , 'db_connect_type_err '.$this->_datamodel_name.' '.$type , Tool_logger::LOG_LEVEL_ALERM );
             return false;
         }

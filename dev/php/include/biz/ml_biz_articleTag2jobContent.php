@@ -1,50 +1,24 @@
 <?php
 class ml_biz_articleTag2jobContent
 {
+	private $metaTag = array();
 	public function execute($aTag)
 	{
+		$this->metaTag = array();
 		$oTag = new ml_model_admin_dbTag();
-		$oTag->tags_get_by_tag($aTag);
-		$aTagInfo = $oTag->get_data();
-
-		$dest_contentName = array();
-
-
-		$aTagExtId = array();
-		foreach ($aTagInfo as $row) {
-			
-			if($row['contentName_tagid'])
-				$aTagExtId[] = $row['contentName_tagid'];
-			if($row['core_tagid'])
-				$aTagExtId[] = $row['core_tagid'];
+		$oTag->tags_getAllRelation($aTag);
+		$aAllRelTag = $oTag->get_data();
+		$aAllTag = array_merge($aTag , Tool_array::format_2d_array($aAllRelTag , 'tag' , Tool_array::FORMAT_VALUE_ONLY));
+		foreach ($aTag as &$tag) {
+			$tag = strtolower($tag);
 		}
-
-		$aTagExtId = array_unique($aTagExtId);
-
-		$oTag->tags_get_by_ids($aTagExtId);
-		$aTagInfo = array_merge($oTag->get_data() , $aTagInfo);
-
-		foreach ($aTagInfo as $row) {
+		foreach ($aAllRelTag as $row){
+			if(in_array($row['tag'] , $aTag))
+				$this->metaTag[] = $row['tag'];
 
 			if($row['type'] == ML_TAGTYPE_CONTENTNAME)
 				$dest_contentName[] = $row;
-			else if($row['type'] == ML_TAGTYPE_CONTENTTYPE)
-				$dest_contentType[] = $row;
-
-			if($row['contentName_tagid'])
-				$aTagExtId2[] = $row['contentName_tagid'];
-			if($row['core_tagid'])
-				$aTagExtId2[] = $row['core_tagid'];
-		}
-
-		$oTag->tags_get_by_ids($aTagExtId2);
-		$aTagInfo = array_merge($oTag->get_data() , $aTagInfo);
-
-		foreach ($aTagInfo as $row) {
-
-			if($row['type'] == ML_TAGTYPE_CONTENTNAME)
-				$dest_contentName[] = $row;
-			else if($row['type'] == ML_TAGTYPE_CONTENTTYPE)
+			if($row['type'] == ML_TAGTYPE_CONTENTTYPE)
 				$dest_contentType[] = $row;
 		}
 
@@ -59,32 +33,37 @@ class ml_biz_articleTag2jobContent
 					$aJobContentId[] = $job_content['id'];
 			}
 		}
-var_dump($aJobContentId);
+
 		if($aJobContentId)
 			return $aJobContentId;
 
-		$aAllTagid = Tool_array::format_2d_array($aTagInfo , 'id' , Tool_array::FORMAT_VALUE_ONLY);
-		
-		foreach ($aAllTagid as $tag_1) {
-			foreach ($aAllTagid as $tag_2) {
-				if($tag_2 == $tag_1)
-					continue;
-				$aTagCombine[] = $tag_1 > $tag_2 
-								? ($tag_2.'_'.$tag_1) 
-								: ($tag_1.'_'.$tag_2);
-			}
-		}
-		$aTagCombine = array_unique($aTagCombine);
+		if(count($dest_contentName) > 0)
+		{
+			$otg2jc = new ml_model_wrcTagGroup2jobContent();
 
-		$oTag2jc = new ml_model_wrcTag2jobContent();
-		foreach ($aTagCombine as $value) {
-			$oTag2jc->getByTagid(explode('_', $value));
-			$t2jc_row = $oTag2jc->get_data();
-			if(!empty($t2jc_row))
-			{
-				$aJobContentId[] = $t2jc_row['jobContentId'];
+			foreach ($dest_contentName as $contentName) {
+				
+				$otg2jc->get_by_contentName_tagid($contentName['id']);
+				$rows = $otg2jc->get_data();
+
+				if(!empty($rows)){
+					foreach ($rows as $cn_row) {
+						$aAddTags = $cn_row['tags'];
+	
+						foreach ($aAllTag as $tag) {
+							if(in_array($tag, $aAddTags)){
+								$aJobContentId[] = $cn_row['jobContentId'];
+							}
+						}
+					}
+				}
 			}
 		}
+
 		return $aJobContentId;
+	}
+	public function getMetaTag()
+	{
+		return $this->metaTag;
 	}
 }

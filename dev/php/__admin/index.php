@@ -70,6 +70,7 @@ function hideMenu()
       <tr><td width="100%" align="center"><a href="/__admin/page/adm_wrcArticle.php" target="admin_iframe">文章管理</a></td></tr>
       <tr><td width="100%" align="center"><a href="/__admin/page/adm_tags.php" target="admin_iframe">标签管理</a></td></tr>
       <tr><td width="100%" align="center"><a href="/__admin/page/adm_wrcTag2jobContent.php" target="admin_iframe">标签组管理</a></td></tr>
+      <tr><td width="100%" align="center"><a href="/__admin/page/adm_wrcTagGroup2jobContent.php" target="admin_iframe">标签组管理</a></td></tr>
       <tr><td width="100%" align="center"><a href="/__admin/page/adm_wrcJobContent.php" target="admin_iframe">职业知识库管理</a></td></tr>
       <tr><td width="100%" align="center"><a href="/__admin/page/adm_wrcJob2jobContent.php" target="admin_iframe">职业能力管理</a></td></tr>
       </table>

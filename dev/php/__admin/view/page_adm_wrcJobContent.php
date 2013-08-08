@@ -29,11 +29,7 @@
 			</tr>
 			<tr>
 				<td>内容方向</td>
-				<td><?php echo ml_tool_admin_view::html_select('contentType_tagid' , $data['contentType']); ?></td>
-			</tr>
-			<tr>
-				<td>推荐级别</td>
-				<td><?php echo ml_tool_admin_view::dtdfn_input($dataDefine['recommend_level']['type'] , 'recommend_level' , $dataDefine['recommend_level']); ?></td>
+				<td><?php echo ml_tool_admin_view::html_select('contentType_tagid' , $data['contentType'] , '' , '' , '' , true); ?></td>
 			</tr>
 			<tr>
 				<td colspan="2"><input type="submit" value="保存"/></td>
@@ -80,10 +76,6 @@
 				<td><?php echo ml_tool_admin_view::html_select('contentType_tagid' , $data['contentType'] , $data['row']['contentType_tagid']); ?></td>
 			</tr>
 			<tr>
-				<td>推荐级别</td>
-				<td><?php echo ml_tool_admin_view::dtdfn_input($dataDefine['recommend_level']['type'] , 'recommend_level' , $dataDefine['recommend_level'] , $data['row']['recommend_level']); ?></td>
-			</tr>
-			<tr>
 				<td colspan="2"><input type="submit" value="保存"/></td>
 			</tr>
 			</form>
@@ -94,8 +86,22 @@
 	function page_index($data)
 	{
 		$dataDefine=ml_factory::load_dataDefine($data['_dataDefine']);
+		global $ML_TAG_CATEGORY;
 ?>
+		<table width="98%" border="0" align="center" cellspacing="0" class="adminlist">
+			<tr><th>
+		<?php foreach ($ML_TAG_CATEGORY as $category => $id) { ?>
+			<a href="?category=<?php echo $id?>"><?php echo $category; ?></a>
+		<?php } ?>
+			</th></tr>
+			<tr><td>
+		<?php foreach ($data['aCnTag'] as $key => $value) { ?>
+			<a href="?category=<?php echo $data['category'] ?>&contentName_tagid=<?php echo $key; ?>"><?php echo $value; ?></a>
+		<?php } ?>
+			</td></tr>
+		</table>
 		<a href="?dtdfn=<?php echo $data['_dataDefine']; ?>&page=addForm">新增</a>
+		<a href="?dtdfn=<?php echo $data['_dataDefine']; ?>&page=redisStat">fff</a>
 		<table width="98%" border="0" align="center" cellspacing="0" class="adminlist">
 			<tr>
 				<th>#</th>
@@ -113,7 +119,6 @@
 				<td><?php ml_tool_admin_view::echoline($data['_dataDefine'] , 'level' , $row['level']); ?></td>
 				<td><?php echo $row['contentName']; ?></td>
 				<td><?php echo $row['contentType']; ?></td>
-				<td><?php ml_tool_admin_view::echoline($data['_dataDefine'] , 'recommend_level' , $row['recommend_level']); ?></td>
 				<td>
 					<a href="?dtdfn=<?php echo $data['_dataDefine'] ?>&page=editForm&id=<?php echo $row['id'] ?>">编辑</a>
 					<a href="javascript:;" onclick="if(window.confirm('xxx')){window.location='?dtdfn=<?php echo $data['_dataDefine'] ?>&api=delById&id=<?php echo $row['id'] ?>'}"><font color="red">删除</font></a>

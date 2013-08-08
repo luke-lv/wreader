@@ -21,12 +21,12 @@ class ml_model_wrcJob2jobContent extends Lib_datamodel_db
         if(isset($this->_data[0]['jobContentIds']))
         {
             foreach ($this->_data as &$row) {
-                $row['jobContentIds'] = explode(',', $row['jobContentIds']);
+                $row['jobContentIds'] = json_decode($row['jobContentIds'] , 1);
             }
         }
         else if(isset($this->_data['jobContentIds']))
         {
-            $this->_data['jobContentIds'] = explode(',', $this->_data['jobContentIds']);
+            $this->_data['jobContentIds'] = json_decode($this->_data['jobContentIds'] , 1);
         }
 
         if(isset($this->_data[0]['category']))
@@ -42,8 +42,10 @@ class ml_model_wrcJob2jobContent extends Lib_datamodel_db
     }
     protected function hook_before_write($array)
     {
-        $array['category'] = is_array($array['category']) ? implode(',', $array['category']) : '';
-        $array['jobContentIds'] = is_array($array['jobContentIds']) ? implode(',', $array['jobContentIds']) : '';
+        if($array['category'])
+            $array['category'] = is_array($array['category']) ? implode(',', $array['category']) : '';
+        if($array['jobContentIds'])
+            $array['jobContentIds'] = is_array($array['jobContentIds']) ? json_encode($array['jobContentIds']) : '';
         return $array;
     }
     function std_listByPage($page = 1 , $pagesize = 10)
@@ -101,6 +103,13 @@ class ml_model_wrcJob2jobContent extends Lib_datamodel_db
 
         return $this->update($data , $where);
 
+    }
+    function get_by_jobid($job_id)
+    {
+        if(!$this->init_db($uid , self::DB_SLAVE))
+            return false;
+        $sql = 'select * from '.$this->table.' where job_id='.$job_id;
+        return $this->fetch_row($sql);
     }
 }
 ?>

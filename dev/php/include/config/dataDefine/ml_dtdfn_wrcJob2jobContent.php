@@ -14,6 +14,11 @@
 				'type' => 'enum',
 				'enum' => $aJobName
 				),
+			'level' => array(
+				'cn'=>'级别',
+				'type' => 'enum',
+				'enum' => array('0' => '初级','1' => '中级','2' => '高级',)
+				),
 			'jobContentIds' => array(
 				'cn'=>'能力',
 				'type' => 's',

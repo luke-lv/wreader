@@ -45,7 +45,7 @@ class adm_wrcArticle extends admin_ctrl
         $category = $aSrc['category'];
 
         $oJobContent = new ml_model_wrcJobContent();
-        $oJobContent->get_by_category($category);
+        $oJobContent->get_by_category($category , 1 , 0);
         $data['aJobContent'] = Tool_array::format_2d_array($oJobContent->get_data() , 'name' , Tool_array::FORMAT_ID2VALUE);
 
         $this->model->std_getCountBySrcId($srcId , $Ym);
@@ -64,6 +64,14 @@ class adm_wrcArticle extends admin_ctrl
         $id = $this->input('id');
         $this->model->std_getRowById($id);
         $data['row'] = $this->model->get_data();
+
+        $oSrc = new ml_model_wrcSource();
+        $oSrc->std_getRowById($data['row']['source_id']);
+        $aSource = $oSrc->get_data();
+
+        $ojc = new ml_model_wrcJobContent();
+        $ojc->get_by_category($aSource['category']);
+        $data['aJobContent'] = Tool_array::format_2d_array($ojc->get_data() , 'name' , Tool_array::FORMAT_ID2VALUE);
         $this->output($data);
     }
     protected function page_articleShow()
@@ -121,21 +129,18 @@ class adm_wrcArticle extends admin_ctrl
 
         $aTag = ml_function_lib::segmentChinese($articleInfo['title']);
 
-        $oTag = new ml_model_admin_dbTag();
-        $oTag->tags_get_by_tag($aTag);
-        $aTag = Tool_array::format_2d_array($oTag->get_data() , 'tag' , Tool_array::FORMAT_VALUE_ONLY);
-
-        $dataUpdate['tags'] = $aTag;
-
         $oBiz = new ml_biz_articleTag2jobContent();
         $aJobContentId = $oBiz->execute($aTag);
-
+        $dataUpdate['tags'] = $oBiz->getMetaTag();
         if(!empty($aJobContentId))
         {
             $dataUpdate['jobContentId'] = $aJobContentId;
         }
 
         $this->model->std_updateRow($id , $dataUpdate);
+
+        $oBizA2r = new ml_biz_articleid2redis();
+        $oBizA2r->execute($id , $dataUpdate['tags'] , $dataUpdate['jobContentId']);
         $this->back();
     }
 }

@@ -211,7 +211,7 @@ class admin_ctrl
     }
     protected function back($param)
     {
-        $this->_redirect($_SERVER['HTTP_REFERER'].$param);
+        $this->_redirect($_SERVER['HTTP_REFERER'].$param , '' , 3);
     }
     
     protected function _check_adm_level($access)

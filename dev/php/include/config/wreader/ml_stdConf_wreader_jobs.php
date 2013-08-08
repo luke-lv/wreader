@@ -20,6 +20,7 @@ define('ML_WR_JOB_TECH_ARCH', 10108);
 
 return array(
 	ML_WR_JOBTYPE_PD => array(
+		'id'=>ML_WR_JOBTYPE_PD,
 		'name' => '产品系',
 		'tag_category' => ML_TAGCATEGORY_PD,
 		'jobs' => array(
@@ -38,6 +39,7 @@ return array(
 		),
 	),
 	ML_WR_JOBTYPE_TECH => array(
+		'id'=>ML_WR_JOBTYPE_TECH,
 		'name' => '技术系',
 		'tag_category' => ML_TAGCATEGORY_TECH,
 		'jobs' => array(

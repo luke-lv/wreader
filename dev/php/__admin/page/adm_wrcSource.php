@@ -113,19 +113,31 @@ class adm_wrcSource extends admin_ctrl
         $srcId = $this->input('id');
 
         $oBizA2R = new ml_biz_articleid2redis();
-
+        $oBizat2jc = new ml_biz_articleTag2jobContent();
         //get all article
         $oArticle = new ml_model_wrcArticle();
-        $oArticle->std_listBySrcIdByPage($srcId , 0 , 1 , 0);
-        $aRows = $oArticle->get_data();
 
-        if (!empty($aRows)) {
-            foreach ($aRows as $key => $value) {
-                echo $value['title']."\n";
-                $oBizA2R->execute($value['id'] , $value['tags']);
+        $mon = date('Ym');
+        for ($i=$mon-2; $i <= $mon; $i++) { 
+            
+            $oArticle->std_listBySrcIdByPage($srcId , $i , 1 , 0);
+            $aRows = $oArticle->get_data();
+
+            if (!empty($aRows)) {
+                foreach ($aRows as $key => $value) {
+                    
+                    $aTag = ml_function_lib::segmentChinese($value['title']);
+
+                    $nvalue['jobContentId'] = $oBizat2jc->execute( $aTag);
+                    $nvalue['tags'] = $oBizat2jc->getMetaTag();
+
+
+                    $oArticle->std_updateRow($value['id'] , $nvalue);
+
+                    $oBizA2R->execute($value['id'] , $nvalue['tags'] , $nvalue['jobContentId']);
+                }
             }
         }
-        
         //$this->_redirect($_SERVER['HTTP_REFERER'] , '重建完成' , 1);    
     }
     //protected function 

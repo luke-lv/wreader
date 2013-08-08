@@ -25,6 +25,7 @@
 	function page_editForm($data)
 	{
 		$dataDefine=ml_factory::load_dataDefine($data['_dataDefine']);
+		$dataDefine = $dataDefine['field'];
 
 ?>
 		<table width="98%" border="0" align="center" cellspacing="0" class="adminlist">
@@ -32,12 +33,31 @@
 			<tr>
 				<th colspan="2">编辑</th>
 			</tr>
-				<?php foreach ($dataDefine['field'] as $key => $value) { ?>
+				
 				<tr>
-					<td><?php echo $value['cn'] ?></td>
-					<td><?php echo ml_tool_admin_view::dtdfn_input($value['type'] , $key , $value , $data['row'][$key]); ?></td>
+					<td>标题</td>
+					<td><?php echo ml_tool_admin_view::dtdfn_input($dataDefine['title']['type'] , 'title' , $dataDefine['title'] , $data['row']['title']); ?></td>
 				</tr>
-				<?php } ?>
+				<tr>
+					<td>发布时间</td>
+					<td><?php echo ml_tool_admin_view::dtdfn_input($dataDefine['pub_time']['type'] , 'pub_time' , $dataDefine['pub_time'] , $data['row']['pub_time']); ?></td>
+				</tr>
+				<tr>
+					<td>摘要</td>
+					<td><?php echo ml_tool_admin_view::dtdfn_input($dataDefine['summary']['type'] , 'summary' , $dataDefine['summary'] , $data['row']['summary']); ?></td>
+				</tr>
+				<tr>
+					<td>链接</td>
+					<td><?php echo ml_tool_admin_view::dtdfn_input($dataDefine['link']['type'] , 'link' , $dataDefine['link'] , $data['row']['link']); ?></td>
+				</tr>
+				<tr>
+					<td>标签</td>
+					<td><?php echo ml_tool_admin_view::dtdfn_input($dataDefine['tags']['type'] , 'tags' , $dataDefine['tags'] , implode(' ',$data['row']['tags'])); ?></td>
+				</tr>
+				<tr>
+					<td>职业能力</td>
+					<td><?php echo ml_tool_admin_view::html_select('jobContentId' , $data['aJobContent'] , $data['row']['jobContentId']); ?></td>
+				</tr>
 			<tr>
 				<td colspan="2"><input type="submit" value="保存"/></td>
 			</tr>
@@ -50,8 +70,9 @@
 	{
 		$dataDefine=ml_factory::load_dataDefine($data['_dataDefine']);
 
-?>
-		<a href="?ym=201306&srcId=<?php echo $data['srcId']; ?>">6月</a>
+?>		<?php for($i=5;$i<10;$i++){ ?>
+		<a href="?ym=20130<?php echo $i ?>&srcId=<?php echo $data['srcId']; ?>"><?php echo $i; ?>月</a>
+		<?php } ?>
 		<table width="98%" border="0" align="center" cellspacing="0" class="adminlist">
 			<tr>
 				<th>#</th>
@@ -65,7 +86,7 @@
 			<?php foreach ($data['rows'] as $key => $row) { ?>
 			<tr aid="<?php echo $row['id']; ?>">
 				<td><?php echo $row['id']; ?></td>
-				<td><?php ml_tool_admin_view::echoline($data['_dataDefine'] , 'title' , $row['title']); ?></td>
+				<td><span title="<?php echo Tool_string::un_html($row['title']); ?>"><?php ml_tool_admin_view::echoline($data['_dataDefine'] , 'title' , $row['title'] , array(ml_tool_admin_view::ECHO_EXTRA_LEN => 30)); ?></span></td>
 				<td><?php ml_tool_admin_view::echoline($data['_dataDefine'] , 'tags' , implode(' ' , $row['tags'])); ?></td>
 				<td><?php ml_tool_admin_view::echoline($data['_dataDefine'] , 'pub_time' , $row['pub_time']); ?></td>
 				<td><?php echo ml_tool_admin_view::html_select('jobContentId' , $data['aJobContent'] , $row['jobContentId'][0] , '' , 'selJobContent' , true); ?></td>
@@ -98,7 +119,7 @@
 			<th><?php echo $data['articleRow']['title']; ?></th>
 		</tr>
 		<tr>
-			<td><?php echo $data['articleRow']['content']; ?></td>
+			<td><?php echo Tool_string::un_html($data['articleRow']['content']); ?></td>
 		</tr>
 	</table>
 <?php

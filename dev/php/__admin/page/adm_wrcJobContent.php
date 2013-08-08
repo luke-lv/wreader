@@ -26,16 +26,26 @@ class adm_wrcJobContent extends admin_ctrl
     
     protected function run()
     {
-        $page = $this->input('page','g',1);
+        $page = $this->input('p','g',1);
         $pagesize = $this->input('pagesize' , 'g' , 10);
-        $this->model->std_listByPage($page , $pagesize);
+        $category = $this->input('category' , 'g' , 1);
+        $contentName_tagid = $this->input('contentName_tagid' , 'g' , 0);
+
+        $this->model->count_by_category($category , $contentName_tagid);
+        $data['total'] = $this->model->get_data();
+        $this->model->get_by_category($category,$page , $pagesize , $contentName_tagid);
         $data['rows'] = $this->model->get_data();
         $data['pagesize'] = $pagesize;
+        $data['category'] = $category;
 
         foreach ($data['rows'] as $row) {
             $aTagid[] = $row['contentType_tagid'];
             $aTagid[] = $row['contentName_tagid'];
         }
+
+        $this->model->get_contentName_by_category($category);
+        $aCnTagid = Tool_array::format_2d_array($this->model->get_data() , 'contentName_tagid' ,Tool_array::FORMAT_VALUE_ONLY);
+
 
         $oTag = new ml_model_admin_dbTag();
         $oTag->tags_get_by_ids($aTagid);
@@ -45,6 +55,10 @@ class adm_wrcJobContent extends admin_ctrl
             $row['contentType'] = $aTag[$row['contentType_tagid']];
             $row['contentName'] = $aTag[$row['contentName_tagid']];
         }
+
+        $oTag->tags_get_by_ids($aCnTagid);
+        $data['aCnTag'] = Tool_array::format_2d_array($oTag->get_data() , 'tag' , Tool_array::FORMAT_ID2VALUE);
+
 
         $this->output($data);
     }
@@ -100,6 +114,20 @@ class adm_wrcJobContent extends admin_ctrl
         $this->output($data);
     }
     
+    protected function page_redisStat()
+    {
+        $oRdsCb = new ml_model_rdsContentBase();
+        $aJcid2n = $oRdsCb->listAllJc();
+
+        $oJobContent = new ml_model_wrcJobContent();
+        $oJobContent->get_by_ids(array_keys($aJcid2n));
+        $aJc = $oJobContent->get_data();
+        foreach ($aJc as $row) {
+            echo $row['name'].' == '.$aJcid2n[$row['id']]."<br/>";
+        }
+        die;
+    }
+
     protected function api_add()
     {
         $dataDefine = ml_factory::load_dataDefine($this->dataDefine);
