@@ -114,6 +114,13 @@ class adm_wrcArticle extends admin_ctrl
         $this->model->std_delById($id);
         $this->back();
     }
+    protected function api_realDelById()
+    {
+        $id = $this->input('id');
+        $this->model->std_realDelById($id);
+        $this->modelContent->std_realDelById($id);
+        $this->back();
+    }
     protected function api_changeJobContentIdById()
     {
         $id = $this->input('id');
@@ -142,6 +149,16 @@ class adm_wrcArticle extends admin_ctrl
         $oBizA2r = new ml_biz_articleid2redis();
         $oBizA2r->execute($id , $dataUpdate['tags'] , $dataUpdate['jobContentId']);
         $this->back();
+    }
+    protected function api_seg2wordgroup()
+    {
+        $id = $this->input('id');
+        $this->modelContent->std_getRowById($id);
+        $articleContent = $this->modelContent->get_data();
+
+        $oBizw2wg = new ml_biz_contentParse_word2wordgroup();
+        var_dump($oBizw2wg->execute($articleContent['content']));
+
     }
 }
 

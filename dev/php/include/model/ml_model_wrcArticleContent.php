@@ -53,16 +53,16 @@ class ml_model_wrcArticleContent extends Lib_datamodel_db
 
         return $this->update($data , $where);
     }
-    function std_delById($id)
+    function std_realDelById($id)
     {
         $Ym = $this->_calc_date_by_articleId($id);
         if(!$this->init_db($Ym , self::DB_MASTER))
             return false;
 
-        $where = '`id` = '.$id;
-        $data['status'] = self::STATUS_DEL;
+        $where = '`id` = "'.$id.'"';
+        
 
-        return $this->update($data , $where);
+        return $this->delete($where);
 
     }
 

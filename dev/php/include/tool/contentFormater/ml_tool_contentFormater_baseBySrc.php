@@ -38,6 +38,8 @@ class ml_tool_contentFormater_baseBySrc
 
 	public function calcFormaterClassName($codeSign)
 	{
-		return 'ml_tool_contentFormater_src'.ucfirst(substr($codeSign, 0 , strpos($codeSign, '_')));
+		$pos = strpos($codeSign, '_');
+		$len = $pos > 0 ? $pos : strlen($codeSign);
+		return 'ml_tool_contentFormater_src'.ucfirst(substr($codeSign, 0 , $len));
 	}
 }

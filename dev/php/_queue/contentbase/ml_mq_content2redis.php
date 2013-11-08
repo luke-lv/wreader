@@ -28,7 +28,7 @@ class ml_mq_content2redis extends MqClass{
         $arr = $this->src_data;
         
         $aTag = explode(' ', $arr['tags']);
-        $this->oBizA2R->execute($arr['article_id'] , $aTag);
+        $this->oBizA2R->execute($arr['article_id'] , $aTag , $arr['jobContentId']);
         
         return true;
     }

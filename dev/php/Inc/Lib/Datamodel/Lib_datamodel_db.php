@@ -341,6 +341,11 @@ class Lib_datamodel_db extends Lib_datamodel_abstract
         
         return $this->query($sql);
     }
+    protected function delete($where){
+        $sql = 'DELETE FROM `'.$this->table.'` WHERE '.$where;
+        
+        return $this->query($sql);
+    }
     
     /**
      * 安全过滤
@@ -350,7 +355,7 @@ class Lib_datamodel_db extends Lib_datamodel_abstract
      */
     protected function escape($s)
     {
-        return mysql_escape_string($s);
+        return mysql_real_escape_string($s);
     }
     /**
      * 格式化 SET `aa`='b',`cc`='d'

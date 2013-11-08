@@ -17,7 +17,7 @@ class ml_model_wrcSource extends Lib_datamodel_db
         parent::__construct('wrc_source' , $db_config['wrc_source']);
     }
     
-    function std_listByPage($page = 1 , $pagesize = 10 , $admin = 0 )
+    function std_listByPage($page = 1 , $pagesize = 10 , $admin = 0 , $orderbyLastSpider = false)
     {
         if(!$this->init_db($uid , self::DB_SLAVE))
             return false;
@@ -26,7 +26,8 @@ class ml_model_wrcSource extends Lib_datamodel_db
         $start = ($page-1)*$pagesize;
 
         $statusCondition = $admin == 1 ? ' status != '.self::STATUS_DEL : ' status = '.self::STATUS_NORMAL;
-        $sql = 'select * from '.$this->table.' where '.$statusCondition.' order by id desc limit '.$start.','.$pagesize;
+        $order = '`lastUpdateTime` DESC';
+        $sql = 'select * from '.$this->table.' where '.$statusCondition.' order by '.$order.' limit '.$start.','.$pagesize;
         return $this->fetch($sql);
     }
 
@@ -105,6 +106,18 @@ class ml_model_wrcSource extends Lib_datamodel_db
 
         $sql = 'select * from '.$this->table.' where spider_time='.$spider_time.' and status='.self::STATUS_NORMAL.' order by id desc limit '.$start.','.$pagesize;
         return $this->fetch($sql);
+    }
+    function updateLastSpiderTime($id)
+    {
+        if(!$this->init_db($uid , self::DB_MASTER))
+            return false;
+
+        $this->_is_utime = false;
+
+        $where = '`id` = '.$id;
+        $data['lastUpdateTime'] = date('Y-m-d H:i:s');
+
+        return $this->update($data , $where);
     }
 }
 ?>

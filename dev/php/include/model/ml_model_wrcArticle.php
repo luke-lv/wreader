@@ -125,13 +125,21 @@ class ml_model_wrcArticle extends Lib_datamodel_db
         if(!$this->init_db($Ym , self::DB_MASTER))
             return false;
 
-        $where = '`id` = '.$id;
+        $where = '`id` = "'.$id.'"';
         $data['status'] = self::STATUS_DEL;
 
         return $this->update($data , $where);
 
     }
+    function std_realDelById($id)
+    {
+        $Ym = $this->_calc_Ym_by_articleId($id);
+        if(!$this->init_db($Ym , self::DB_MASTER))
+            return false;
 
+        $where = '`id` = "'.$id.'"';
+        return $this->delete($where);
+    }
 
     function countByLink($srcId , $link)
     {

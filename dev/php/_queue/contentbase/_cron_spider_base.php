@@ -7,6 +7,7 @@ class _cron_spider_base
 {
 	private $spidertime;
 	private $oArticle;
+	private $oSource;
 	private $oArticleContent;
 	private $oAdminCommon;
 
@@ -21,13 +22,13 @@ class _cron_spider_base
 	}
 	public function execute()
 	{
-		$oSource = new ml_model_wrcSource();
+		$this->oSource = new ml_model_wrcSource();
 
 
 		$srcPage = 1;
 		while (true) {
-			$oSource->listBySpidertime($this->spidertime , $srcPage);
-			$srcRows = $oSource->get_data();
+			$this->oSource->listBySpidertime($this->spidertime , $srcPage);
+			$srcRows = $this->oSource->get_data();
 
 			if(!$srcRows)
 				break;
@@ -171,7 +172,7 @@ echo "\n\n\n\n\n\n";
 
 	private function _update_last_fetched_time($srcId)
 	{
-		return;
+		$this->oSource->updateLastSpiderTime($srcId);
 
 	}
 	
@@ -206,6 +207,7 @@ echo "\n\n\n\n\n\n";
 			'title' => $articleRow['title'],
 			'link' => $articleRow['link'],
 			'tags' => $articleRow['tags'],
+			'jobContentId' => $articleRow['jobContentId'],
 			'pub_time' => date('Y-m-d H:i:s' , strtotime($articleRow['pubDate'])),
 		);
 
@@ -221,7 +223,10 @@ echo "\n\n\n\n\n\n";
 
 		if(!empty($articleRow['tags']))
 		{
-			ml_tool_queue_contentBase::add_content2redis($article_id , $articleRow['tags']);
+			var_dump($articleRow['tags']);
+			var_dump($articleRow['jobContentId']);
+			echo 'xxxx';
+			ml_tool_queue_contentBase::add_content2redis($article_id , $articleRow['tags'] , $articleRow['jobContentId']);
 		}
 
 		return true;

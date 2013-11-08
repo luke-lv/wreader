@@ -69,9 +69,13 @@
 	function page_index($data)
 	{
 		$dataDefine=ml_factory::load_dataDefine($data['_dataDefine']);
+		$year = date('y');
 
-?>		<?php for($i=5;$i<10;$i++){ ?>
-		<a href="?ym=20130<?php echo $i ?>&srcId=<?php echo $data['srcId']; ?>"><?php echo $i; ?>月</a>
+		for($i=0;$i>-6;$i--){ 
+			
+			$yearMonth = Tool_date::offsetMonth($i);
+		?>
+		<a href="?ym=<?php echo $yearMonth ?>&srcId=<?php echo $data['srcId']; ?>"><?php echo $yearMonth; ?></a> 
 		<?php } ?>
 		<table width="98%" border="0" align="center" cellspacing="0" class="adminlist">
 			<tr>
@@ -95,7 +99,9 @@
 					<a href="?dtdfn=<?php echo $data['_dataDefine'] ?>&page=articleShow&id=<?php echo $row['id'] ?>">查看</a>
 					<a href="?dtdfn=<?php echo $data['_dataDefine'] ?>&page=editForm&id=<?php echo $row['id'] ?>">编辑</a>
 					<a href="?dtdfn=<?php echo $data['_dataDefine'] ?>&api=reSegment&id=<?php echo $row['id'] ?>">分词</a>
+					<a href="?dtdfn=<?php echo $data['_dataDefine'] ?>&api=seg2wordgroup&id=<?php echo $row['id'] ?>">词组</a>
 					<a href="javascript:;" onclick="if(window.confirm('xxx')){window.location='?dtdfn=<?php echo $data['_dataDefine'] ?>&api=delById&id=<?php echo $row['id'] ?>'}"><font color="red">删除</font></a>
+					<a href="javascript:;" onclick="if(window.confirm('xxx')){window.location='?dtdfn=<?php echo $data['_dataDefine'] ?>&api=realDelById&id=<?php echo $row['id'] ?>'}"><font color="red">[真删除]</font></a>
 				</td>
 			</tr>
 			<?php } ?>
