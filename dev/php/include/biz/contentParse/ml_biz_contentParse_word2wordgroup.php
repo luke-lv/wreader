@@ -11,7 +11,7 @@ class ml_biz_contentParse_word2wordgroup
 		$group = array();
 		$aMark = array(',','.','?','!',':',';','"','\'','，','。', '？', '！', '：', '；', '“', '‘' , '、','”' , '《' , '》');
 		$aAttrPass = array('c' , 'uj' , 'r' , 'd' , 'm' , 'p' , 'f' , 'un' , 'q' , 'mt');
-		$aUnuseWord = array('把','被','成' , '是' , '了' , '等','着' , '下' , '上','让');
+		$aUnuseWord = array('把','被','成' , '是' , '了' , '等','着' , '下' , '上','让' , '如' , '等');
 		$aUnusePreWord = array('所');
 		foreach ($wordInfoRows as $wordInfo) {
 
