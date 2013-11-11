@@ -27,10 +27,11 @@ class adm_wrcSource extends admin_ctrl
     protected function run()
     {
         $page = $this->input('p');
+        $category = $this->input('category');
         $pagesize = $this->input('pagesize' , 'g' , 10);
-        $this->model->std_listByPage($page , $pagesize , 1);
+        $this->model->std_listByPage($page , $pagesize , 1 , $category);
         $data['rows'] = $this->model->get_data();
-        $this->model->std_getCount();
+        $this->model->std_getCount(1,$category);
         $data['total'] = $this->model->get_data();
         $data['pagesize'] = $pagesize;
 
@@ -57,7 +58,41 @@ class adm_wrcSource extends admin_ctrl
         $data['aTag'] = Tool_array::format_2d_array($oTag->get_data() , 'tag' , Tool_array::FORMAT_ID2VALUE);
         $this->output($data);
     }
-    
+    protected function page_findKeyWord()
+    {
+        $srcId = $this->input('id');
+
+        $oBizA2R = new ml_biz_articleid2redis();
+        $oBizat2jc = new ml_biz_articleTag2jobContent();
+        //get all article
+        $oArticle = new ml_model_wrcArticle();
+        $oContent = new ml_model_wrcArticleContent();
+        $oBizParse = new ml_biz_contentParse_word2wordgroup();
+
+        $mon = date('Ym');
+        $aAllKey = array();
+        for ($i=$mon-1; $i <= $mon; $i++) { 
+            
+            $oArticle->std_listBySrcIdByPage($srcId , $i , 1 , 0);
+            $aRows = $oArticle->get_data();
+            foreach ($aRows as $value) {
+                $oContent->std_getRowById($value['id']);
+                $aContent = $oContent->get_data();
+                
+                $aContents[] = $aContent['content'];
+            }
+        }
+
+        $rs = $oBizParse->execute_in_multi_article($aContents);
+        // var_dump($rs);die;
+        $data['sort'] = $rs['sort'];
+
+        $data['words'] = $rs['wordInfo'];
+
+        $this->output($data);
+    }
+
+
     protected function api_add()
     {
         $dataDefine = ml_factory::load_dataDefine($this->dataDefine);
@@ -117,6 +152,10 @@ class adm_wrcSource extends admin_ctrl
         //get all article
         $oArticle = new ml_model_wrcArticle();
 
+        $oSource = new ml_model_wrcSource();
+        $oSource->std_getRowById($srcId);
+        $sourceInfo = $oSource->get_data();
+
         $mon = date('Ym');
         for ($i=$mon-2; $i <= $mon; $i++) { 
             
@@ -127,6 +166,8 @@ class adm_wrcSource extends admin_ctrl
                 foreach ($aRows as $key => $value) {
                     
                     $aTag = ml_function_lib::segmentChinese($value['title']);
+                    array_filter($aTag);
+                    $aTag = array_merge($aTag , $sourceInfo['tags']);
 
                     $nvalue['jobContentId'] = $oBizat2jc->execute( $aTag);
                     $nvalue['tags'] = $oBizat2jc->getMetaTag();
@@ -140,42 +181,8 @@ class adm_wrcSource extends admin_ctrl
         }
         $this->_redirect($_SERVER['HTTP_REFERER'] , '重建完成' , 1);    
     }
-    protected function api_findKeyWord()
-    {
-        $srcId = $this->input('id');
-
-        $oBizA2R = new ml_biz_articleid2redis();
-        $oBizat2jc = new ml_biz_articleTag2jobContent();
-        //get all article
-        $oArticle = new ml_model_wrcArticle();
-        $oContent = new ml_model_wrcArticleContent();
-        $oBizParse = new ml_biz_contentParse_word2wordgroup();
-
-        $mon = date('Ym');
-        $aAllKey = array();
-        for ($i=$mon-1; $i <= $mon; $i++) { 
-            
-            $oArticle->std_listBySrcIdByPage($srcId , $i , 1 , 0);
-            $aRows = $oArticle->get_data();
-            foreach ($aRows as $value) {
-                $oContent->std_getRowById($value['id']);
-                $aContent = $oContent->get_data();
-                $rs = $oBizParse->execute($aContent['content']);
-                foreach ($rs as $wordgroup => $n) {
-                    $aAllKey[$wordgroup]['value']+=$n;
-                    $aAllKey[$wordgroup]['article_id'].=','.$aContent['id'];
-                }
-            }
-
-            
-        }
-
-        arsort($aAllKey);
-        
-        foreach ($aAllKey as $key => $arr) {
-            echo $key.' '.$arr['value'].' '.$arr['article_id']."<br/>";
-        }
-    }
+    
+    
     //protected function 
 }
 

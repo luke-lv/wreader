@@ -16,8 +16,30 @@ class ml_model_wrcSource extends Lib_datamodel_db
 
         parent::__construct('wrc_source' , $db_config['wrc_source']);
     }
+    protected function hook_after_fetch()
+    {
+        if(isset($this->_data[0]['tags']))
+        {
+            foreach ($this->_data as &$row) {
+                $row['tags'] = explode(',', $row['tags']);
+            }
+        }
+        else if(isset($this->_data['tags']))
+        {
+            $this->_data['tags'] = explode(',', $this->_data['tags']);
+        }
+
+    }
     
-    function std_listByPage($page = 1 , $pagesize = 10 , $admin = 0 , $orderbyLastSpider = false)
+    protected function hook_before_write($array)
+    {
+        if($array['tags'])
+            $array['tags'] = is_array($array['tags']) ? implode(',', $array['tags']) : '';
+    
+        return $array;
+    }
+    
+    function std_listByPage($page = 1 , $pagesize = 10 , $admin = 0 , $category = 0, $orderbyLastSpider = true)
     {
         if(!$this->init_db($uid , self::DB_SLAVE))
             return false;
@@ -25,20 +47,23 @@ class ml_model_wrcSource extends Lib_datamodel_db
         $page = $page <1 ? 1 : $page;
         $start = ($page-1)*$pagesize;
 
+
         $statusCondition = $admin == 1 ? ' status != '.self::STATUS_DEL : ' status = '.self::STATUS_NORMAL;
-        $order = '`lastUpdateTime` DESC';
-        $sql = 'select * from '.$this->table.' where '.$statusCondition.' order by '.$order.' limit '.$start.','.$pagesize;
+        $condition = $category > 0 ? ' AND category='.$category :'';
+        if($orderbyLastSpider)
+            $order = 'order by `lastUpdateTime` DESC';
+        $sql = 'select * from '.$this->table.' where '.$statusCondition.$condition.' '.$order.' limit '.$start.','.$pagesize;
         return $this->fetch($sql);
     }
 
-    function std_getCount($admin = 0)
+    function std_getCount($admin = 0 , $category = 0)
     {
         if(!$this->init_db($uid , self::DB_SLAVE))
             return false;
 
         $statusCondition = $admin == 1 ? 'status != '.self::STATUS_DEL : 'status = '.self::STATUS_NORMAL;
-        
-        return $this->fetch_count($statusCondition);
+        $condition = $category > 0 ? ' AND category='.$category :'';
+        return $this->fetch_count($statusCondition.$condition);
     }
 
     function std_getRowById($id , $admin = 0)

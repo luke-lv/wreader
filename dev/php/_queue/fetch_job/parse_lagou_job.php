@@ -6,17 +6,16 @@ class parse_lagou_job
 		$fp = fopen('./jobs/'.$filename, 'r');
 
 		$aJobKeyword = array();
-		$aAttrPass = array('c' , 'uj' , 'r' , 'd' , 'm' , 'p' , 'f' , 'un' , 'q' , 'mt');
 
 		while ($line = trim(fgets($fp))) {
 			list($jobName , $jobDesc , $jobContent) = explode('----', $line);
 
 			$job_level = $this->_calc_job_level($jobName);
 
-			$content.=$jobContent;
+			$aContent[]=$jobContent;
 		}
 		$oBiz = new ml_biz_contentParse_word2wordgroup;
-		$a = $oBiz->execute($content);
+		$a = $oBiz->execute_in_multi_article($aContent , false);
 		
 			var_dump($a);
 	}

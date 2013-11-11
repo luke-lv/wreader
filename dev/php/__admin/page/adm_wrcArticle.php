@@ -9,12 +9,14 @@ class adm_wrcArticle extends admin_ctrl
     private $model;
     private $modelContent;
 
+
     public function _construct()
     {
         
         $this->dataDefine = 'wrcArticle';
         $this->model = new ml_model_wrcArticle($this->dataDefine);
         $this->modelContent = new ml_model_wrcArticleContent();
+        
         //
     }
     
@@ -134,7 +136,15 @@ class adm_wrcArticle extends admin_ctrl
         $this->model->std_getRowById($id);
         $articleInfo = $this->model->get_data();
 
+        $oSource = new ml_model_wrcSource();
+        $oSource->std_getRowById($articleInfo['source_id']);
+        $sourceInfo = $oSource->get_data();
+
+
         $aTag = ml_function_lib::segmentChinese($articleInfo['title']);
+        array_filter($aTag);
+        $aTag = array_merge($aTag , $sourceInfo['tags']);
+
 
         $oBiz = new ml_biz_articleTag2jobContent();
         $aJobContentId = $oBiz->execute($aTag);

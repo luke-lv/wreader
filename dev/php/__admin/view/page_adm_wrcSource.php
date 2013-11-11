@@ -187,7 +187,7 @@
 					<a href="adm_wrcArticle.php?srcId=<?php echo $row['id'] ?>">文章列表</a>
 					<a href="?dtdfn=<?php echo $data['_dataDefine'] ?>&page=editForm&id=<?php echo $row['id'] ?>">编辑</a>
 					<a href="?dtdfn=<?php echo $data['_dataDefine'] ?>&api=reRedis&id=<?php echo $row['id'] ?>">重建索引</a>
-					<a href="?dtdfn=<?php echo $data['_dataDefine'] ?>&api=findKeyWord&id=<?php echo $row['id'] ?>">关键词库</a>
+					<a href="?dtdfn=<?php echo $data['_dataDefine'] ?>&page=findKeyWord&id=<?php echo $row['id'] ?>">关键词库</a>
 					<a href="?dtdfn=<?php echo $data['_dataDefine'] ?>&api=setStatusById&id=<?php echo $row['id'] ?>&status=<?php echo $row['status']==ml_model_wrcSource::STATUS_STOP?ml_model_wrcSource::STATUS_NORMAL:ml_model_wrcSource::STATUS_STOP;?>"><?php echo $row['status']==ml_model_wrcSource::STATUS_STOP?'<font color="gray">禁用中</font>':'<font color="green">正常</font>';?></a>
 					<a href="javascript:;" onclick="if(window.confirm('xxx')){window.location='?dtdfn=<?php echo $data['_dataDefine'] ?>&api=delById&id=<?php echo $row['id'] ?>'}"><font color="red">删除</font></a>
 				</td>
@@ -204,5 +204,29 @@
 			});
 		</script>
 <?php
+	}
+
+	function page_findKeyWord($data){
+		?>
+		<table width="98%" border="0" align="center" cellspacing="0" class="adminlist">
+			<tr>
+				<th>词组</th>
+				<th>出现文章数</th>
+				<th>idf</th>
+			</tr>
+			<?php
+				foreach ($data['sort'] as $key => $value) {
+					?>
+				<tr>
+					<td><?php echo $key; ?></td>
+					<td><?php echo $value; ?></td>
+					<td><?php echo implode(' ', $data['words'][$key]['idf']); ?></td>
+				</tr>
+					<?php
+				}
+			?>
+			
+		</table>
+		<?php
 	}
 ?>

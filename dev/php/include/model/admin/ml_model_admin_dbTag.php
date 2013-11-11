@@ -70,14 +70,14 @@ class ml_model_admin_dbTag extends Lib_datamodel_db
             return false;
 
         $arr = array();
-        if($data['tag']['contentName_tagid'])
-            $arr['contentName_tagid'];
-        if($data['tag']['contentType_tagid'])
-            $arr['contentType_tagid'];
-        if($data['tag']['type'])
-            $arr['type'];
-        if($data['tag']['core_tagid'])
-            $arr['core_tagid'];
+        if($data['contentName_tagid'])
+            $arr['contentName_tagid'] = $data['contentName_tagid'];
+        if($data['contentType_tagid'])
+            $arr['contentType_tagid'] = $data['contentType_tagid'];
+        if($data['type'])
+            $arr['type'] = $data['type'];
+        if($data['core_tagid'])
+            $arr['core_tagid'] = $data['core_tagid'];
 
         foreach ($aTags as $value) {
             $a = array(

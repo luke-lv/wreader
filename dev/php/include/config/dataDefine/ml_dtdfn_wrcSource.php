@@ -29,8 +29,7 @@
 				'length'=>50),
 			'tags' => array(
 				'cn'=>'标签',
-				'type' => 's',
-				'length'=>200),
+				'type' => 'a'),
 			'language' => array(
 				'cn'=>'语言',
 				'type' => 'enum',
@@ -38,7 +37,7 @@
 			'spider_time' => array(
 				'cn'=>'抓取频率',
 				'type' => 'enum',
-				'enum'=>array(ML_SPIDERTIME_3HOUR=>'3小时',ML_SPIDERTIME_1HOUR=>'1小时',ML_SPIDERTIME_6HOUR=>'6小时',ML_SPIDERTIME_1DAY=>'1天')),
+				'enum'=>array(ML_SPIDERTIME_3HOUR=>'3小时',ML_SPIDERTIME_1HOUR=>'1小时',ML_SPIDERTIME_6HOUR=>'6小时',ML_SPIDERTIME_1DAY=>'1天',ML_SPIDERTIME_NEVER=>'暂停')),
 			'spider_type' => array(
 				'cn'=>'抓取方式',
 				'type' => 'enum',

@@ -81,6 +81,11 @@ class ml_tool_admin_view
             
             echo $df['field'][$field]['enum'][$value];
         }
+        else if($df['field'][$field]['type']=='a')
+        {
+            
+            echo htmlspecialchars(implode(' ', $value));
+        }
         else
         {
             echo htmlspecialchars($value);
@@ -92,6 +97,10 @@ class ml_tool_admin_view
         if(in_array($type, array('i','s')))
         {
             return '<input type="text" name="'.$name.'" value="'.(is_null($value)?$dtdfn['default']:$value).'"/>';
+        }
+        else if($type== 'a')
+        {
+            return '<input type="text" name="'.$name.'" value="'.(is_null($value)?$dtdfn['default']:implode(' ', $value)).'"/>';
         }
         else if($type=='enum')
         {
