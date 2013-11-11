@@ -26,11 +26,14 @@ class adm_wruUser extends admin_ctrl
     
     protected function run()
     {
-        $page = $this->input('page','g',10);
-        $pagesize = $this->input('pagesize');
+        $page = $this->input('p');
+        $pagesize = $this->input('pagesize' , 'g' , 10);
         $this->model->std_listByPage($page , $pagesize);
         $data['rows'] = $this->model->get_data();
         $data['pagesize'] = $pagesize;
+
+        $this->model->std_getCount();
+        $data['total'] = $this->model->get_data();
 
         $this->output($data);
     }
@@ -44,6 +47,19 @@ class adm_wruUser extends admin_ctrl
         $this->model->std_getRowById($id);
         $data['row'] = $this->model->get_data();
         $this->output($data);
+    }
+    protected function page_showReadedTag(){
+        $uid = $this->input('uid');
+        $oRds = new ml_model_rdsUserReaded;
+        $rs = $oRds->getReadedTag($uid , true);
+        
+        $aTagId = array_keys($rs);
+        
+        $oTag = new ml_model_admin_dbTag;
+        $oTag->tags_get_by_taghash($aTagId);
+
+        $aTags = Tool_array::format_2d_array($oTag->get_data() , 'id' , Tool_array::FORMAT_FIELD2ROW);
+        var_dump($aTags);
     }
     
     protected function api_add()

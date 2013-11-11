@@ -58,6 +58,7 @@
 				<th><?php echo $value['cn']; ?></th>
 				<?php } ?>
 				<th>操作</th>
+				<th>查看</th>
 			</tr>
 			<?php foreach ($data['rows'] as $key => $row) { ?>
 			<tr>
@@ -69,6 +70,7 @@
 					<a href="?dtdfn=<?php echo $data['_dataDefine'] ?>&page=editForm&id=<?php echo $row['id'] ?>">编辑</a>
 					<a href="javascript:;" onclick="if(window.confirm('xxx')){window.location='?dtdfn=<?php echo $data['_dataDefine'] ?>&api=delById&id=<?php echo $row['id'] ?>'}"><font color="red">删除</font></a>
 				</td>
+				<td><a href="?page=showReadedTag&uid=<?php echo $row['id']; ?>">已读标签</a></td>
 			</tr>
 			<?php } ?>
 			<tr>
