@@ -2,6 +2,8 @@
 class ml_tool_chineseSegment
 {
 	const IGNORE_SYMBOL=true;
+
+    static $_unusefulAttr = array('c' , 'uj' , 'r' , 'd' , 'm' , 'p' , 'f' , 'un' , 'q' , 'mt' , 'sn');
 	public static function segment2word($str)
     {
         $scws = self::_init_scws();
@@ -22,15 +24,27 @@ class ml_tool_chineseSegment
         return $words;
 
     }
-    public static function segmentWithAttr($str)
+    /**
+     * 分词 并保存词的属性
+     * @param  [type]  $str         [description]
+     * @param  boolean $set_duality 二分
+     * @return [type]               [description]
+     */
+    public static function segmentWithAttr($str , $set_duality = true)
     {
     	$scws = self::_init_scws();
-    	$scws->set_duality(true); 
+    	$scws->set_duality($set_duality); 
         $scws->send_text($str);
         while ($result = $scws->get_result())
         {
 
             foreach ($result as $tmp){
+                if($tmp['idf'] == 0){
+                    continue;
+                }
+                if(in_array($tmp['attr'] , self::$_unusefulAttr)){
+                    continue;
+                }
                 $rs[] = $tmp;
             }
         }
@@ -48,5 +62,13 @@ class ml_tool_chineseSegment
         $scws->set_ignore(self::IGNORE_SYMBOL); 
         
         return $scws;
+    }
+
+    public static function filterUnavailableStr($content){
+        $content = strip_tags($content);
+        $content = str_replace('&nbsp;', ' ', $content);
+        $content = Tool_string::delLongEnglish($content);
+        $content = strtolower($content);
+        return $content;
     }
 }

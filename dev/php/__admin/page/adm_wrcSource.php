@@ -58,7 +58,7 @@ class adm_wrcSource extends admin_ctrl
         $data['aTag'] = Tool_array::format_2d_array($oTag->get_data() , 'tag' , Tool_array::FORMAT_ID2VALUE);
         $this->output($data);
     }
-    protected function page_findKeyWord()
+    protected function page_findKeyWordGroup()
     {
         $srcId = $this->input('id');
 
@@ -79,7 +79,7 @@ class adm_wrcSource extends admin_ctrl
                 $oContent->std_getRowById($value['id']);
                 $aContent = $oContent->get_data();
                 
-                $aContents[] = $aContent['content'];
+                $aContents[] = ml_tool_chineseSegment::filterUnavailableStr($aContent['content']);
             }
         }
 
@@ -88,6 +88,44 @@ class adm_wrcSource extends admin_ctrl
         $data['sort'] = $rs['sort'];
 
         $data['words'] = $rs['wordInfo'];
+
+        $this->output($data);
+    }
+    protected function page_findKeyWord()
+    {
+        $srcId = $this->input('id');
+
+        $oBizA2R = new ml_biz_articleid2redis();
+        $oBizat2jc = new ml_biz_articleTag2jobContent();
+        //get all article
+        $oArticle = new ml_model_wrcArticle();
+        $oContent = new ml_model_wrcArticleContent();
+        
+
+        $mon = date('Ym');
+        $aAllKey = array();
+        $aTagInfos = array();
+        for ($i=$mon-1; $i <= $mon; $i++) { 
+            
+            $oArticle->std_listBySrcIdByPage($srcId , $i , 1 , 0);
+            $aRows = $oArticle->get_data();
+            foreach ($aRows as $value) {
+                $oContent->std_getRowById($value['id']);
+                $aContent = $oContent->get_data();
+                $content = ml_tool_chineseSegment::filterUnavailableStr($aContent['content']);
+                $aTag = ml_tool_chineseSegment::segmentWithAttr($content , false);
+                
+                foreach ($aTag as $tagInfo) {
+                    $aTagInfos[$tagInfo['word']] = $tagInfo;
+                    $aAllKey[$tagInfo['word']]++;
+                }
+            }
+        }
+        arsort($aAllKey);
+        
+        $data['sort'] = $aAllKey;
+
+        $data['words'] = $aTagInfos;
 
         $this->output($data);
     }

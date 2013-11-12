@@ -163,6 +163,20 @@ class adm_wrcArticle extends admin_ctrl
 
         $oBizA2r = new ml_biz_articleid2redis();
         $oBizA2r->execute($id , $dataUpdate['tags'] , $dataUpdate['jobContentId']);
+
+
+        // $this->modelContent->std_getRowById($id);
+        // $aContent = $this->modelContent->get_data();
+        // $aTag = ml_tool_chineseSegment::segmentWithAttr($aContent['content']);
+        // foreach ($aTag as $key => $tagInfo) {
+        //     if($tagInfo['idf'] >0){
+        //         $aTagAvail[] = $tagInfo['word'];
+        //     }
+        // }
+        // $aTagCount = array_count_values($aTagAvail);
+        // arsort($aTagCount);
+        // var_dump($aTagCount);
+        // die;
         $this->back();
     }
     protected function api_seg2wordgroup()

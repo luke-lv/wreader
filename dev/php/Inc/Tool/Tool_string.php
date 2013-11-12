@@ -156,7 +156,7 @@ class Tool_string
      * @param string $str
      * @return int
      */
-    function count_all_character($str , $encoding = 'utf-8')
+    static function count_all_character($str , $encoding = 'utf-8')
     {
         $str = preg_replace("/&(#\d{3,5});/", "_", $str);
         $str = preg_replace("/&([a-z]{2,7});/", "_", $str);
@@ -170,7 +170,7 @@ class Tool_string
      * @param string $encoding
      * @return int
      */
-    function str_width($str , $encoding = 'utf-8')
+    static function str_width($str , $encoding = 'utf-8')
     {
         return mb_strwidth($str , $encoding);
     }
@@ -180,7 +180,7 @@ class Tool_string
      * @param string $s
      * @return string
      */
-    function autolink($s)
+    static function autolink($s)
     {
         $s_copy = str_replace('&nbsp;' , ' ' , $s);
         preg_match_all('/((http|https|news|ftp):\/\/\w+[^\s<>\[\]]+)/i' , $s_copy , $b);
@@ -205,7 +205,7 @@ class Tool_string
      * @param string $str
      * @return string
      */
-    function html_word_cut($str , $num = 24)
+    static function html_word_cut($str , $num = 24)
     {
         $str = str_replace(array('&nbsp;'),array('&nbsp;<wbr>'),$str);
 
@@ -231,7 +231,7 @@ class Tool_string
      * @param string $encoding 编码方式：'gbk' 'utf-8'...
      * @return string
      */
-    function substr_by_width($str , $start , $offset , $encoding = 'utf-8',$end = '')
+    static function substr_by_width($str , $start , $offset , $encoding = 'utf-8',$end = '')
     {
         if (!function_exists("mb_strimwidth"))
         {
@@ -249,7 +249,7 @@ class Tool_string
      * @param string $encoding 编码方式：'gbk' 'utf-8'...
      * @return string
      */
-    function substr_by_charater($str , $start , $offset , $encoding = 'utf-8')
+    static function substr_by_charater($str , $start , $offset , $encoding = 'utf-8')
     {
         if (!function_exists("mb_substr"))
         {
@@ -265,7 +265,7 @@ class Tool_string
      * @param unknown_type $str
      * @return unknown
      */
-    function esc_korea_change($str)
+    static function esc_korea_change($str)
     {
         $str = preg_replace("/&(#?[0-9a-zA-Z]{2,7});/", "__sina_\\1_word__", $str);
         return $str;
@@ -275,7 +275,7 @@ class Tool_string
      * @param string $str
      * @return string
      */
-    function esc_korea_restore($str)
+    static function esc_korea_restore($str)
     {
         $str = preg_replace("/__sina_(#?[0-9a-zA-Z]{2,7})_word__/U", "&\\1;", $str);
         return $str;
@@ -286,7 +286,7 @@ class Tool_string
      *
      * @param unknown_type $string
      */
-    function htmlEntitiesSymbol_2_gbk($string)
+    static function htmlEntitiesSymbol_2_gbk($string)
     {
         $arr_replace = array("&Alpha;" => "Α",
                     "&Gamma;" => "Γ",
@@ -371,7 +371,7 @@ class Tool_string
         return $string;
     }
 
-    public function isUtf8($string)
+    static public function isUtf8($string)
     {
         return preg_match('%^(?:
           [\x09\x0A\x0D\x20-\x7E]            # ASCII
@@ -386,7 +386,7 @@ class Tool_string
     }
     
 
-    public function trimCdata($str)
+    static public function trimCdata($str)
     {
         if (substr($str, 0 , 9) == '<![CDATA[') {
                     $str = substr($str, 9 , strlen($str)-9-3);
@@ -394,4 +394,7 @@ class Tool_string
         return $str;
     }
     
+    static function delLongEnglish($str){
+         return preg_replace('/[[:digit:][:alpha:][:punct:]\s]{20,}/', '',$str);
+    }
 }
