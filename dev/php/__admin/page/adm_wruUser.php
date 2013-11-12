@@ -51,15 +51,23 @@ class adm_wruUser extends admin_ctrl
     protected function page_showReadedTag(){
         $uid = $this->input('uid');
         $oRds = new ml_model_rdsUserReaded;
-        $rs = $oRds->getReadedTag($uid , true);
+        $aTag2Weight= $oRds->getReadedTag($uid , true);
         
-        $aTagId = array_keys($rs);
+        $aTagId = array_keys($aTag2Weight);
         
         $oTag = new ml_model_admin_dbTag;
         $oTag->tags_get_by_taghash($aTagId);
 
-        $aTags = Tool_array::format_2d_array($oTag->get_data() , 'id' , Tool_array::FORMAT_FIELD2ROW);
-        var_dump($aTags);
+        $aTags = Tool_array::format_2d_array($oTag->get_data() , 'tag_hash' , Tool_array::FORMAT_FIELD2ROW);
+        
+
+        foreach ($aTag2Weight as $key => $value) {
+            echo $aTags[$key]['tag']."\t\t".$value."\n";
+        }
+        $data['tagInfo'] = $aTags;
+        $data['tagReaded'] = $aTag2Weight;
+
+
     }
     
     protected function api_add()

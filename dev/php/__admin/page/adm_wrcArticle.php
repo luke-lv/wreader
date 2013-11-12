@@ -86,6 +86,11 @@ class adm_wrcArticle extends admin_ctrl
 
         $data['articleRow'] = array_merge($data['articleRow'] , $this->modelContent->get_data());
         
+        $oSource = new ml_model_wrcSource;
+        $oSource->std_getRowById($data['articleRow']['source_id']);
+        $data['source'] = $oSource->get_data();
+        $data['ym'] = ml_model_wrcArticle::_calc_Ym_by_articleId($id);
+
         $this->output($data);
     }
     

@@ -122,7 +122,7 @@
 ?>
 	<table width="98%" border="0" align="center" cellspacing="0" class="adminlist">
 		<tr>
-			<th><?php echo $data['articleRow']['title']; ?></th>
+			<th><?php echo $data['articleRow']['title'].' <a href="adm_wrcArticle.php?ym='.$data['ym'].'&srcId='.$data['source']['id'].'">'.$data['source']['title'].' '.$data['ym'].'</a>'; ?></th>
 		</tr>
 		<tr>
 			<td><?php echo Tool_string::un_html($data['articleRow']['content']); ?></td>

@@ -13,6 +13,17 @@ function page_index($data)
 </tr>
 </form>
 </table>
+
+<table class="adminlist" width="100%">
+<form action="?api=codeautomake" method="POST">
+<tr>
+    <th width="100%" style="text-align:center;" colspan="2">查看文章</th>
+</tr>
+<tr>
+    <td>文章ID：<input type="text" id="articleId"/><input type="button" onclick="window.location.href='adm_wrcArticle.php?dtdfn=wrcArticle&page=articleShow&id='+document.getElementById('articleId').value" value="生成"/></td>
+</tr>
+</form>
+</table>
 <?php
 }
 function page_notice($adm)

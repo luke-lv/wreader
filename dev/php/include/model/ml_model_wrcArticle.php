@@ -199,7 +199,7 @@ class ml_model_wrcArticle extends Lib_datamodel_db
     }
 
 
-    private function _calc_Ym_by_articleId($article_id)
+    public function _calc_Ym_by_articleId($article_id)
     {
         $date = strtotime(base_convert(substr($article_id , 0 , 5),36,10));
         return date('Ym' , $date);

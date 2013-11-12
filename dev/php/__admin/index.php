@@ -55,11 +55,16 @@ function hideMenu()
   <table width="150" border="0" align="center" cellpadding="0" cellspacing="0" class="adminlist">
     
   <tr><td width="912" align="center" class="td_title"><strong>首页</strong></td></tr>
-  
+  <tr><td align="center">
+    <table width="100%" border="0">
+      <tr><td width="100%" align="center"><a href="/__admin/page/adm_home.php" target="admin_iframe">首页</a></td></tr>
+      </table>
+  </td></tr>
+
   <tr><td align="center" class="td_title"><strong>用户管理</strong></td></tr>
   <tr><td align="center">
     <table width="100%" border="0">
-      <tr><td width="100%" align="center"><a href="/__admin/page/adm_member.php?page=apply_list" target="admin_iframe">处理会员申请</a></td></tr>
+      <tr><td width="100%" align="center"><a href="/__admin/page/adm_wruUser.php" target="admin_iframe">用户管理</a></td></tr>
       </table>
   </td></tr>
 

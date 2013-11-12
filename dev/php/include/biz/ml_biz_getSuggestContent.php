@@ -116,20 +116,22 @@ class ml_biz_getSuggestContent
 	{
 		$jobsConf = ml_factory::load_standard_conf('wreader_jobs');
 
+		//取职业配置
 		foreach ($jobsConf as $key => $value) {
 			if(isset($value['jobs'][$this->_job]))
 				$this->_jobConf = $value['jobs'][$this->_job];
 		}
-
 		if(!$this->_jobConf)
 			return false;
 
+		//取职业能力
 		$this->_jobAbility = ml_factory::load_standard_conf('wreader_job'.ucfirst($this->_jobConf['sign']));
 		if(!$this->_jobAbility)
 		{
 			return false;
 		}
 
+		//根据职业取基本文章
 		$this->_fetchBasicTagArticle();
 		//$this->_fetchattendTagArticle();
 

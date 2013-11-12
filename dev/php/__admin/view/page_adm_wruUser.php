@@ -79,4 +79,8 @@
 		</table>
 <?php
 	}
+
+	function page_showReadedTag(){
+		
+	}
 ?>

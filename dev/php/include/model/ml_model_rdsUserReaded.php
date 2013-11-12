@@ -34,6 +34,7 @@ class ml_model_rdsUserReaded extends ml_model_redis
             if(!$this->zIncrBy($key , 1 , $tag_hash))
                 return false;
         }
+        return true;
     }
     public function getReadedTag($uid , $withScores = false)
     {

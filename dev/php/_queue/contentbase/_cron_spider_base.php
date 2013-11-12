@@ -93,34 +93,15 @@ class _cron_spider_base
 
 					
 					
-					$seg = ml_function_lib::segmentChinese($articleRow['title']);
-					$rs = $this->oAdminCommon->tags_get_by_tag($seg);
-					$tags = $this->oAdminCommon->get_data();
-
-					$tags = Tool_array::format_2d_array($tags, 'tag' , Tool_array::FORMAT_VALUE_ONLY );
-					
-					/*
-					$seg = ml_function_lib::segmentChinese($articleRow['description']);
-					$a = (array_count_values($seg));
-					asort($a);
-					var_dump($a);
-					die;
-					 */
-
-					if(count($tags) > 0)
-					{
-						$articleRow['tags'] = $tags;
-
-					}
-
+					$aTag = ml_function_lib::segmentChinese($articleRow['title']);
+					array_filter($aTag);
+        			$aTag = array_merge($aTag , $srcRow['tags']);
 					
 					$articleRow = $this->_formatBySource($srcRow['codeSign'] , $articleRow);
 
 					$oBizTag2jc = new ml_biz_articleTag2jobContent();
-					$articleRow['jobContentId'] = $oBizTag2jc->execute($tags);
-
-
-echo "\n\n\n\n\n\n";
+					$articleRow['jobContentId'] = $oBizTag2jc->execute($aTag);
+					
 
 					$this->_write_in_article($srcRow['id'],$articleRow);
 					
