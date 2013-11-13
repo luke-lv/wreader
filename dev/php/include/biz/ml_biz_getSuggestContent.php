@@ -2,15 +2,12 @@
 class ml_biz_getSuggestContent
 {
 	private $_uid;
-	private $_job;
+	private $_job_id;
 	private $_userJob;
-	private $_jobConf;
-	private $_jobAbility;
 	private $oRdsCB;
-	private $oDbTag;
 	private $oArticle;
 	private $oSource;
-
+	private $_readedTagHash2cnt;
 	private $_aBasicArticle;
 	private $_aAttendTagArticle;
 
@@ -19,114 +16,29 @@ class ml_biz_getSuggestContent
 
 	const SC_SUGTYPE_TREE = 'tree';
 	const SC_SUGTYPE_ATTEND = 'attend';
-	const SC_SUGTYPE_SELF = 'self';
+	const SC_SUGTYPE_READED = 'readed';
 
-	const SC_KEYPREFIX = 'BSC_';
 	const SC_BASICEXPIRE = 600;
 
-	const SC_READMORE_WEIGHT = 1.05;
-	const SC_ATTEND_WEIGHT = 1.2;
-	const SC_READED_WEIGHT = 1.05;
 
 	public function __construct($uid , $userJob)
 	{
 		$this->_uid = $uid;
 		$this->_userJob = $userJob;
-		$this->_job = $this->_userJob['job_id'];
+		$this->_job_id = $this->_userJob['job_id'];
 		$this->oRdsCB = new ml_model_rdsContentBase();
 	}
 
-
-	private function _fetchBasicTagArticle()
+	public function execute($page , $pagesize = 50)
 	{
-		global $ML_RECOMMENDLEVEL_WEIGHT;
-
-		$this->_aBasicArticle = $this->oRdsCB->listArticleByJobId($this->_job);
-		if(empty($this->_aBasicArticle))
-		{
-			$oJob2jc = new ml_model_wrcJob2jobContent();
-			$oJob2jc->get_by_jobid($this->_job);
-			$row = $oJob2jc->get_data();
-			$aJobContentId = array_keys($row['jobContentIds']);
-			foreach ($aJobContentId as $jcid) {
-				$aWeight[] = $ML_RECOMMENDLEVEL_WEIGHT[$row['jobContentIds'][$jcid]['rcmdLv']];
-			}
-
-			$this->oRdsCB->unionByJobContentId($this->_job , $aJobContentId , $aWeight);
-			$this->_aBasicArticle = $this->oRdsCB->listArticleByJobId($this->_job);
+		$oRdsReaded = new ml_model_rdsUserReaded;
+		$this->_readedTagHash2cnt = $oRdsReaded->getReadedTag($this->_uid , true);
 		
-
-			//$this->oRdsCB->setTimeOut($rdsKey , self::SC_BASICEXPIRE);
-			return true;
-		}
-		else
-		{
-			return true;
-		}
-	}
-	private function _fetchattendTagArticle()
-	{
-		$rdsKey = self::SC_KEYPREFIX.'uAttTgArtUn_'.$this->_uid;
-		$rdsBasicKey = self::SC_KEYPREFIX.'jbBscArtUn_'.$this->_jobConf['sign'];
-
-
-		$oRdsReaded = new ml_model_rdsUserReaded();
-		$aReadedTag = $oRdsReaded->getReadedTag($this->_uid , true);
-		
-		$aReadedTagHash = array_keys($aReadedTag);
-
-		$aAttendTagHash = $this->_tag2hash($this->_userJob['attend_tag']);
-
-		$aAllTaghash = array_unique( array_values( array_merge($aReadedTagHash , array_values($aAttendTagHash))));
-		
-		$aAllHash2Weight = array_combine(
-								$aAllTaghash, array_pad(array()
-								, count($aAllTaghash), 1));
-
-		foreach ($aAllHash2Weight as $hash => &$value) {
-
-			if(in_array($hash, $aAttendTagHash))
-				$value = self::SC_ATTEND_WEIGHT;
-			else if(in_array($hash, $aReadedTagHash)){
-
-				$value = self::SC_READMORE_WEIGHT + ((int)$aReadedTag[$hash] /5);
-			}
-			
-		}
-		
-
-		$aHash = $this->_tag2hash($this->_userJob['attend_tag']);
-		$this->oRdsCB->unionByTaghashes($rdsKey , $aHash , array($rdsBasicKey) , $aAllHash2Weight);
-		$this->_aAttendTagArticle = $this->oRdsCB->zRevRange($rdsKey , 0 , -1);
-
-	
-
-		$this->oRdsCB->delete($rdsKey);
-		return true;
-	}
-	private function _tag2hash($aTag)
-	{
-		if(!empty($aTag))
-		{
-			foreach ($aTag as $key => $value) {
-				$aTag2hash[$value] = ml_model_admin_dbTag::tag_hash($value);
-			}
-		}
-		return $aTag2hash;
-	}
-
-	public function execute()
-	{
-		$jobsConf = ml_factory::load_standard_conf('wreader_jobs');
-
-		//取职业配置
-		$this->_jobConf = ml_tool_jobs::getJobConf($this->_job);
 
 		//取针对用户的推荐列表
-		//$articleIds = $this->_fetchMySuggestedArticleidsByPage();
-		$articleIds = false;
+		$articleIds = $this->_fetchMySuggestedArticleidsByPage($page , $pagesize);
 		//没有则创建用户的推荐列表
-		if($articleIds === false){
+		if(empty($articleIds)){
 			//取职业公用文章列表
 			$this->_fetchJobSuggestedArticleids();
 
@@ -138,48 +50,36 @@ class ml_biz_getSuggestContent
 			
 
 			//缓存我的文章列表
-			$this->oRdsCB->unionForUserAll($this->_uid , $this->_job);
-			$articleIds = $this->_fetchMySuggestedArticleidsByPage();
+			$rs = $this->oRdsCB->unionForUserAll($this->_uid , $this->_job_id);
+			$articleIds = $this->_fetchMySuggestedArticleidsByPage($page , $pagesize);
 		}
-		arsort($jobArticleIds);
-		$this->_aRsArticle = array_keys($jobArticleIds);
-return true;
-
-
-
-
-		//根据职业取基本文章
-		$this->_fetchBasicTagArticle();
-		//$this->_fetchattendTagArticle();
-
-		//$this->_aRsArticle = $this->_aAttendTagArticle + $this->_aBasicArticle;
-
-		$this->_aRsArticle = $this->_aBasicArticle;
 		
+		$this->_aRsArticle = $articleIds;
 
-
-		return true;		
+		return true;
 	}
+	//取已生成好的推荐列表
+	private function _fetchMySuggestedArticleidsByPage($page , $pagesize){
+		return $this->oRdsCB->fetchUserAllSuggested($this->_uid , $page , $pagesize);
 
-	private function _fetchMySuggestedArticleidsByPage($page){
-		return false;
 	}
+	//取职业推荐文章列表
 	private function _fetchJobSuggestedArticleids(){
 		global $ML_RECOMMENDLEVEL_WEIGHT;
 
-		$this->_aBasicArticle = $this->oRdsCB->listArticleByJobId($this->_job);
+		$this->_aBasicArticle = $this->oRdsCB->listArticleByJobId($this->_job_id);
 		if(empty($this->_aBasicArticle))
 		{
 			$oJob2jc = new ml_model_wrcJob2jobContent();
-			$oJob2jc->get_by_jobid($this->_job);
+			$oJob2jc->get_by_jobid($this->_job_id);
 			$row = $oJob2jc->get_data();
 			$aJobContentId = array_keys($row['jobContentIds']);
 			foreach ($aJobContentId as $jcid) {
 				$aWeight[] = $ML_RECOMMENDLEVEL_WEIGHT[$row['jobContentIds'][$jcid]['rcmdLv']];
 			}
 
-			$this->oRdsCB->unionByJobContentId($this->_job , $aJobContentId , $aWeight);
-			$this->_aBasicArticle = $this->oRdsCB->listArticleByJobId($this->_job);
+			$this->oRdsCB->unionByJobContentId($this->_job_id , $aJobContentId , $aWeight);
+			$this->_aBasicArticle = $this->oRdsCB->listArticleByJobId($this->_job_id);
 		
 
 			//$this->oRdsCB->setTimeOut($rdsKey , self::SC_BASICEXPIRE);
@@ -190,6 +90,7 @@ return true;
 			return true;
 		}
 	}
+	//取关注标签的文章列表
 	private function _fetchMyAttentionArticleids(){
 		$attend_tag = $this->_userJob['attend_tag'];
 		
@@ -201,37 +102,51 @@ return true;
 		
 		return $this->oRdsCB->unionForUserAtten($this->_uid , $aTaghash , $aWeight);
 	}
+	//取常读标签的文章列表
 	private function _fetchMyReadedArticleids(){
-		$oRdsReaded = new ml_model_rdsUserReaded;
-		$readed_tag = $oRdsReaded->getReadedTag($this->_uid , true);
-
-		return $this->oRdsCB->unionForUserReaded($this->_uid , array_keys($readed_tag) , array_values($readed_tag));
+		
+		$aTag = array_slice(array_keys($this->_readedTagHash2cnt), 0 , 3);
+		$aTagWeight = array_slice(array_values($this->_readedTagHash2cnt), 0 , 3);
+		return $this->oRdsCB->unionForUserReaded($this->_uid , $aTag , $aTagWeight);
 	}
 
 
 	public function getArticleListByPage($page , $pagesize = 500)
 	{
-		$start = ($page-1)*$pagesize;
-		$aAids = array_slice($this->_aRsArticle, $start , $pagesize);
+		//
+		$this->execute($page , $pagesize);
+		$aAids = $this->_aRsArticle;
+
+		//取文章
 		$rs = $this->_fetchArticleInfo($aAids);
-		$aArticle = $this->get_data();
-
-		$oRdsReaded = new ml_model_rdsUserReaded();
-		$aReaded = $oRdsReaded->getReadedByArticleId($this->_uid , $aAids);
-
-
 		if(!$rs)
 			return false;
+		$aArticle = $this->get_data();
+
+		//已读记录
+		$oRdsReaded = new ml_model_rdsUserReaded();
+		$aReaded = $oRdsReaded->getReadedByArticleId($this->_uid , $aAids);
+		//已读标签
+		$oTag = new ml_model_admin_dbTag;
+		$oTag->tags_get_by_taghash(array_keys($this->_readedTagHash2cnt));
+		$aReadedTag = Tool_array::format_2d_array($oTag->get_data() , 'tag' , Tool_array::FORMAT_VALUE_ONLY);
+
+		//取源信息
 		$aSrcId = array_unique(Tool_array::format_2d_array($aArticle , 'source_id' , Tool_array::FORMAT_VALUE_ONLY));
 		$this->_fetchSourceInfo($aSrcId);
 		$aSid2site = $this->get_data();
 
 		foreach ($aArticle as &$value) {
 			$value['site_info'] = $aSid2site[$value['source_id']];
-			if(in_array($value['id'], $this->_aBasicArticle))
-				$value['suggestType'] = self::SC_SUGTYPE_TREE;
-			else if(in_array($value['id'], $this->_aAttendTagArticle))
+			
+			
+			if(array_intersect($this->_userJob['attend_tag'], $value['tags']) != array())
 				$value['suggestType'] = self::SC_SUGTYPE_ATTEND;
+			else if(array_intersect($aReadedTag, $value['tags']) != array())
+				$value['suggestType'] = self::SC_SUGTYPE_READED;
+			else{
+				$value['suggestType'] = self::SC_SUGTYPE_TREE;
+			}
 
 			$value['readed'] = $aReaded[$value['id']]==1 ? true : false;
 		}

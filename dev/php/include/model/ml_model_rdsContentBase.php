@@ -81,21 +81,14 @@ class ml_model_rdsContentBase extends ml_model_redis
     public function unionForUserReaded($uid , $aTagHash , $aWeight)
     {
         foreach ($aTagHash as $key => $tagHash) {
-            if($this->oRedis->keys(self::KEY_PREFIX.$tagHash)){
-                $aKeys[]= self::KEY_PREFIX.$tagHash;
-                $aW[] = $aWeight[$key];
-            }
+            $aKeys[]= self::KEY_PREFIX.$tagHash;
+            $aWeight[$key] = (int)$aWeight[$key];
         }
         $destKey = self::KEY_PREFIX_USERREADED.$uid;
-var_dump($destKey);
-var_dump($aKeys);
-var_dump($aW);
-        var_dump($this->zUnion($destKey , $aKeys , $aW));
-
+        return $this->zUnion($destKey , $aKeys , $aWeight);
     }
     public function unionForUserAll($uid , $job_id)
     {
-        
         $destKey = self::KEY_PREFIX_USERALL.$uid;
         $aKeys = array(
             self::KEY_PREFIX_JOB.$job_id,
@@ -105,11 +98,18 @@ var_dump($aW);
         $aWeight = array(
             1,
             1.1,
-            1,2,
+            1.2,
         );
         return $this->zUnion($destKey , $aKeys , $aWeight);
     }
-    
+    public function fetchUserAllSuggested($uid , $page = 1 , $pagesize = 50){
+        $destKey = self::KEY_PREFIX_USERALL.$uid;
+        $start = ($page-1)*$pagesize;
+        $end = $page*$pagesize;
+
+        
+        return $this->zRevRange($destKey , $start , $end);
+    }
     
     public function listArticleByJobId($job_id)
     {

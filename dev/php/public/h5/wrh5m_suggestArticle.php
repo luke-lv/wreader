@@ -10,13 +10,8 @@
 			ml_factory::load_standard_conf('wreader_jobs');
 
 
-
-
-
-
 			$this->oBizSuggArt = new ml_biz_getSuggestContent($this->__visitor['uid'] , $this->__visitor['userJob']);
-			$this->oBizSuggArt->execute();
-			$this->oBizSuggArt->getArticleListByPage(1);
+			$this->oBizSuggArt->getArticleListByPage(1 , 50);
 			$data['articleList'] = $this->oBizSuggArt->get_data();
 
 			$this->page_output('suggestArticle' , $data);
