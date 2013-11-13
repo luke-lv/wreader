@@ -4,6 +4,9 @@ class ml_model_rdsContentBase extends ml_model_redis
     const KEY_PREFIX = 'rcb_';
     const KEY_PREFIX_JC = 'rcbjc_';
     const KEY_PREFIX_JOB = 'rcbj_';
+    const KEY_PREFIX_USERATTEN = 'rcbUa_';
+    const KEY_PREFIX_USERREADED = 'rcbUr_';
+    const KEY_PREFIX_USERALL = 'rcbUal_';
     function __construct() {
         if(!$this->init_rds('meila_contentBase'))
             return false;
@@ -65,6 +68,49 @@ class ml_model_rdsContentBase extends ml_model_redis
 
         return $this->zUnion($destKey , $aKeys , $aWeight);
     }
+    public function unionForUserAtten($uid , $aTagHash , $aWeight)
+    {
+
+        foreach ($aTagHash as $tagHash) {
+            $aKeys[]= self::KEY_PREFIX.$tagHash;
+        }
+        $destKey = self::KEY_PREFIX_USERATTEN.$uid;
+
+        return $this->zUnion($destKey , $aKeys , $aWeight);
+    }
+    public function unionForUserReaded($uid , $aTagHash , $aWeight)
+    {
+        foreach ($aTagHash as $key => $tagHash) {
+            if($this->oRedis->keys(self::KEY_PREFIX.$tagHash)){
+                $aKeys[]= self::KEY_PREFIX.$tagHash;
+                $aW[] = $aWeight[$key];
+            }
+        }
+        $destKey = self::KEY_PREFIX_USERREADED.$uid;
+var_dump($destKey);
+var_dump($aKeys);
+var_dump($aW);
+        var_dump($this->zUnion($destKey , $aKeys , $aW));
+
+    }
+    public function unionForUserAll($uid , $job_id)
+    {
+        
+        $destKey = self::KEY_PREFIX_USERALL.$uid;
+        $aKeys = array(
+            self::KEY_PREFIX_JOB.$job_id,
+            self::KEY_PREFIX_USERATTEN.$uid,
+            self::KEY_PREFIX_USERREADED.$uid,
+        );
+        $aWeight = array(
+            1,
+            1.1,
+            1,2,
+        );
+        return $this->zUnion($destKey , $aKeys , $aWeight);
+    }
+    
+    
     public function listArticleByJobId($job_id)
     {
         $key = self::KEY_PREFIX_JOB.$job_id;
@@ -79,5 +125,9 @@ class ml_model_rdsContentBase extends ml_model_redis
             $aRs[$jobContentId] = $n;
         }
         return $aRs;
+    }
+    public function getByTagHash($hash , $withScores = true){
+        $key = self::KEY_PREFIX.$hash;
+        return $this->zRange($key , 0 , 100 , $withScores);
     }
 }

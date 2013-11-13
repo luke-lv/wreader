@@ -244,7 +244,7 @@
 				<tr>
 					<td><?php echo $key; ?></td>
 					<td><?php echo $value; ?></td>
-					<td><?php echo $data['words'][$key]['idf']; ?></td>
+					<td><?php echo $data['words'][$key]['idf'].' '.$data['words'][$key]['attr'] ; ?></td>
 				</tr>
 					<?php
 				}

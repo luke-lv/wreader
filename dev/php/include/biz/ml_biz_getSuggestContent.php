@@ -26,6 +26,7 @@ class ml_biz_getSuggestContent
 
 	const SC_READMORE_WEIGHT = 1.05;
 	const SC_ATTEND_WEIGHT = 1.2;
+	const SC_READED_WEIGHT = 1.05;
 
 	public function __construct($uid , $userJob)
 	{
@@ -39,6 +40,8 @@ class ml_biz_getSuggestContent
 	private function _fetchBasicTagArticle()
 	{
 		global $ML_RECOMMENDLEVEL_WEIGHT;
+
+		$this->_aBasicArticle = $this->oRdsCB->listArticleByJobId($this->_job);
 		if(empty($this->_aBasicArticle))
 		{
 			$oJob2jc = new ml_model_wrcJob2jobContent();
@@ -117,19 +120,33 @@ class ml_biz_getSuggestContent
 		$jobsConf = ml_factory::load_standard_conf('wreader_jobs');
 
 		//取职业配置
-		foreach ($jobsConf as $key => $value) {
-			if(isset($value['jobs'][$this->_job]))
-				$this->_jobConf = $value['jobs'][$this->_job];
-		}
-		if(!$this->_jobConf)
-			return false;
+		$this->_jobConf = ml_tool_jobs::getJobConf($this->_job);
 
-		//取职业能力
-		$this->_jobAbility = ml_factory::load_standard_conf('wreader_job'.ucfirst($this->_jobConf['sign']));
-		if(!$this->_jobAbility)
-		{
-			return false;
+		//取针对用户的推荐列表
+		//$articleIds = $this->_fetchMySuggestedArticleidsByPage();
+		$articleIds = false;
+		//没有则创建用户的推荐列表
+		if($articleIds === false){
+			//取职业公用文章列表
+			$this->_fetchJobSuggestedArticleids();
+
+			//取我要看的文章列表
+			$this->_fetchMyAttentionArticleids();
+			
+			//取我读过的标签的文章列表
+			$this->_fetchMyReadedArticleids();
+			
+
+			//缓存我的文章列表
+			$this->oRdsCB->unionForUserAll($this->_uid , $this->_job);
+			$articleIds = $this->_fetchMySuggestedArticleidsByPage();
 		}
+		arsort($jobArticleIds);
+		$this->_aRsArticle = array_keys($jobArticleIds);
+return true;
+
+
+
 
 		//根据职业取基本文章
 		$this->_fetchBasicTagArticle();
@@ -143,6 +160,55 @@ class ml_biz_getSuggestContent
 
 		return true;		
 	}
+
+	private function _fetchMySuggestedArticleidsByPage($page){
+		return false;
+	}
+	private function _fetchJobSuggestedArticleids(){
+		global $ML_RECOMMENDLEVEL_WEIGHT;
+
+		$this->_aBasicArticle = $this->oRdsCB->listArticleByJobId($this->_job);
+		if(empty($this->_aBasicArticle))
+		{
+			$oJob2jc = new ml_model_wrcJob2jobContent();
+			$oJob2jc->get_by_jobid($this->_job);
+			$row = $oJob2jc->get_data();
+			$aJobContentId = array_keys($row['jobContentIds']);
+			foreach ($aJobContentId as $jcid) {
+				$aWeight[] = $ML_RECOMMENDLEVEL_WEIGHT[$row['jobContentIds'][$jcid]['rcmdLv']];
+			}
+
+			$this->oRdsCB->unionByJobContentId($this->_job , $aJobContentId , $aWeight);
+			$this->_aBasicArticle = $this->oRdsCB->listArticleByJobId($this->_job);
+		
+
+			//$this->oRdsCB->setTimeOut($rdsKey , self::SC_BASICEXPIRE);
+			return true;
+		}
+		else
+		{
+			return true;
+		}
+	}
+	private function _fetchMyAttentionArticleids(){
+		$attend_tag = $this->_userJob['attend_tag'];
+		
+		$aAll = array();
+		foreach ($attend_tag as $tag) {
+			$aTaghash[] = ml_model_admin_dbTag::tag_hash($tag);
+			$aWeight[] = 1;	
+		}
+		
+		return $this->oRdsCB->unionForUserAtten($this->_uid , $aTaghash , $aWeight);
+	}
+	private function _fetchMyReadedArticleids(){
+		$oRdsReaded = new ml_model_rdsUserReaded;
+		$readed_tag = $oRdsReaded->getReadedTag($this->_uid , true);
+
+		return $this->oRdsCB->unionForUserReaded($this->_uid , array_keys($readed_tag) , array_values($readed_tag));
+	}
+
+
 	public function getArticleListByPage($page , $pagesize = 500)
 	{
 		$start = ($page-1)*$pagesize;
