@@ -9,18 +9,17 @@ class ml_biz_contentParse_word2wordgroup
 		$last_idf = 0;
 		$group = array();
 		$aMark = array(',','.','?','!',':',';','"','\'','，','。', '？', '！', '：', '；', '“', '‘' , '、','”' , '《' , '》');
-		$aAttrPass = array('c' , 'uj' , 'r' , 'd' , 'm' , 'p' , 'f' , 'un' , 'q' , 'mt' , 'sn');
 		$aUnusePreWord = array('所');
+		$aUnuseWord = array('的','了' , '要' , '将');
 		foreach ($wordInfoRows as $wordInfo) {
 
 
 			if(in_array($wordInfo['word'], $aMark) //标点断句
-				or in_array($wordInfo['attr'], $aAttrPass)	//无用词性
+
 				or ($last &&  strpos($wordInfo['word'], $last['word']) === 0)	//重复字
-				// or in_array($wordInfo['word'], $aUnuseWord)	//没啥用的字符
+				or in_array($wordInfo['word'], $aUnuseWord)	//没啥用的字符
 				or mb_substr($last['word'], -1 , 1 , 'utf-8') == mb_substr($wordInfo['word'], 0, 1 , 'utf-8')//重复字 由于用了二分匹配 可能出现 我爱 爱你
 				//or in_array($last, $aUnusePreWord)
-				or $wordInfo['idf'] == 0
 				){
 				$last = array();
 				continue;

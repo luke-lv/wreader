@@ -3,7 +3,7 @@ class ml_tool_chineseSegment
 {
 	const IGNORE_SYMBOL=true;
 
-    static $_unusefulAttr = array('c' , 'uj' , 'r' , 'd' , 'm' , 'p' , 'f' , 'un' , 'q' , 'mt' , 'sn');
+    static $_unusefulAttr = array('c' , 'uj' , 'r' , 'd' , 'm' , 'p' , 'f' , 'un' , 'q' , 'mt');
 	public static function segment2word($str)
     {
         $scws = self::_init_scws();
@@ -14,7 +14,7 @@ class ml_tool_chineseSegment
         {
         
             foreach ($result as $tmp){
-                if(in_array($tmp['word'], $aBlack))
+                if(in_array($tmp['attr'], self::$_unusefulAttr))
                     continue;
 
                 $words[] = $tmp['word'];
@@ -39,9 +39,9 @@ class ml_tool_chineseSegment
         {
 
             foreach ($result as $tmp){
-                if($tmp['idf'] == 0){
-                    continue;
-                }
+                // if($tmp['idf'] == 0){
+                //     continue;
+                // }
                 if(in_array($tmp['attr'] , self::$_unusefulAttr)){
                     continue;
                 }
