@@ -49,6 +49,65 @@ class ml_biz_contentParse_word2wordgroup
 		}
 		
 	}
+	public function execute_2($string){
+		$aWordInfo = ml_tool_chineseSegment::segmentWithAttr(ml_tool_chineseSegment::filterUnavailableStr($string) , false , true);
+
+		$wordCnt = count($aWordInfo);
+		foreach ($aWordInfo as $key => $value) {
+			if(!in_array($value['word'], ml_tool_chineseSegment::$_unuseChar)){
+				$aWordCnt[$value['word']]++;
+				$aWordOffset[$value['word']][] = $value['off'];
+				$aWordAttr[$value['word']] = $value['attr'];
+			}
+		}
+		
+		arsort($aWordCnt);
+		foreach ($aWordCnt as $word => $cnt) {
+			$idf = $cnt/$wordCnt;
+			if($idf > 0.001){
+				
+				foreach ($aWordOffset[$word] as $value) {
+					$aOff2Word[$value] = $word;
+				}
+			}
+		}
+
+		$aOffset = array_keys($aOff2Word);
+		sort($aOffset);
+
+		$wording = '';
+		$endOffset = 0;
+		$wordLen = 0;
+		foreach ($aOffset as  $value) {
+			
+			if($value!=$endOffset || $aWordAttr[$aOff2Word[$value]] == 'un'){
+
+				if(Tool_string::count_all_character($wording) > 1 && $wordLen > 1){
+					$aWordgroup[] = $wording;
+				}
+				
+				$wording = '';
+				$wordLen=0;
+		
+			}
+
+			if($aWordAttr[$aOff2Word[$value]] != 'un'){			
+				$endOffset = $value+strlen($aOff2Word[$value]);
+				$wording.=$aOff2Word[$value];
+				$wordLen++;
+
+				if($wordLen>1){
+					$aWordgroup[] = $wording;
+				}
+			}
+		}
+		$aWordGroupCnt = array_count_values($aWordgroup);
+		arsort($aWordGroupCnt);
+		var_dump($aWordGroupCnt);
+
+		
+
+	}
 	public function execute_in_multi_article($aContents){
 		foreach ($aContents as $con) {
 			$aSegment = $this->execute($con);

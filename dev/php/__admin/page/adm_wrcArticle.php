@@ -185,6 +185,10 @@ class adm_wrcArticle extends admin_ctrl
         $this->modelContent->std_getRowById($id);
         $articleContent = $this->modelContent->get_data();
 
+        $oBizw2wg = new ml_biz_contentParse_word2wordgroup();
+        $oBizw2wg->execute_2($articleContent['content']);
+        die;
+
         $content = ml_tool_chineseSegment::filterUnavailableStr($articleContent['content']);
         $aWordInfo = ml_tool_chineseSegment::segmentWithAttr($content , false);
         foreach ($aWordInfo as $wordInfo) {
